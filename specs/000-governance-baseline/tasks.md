@@ -311,7 +311,7 @@ The ADR tasks T059 to T063 each follow the plan Part J.4 template, using the hea
   - `## Actions`, with `| Action | Owner | Due |`.
   - `Verdict: passed` or `Verdict: not passed`.
   - A `## Signature` block.
-- [ ] T069 [US8] **HUMAN (sponsor + implementer)**: hold the Gate 0/A review meeting. Walk through every criteria row, update Results and Actions in the PR as agreed, and set the Verdict. Open PR "Gate 0/A review record". **HUMAN (sponsor)**: approve; this approval is the gate signature. After it merges, re-run `bash scripts/governance/verify-signatures.sh | tee docs/evidence/phase-0/signatures.md`, which should show SIGNED for all three files, and commit it in a final PR "Gate 0/A signature evidence", approved by the sponsor. **Solo mode (clarified 2026-11-14):** the meeting is the implementer's own review. The verdict is a self-attestation; there is no sponsor approval to wait for.
+- [X] T069 [US8] **HUMAN (sponsor + implementer)**: hold the Gate 0/A review meeting. Walk through every criteria row, update Results and Actions in the PR as agreed, and set the Verdict. Open PR "Gate 0/A review record". **HUMAN (sponsor)**: approve; this approval is the gate signature. After it merges, re-run `bash scripts/governance/verify-signatures.sh | tee docs/evidence/phase-0/signatures.md`, which should show SIGNED for all three files, and commit it in a final PR "Gate 0/A signature evidence", approved by the sponsor. **Solo mode (clarified 2026-11-14):** the meeting is the implementer's own review. The verdict is a self-attestation; there is no sponsor approval to wait for.
 
 **Checkpoint**: **Gate 0 / Gate A passed.** Phase 2 (feature 001) may start.
 
@@ -319,8 +319,8 @@ The ADR tasks T059 to T063 each follow the plan Part J.4 template, using the hea
 
 ## Phase 11: Polish & Cross-Cutting Concerns
 
-- [ ] T070 [P] Create `specs/README.md`, a feature-number map. It should note that `000-governance-baseline` is Phase 0, and that later Spec Kit numbers follow plan §J.11. Any mismatch between the auto-assigned number and J.11 is recorded here.
-- [ ] T071 [P] Update `specs/000-governance-baseline/spec.md`, changing `**Status**: Draft` to `**Status**: Accepted (Gate 0/A passed <date>)`.
+- [X] T070 [P] Create `specs/README.md`, a feature-number map. It should note that `000-governance-baseline` is Phase 0, and that later Spec Kit numbers follow plan §J.11. Any mismatch between the auto-assigned number and J.11 is recorded here.
+- [X] T071 [P] Update `specs/000-governance-baseline/spec.md`, changing `**Status**: Draft` to `**Status**: Accepted (Gate 0/A passed <date>)`.
 - [X] T072 [P] Open backlog issue "Port governance checker to monorepo tooling" (labels `phase:2`, `P1`), referencing feature 001, so that C-1 to C-17 move into the TypeScript CI stage (plan §I.4, *safety* stage) without being lost. Add the issue number to `docs/evidence/phase-0/backlog.md`.
 - [ ] T073 Run every step of [quickstart.md](./quickstart.md) from §1 to §8 on a clean clone in a different folder (`git clone … C:\dev\pdfe-verify`), and confirm that each expected result holds. Record the outcome in `docs/evidence/phase-0/quickstart-run.md` and merge it through a PR approved by the sponsor.
 

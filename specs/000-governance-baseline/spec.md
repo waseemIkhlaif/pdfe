@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-14
 
-**Status**: Draft
+**Status**: Accepted (Gate 0/A passed 2026-11-15)
 
 **Input**: User description: "read PDFE_IMPLEMENTATION_PLAN.md carefully and create a specification for Phase 0 — Setup, Governance & Control Baseline (M0 → Gate 0 / Gate A)"
 
