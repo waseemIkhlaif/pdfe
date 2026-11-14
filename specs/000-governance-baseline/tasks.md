@@ -99,7 +99,7 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
 
 - [X] T025 [P] [US3] Run `specify check` and save its output, followed by `git --version`, `node --version`, `pnpm --version`, `docker --version`, `uv --version` and `gh --version`, to `docs/evidence/phase-0/specify-check.txt`. If any tool is missing, install it per plan Part E.1, re-run, and add a `## Fixes` section noting what was fixed (SC-010).
 - [X] T026 [P] [US3] Create `docs/evidence/phase-0/bootstrap.md`, recording the bootstrap commit SHA(s) from T021 and T022, the date, and the statement "These are the only commits pushed to `main` without a pull request; protection enabled at <date/time>" (research R-4).
-- [ ] T027 [US3] Open PR "Phase 0: workstation evidence" containing `docs/evidence/phase-0/specify-check.txt`, `docs/evidence/phase-0/bootstrap.md`, `docs/evidence/phase-0/repo-settings.json` and `docs/evidence/phase-0/bootstrap-ci.txt`. **HUMAN (sponsor)**: review and approve; then merge with `gh pr merge --squash`. **Solo mode (clarified 2026-11-14):** no approval step; merge your own PR once the required checks pass.
+- [X] T027 [US3] Open PR "Phase 0: workstation evidence" containing `docs/evidence/phase-0/specify-check.txt`, `docs/evidence/phase-0/bootstrap.md`, `docs/evidence/phase-0/repo-settings.json` and `docs/evidence/phase-0/bootstrap-ci.txt`. **HUMAN (sponsor)**: review and approve; then merge with `gh pr merge --squash`. **Solo mode (clarified 2026-11-14):** no approval step; merge your own PR once the required checks pass.
 
 **Checkpoint**: US3 is verifiable on its own.
 
@@ -112,7 +112,7 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
 **Independent Test**: `bash scripts/governance/check-phase0.sh` reports C-2 PASS. The merged PR shows the sponsor's `APPROVED` review.
 
 - [X] T028 [P] [US2] Create `scripts/governance/checks/c02-constitution.sh`, defining `check_c02` (C-2). In format mode it passes while the file is still the pristine template (contains `[PROJECT_NAME]`), so the bootstrap commit is not blocked; otherwise, and always in gate mode, it FAILs if `.specify/memory/constitution.md` contains any `\[[A-Z][A-Z0-9_]+\]` token, if it does not contain the eleven headings `### I.` through `### XI.` with the titles from plan Part E.4, or if it lacks a `## Governance` section with `**Version**:` and `**Ratified**:` lines that hold a valid version and date.
-- [ ] T029 [US2] Run `/speckit-constitution`, pasting the constitution prompt from `docs/source/PDFE_IMPLEMENTATION_PLAN.md` §E.4 verbatim. The output, `.specify/memory/constitution.md`, must have: **Solo mode (clarified 2026-11-14):** no approval step. The ratification date is the merge date, and the constitution's Governance section points to `docs/governance/solo-mode-exception.md`.
+- [X] T029 [US2] Run `/speckit-constitution`, pasting the constitution prompt from `docs/source/PDFE_IMPLEMENTATION_PLAN.md` §E.4 verbatim. The output, `.specify/memory/constitution.md`, must have: **Solo mode (clarified 2026-11-14):** no approval step. The ratification date is the merge date, and the constitution's Governance section points to `docs/governance/solo-mode-exception.md`.
   - Project name `PDFE`.
   - Articles I–XI as `### I. Simulation Boundary First` … `### XI. Simplicity`, with their text unchanged in meaning.
   - A `## Governance` section with the amendment rule (ADR approved by the engineering lead and security lead), constitution precedence, and the `/speckit-analyze` rule.
