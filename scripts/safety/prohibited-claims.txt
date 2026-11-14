@@ -1,0 +1,8 @@
+# Prohibited claims (Article VIII). Whole-word, case-insensitive. One per line.
+guaranteed
+deposit protected
+licensed
+redeem for real
+FDIC
+insured deposit
+regulated by

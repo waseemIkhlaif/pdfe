@@ -1,0 +1,24 @@
+# Solo mode (SOLO_MODE=1, clarified 2026-11-14): every line names the single owner.
+# These rules cannot enforce independent review while there is one owner. They stay in place so that
+# review requirements resume as soon as a second reviewer is named (see docs/governance/solo-mode-exception.md).
+# The solo ruleset does not require code-owner review; the two-person ruleset does.
+# Contract: specs/000-governance-baseline/contracts/repository-controls.md section 3.
+
+# Default
+*                                   @waseemIkhlaif
+
+# Signed artifacts (a self-attestation in solo mode, FR-006a). Keep these below the `*` line: the last match wins.
+/docs/simulation-charter.md         @waseemIkhlaif
+/docs/governance/approved-scope.md  @waseemIkhlaif
+/docs/governance/gate-0-review.md   @waseemIkhlaif
+/.specify/memory/constitution.md    @waseemIkhlaif
+
+# Control files
+/.github/                           @waseemIkhlaif
+/scripts/governance/                @waseemIkhlaif
+
+# Plan Part D ownership (paths created from Phase 2; listed now so they are covered from day one)
+/apps/api/src/modules/ledger/       @waseemIkhlaif
+/db/migrations/                     @waseemIkhlaif
+**/adapters/**                      @waseemIkhlaif
+/infra/network/                     @waseemIkhlaif

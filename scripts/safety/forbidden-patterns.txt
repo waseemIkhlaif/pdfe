@@ -1,0 +1,13 @@
+# Forbidden patterns (extended regex, case-insensitive). One per line; # starts a comment.
+# Constitution Article I: no real endpoints, credentials, private keys or real payment data.
+-----BEGIN [A-Z ]*PRIVATE KEY-----
+(mainnet|testnet|sepolia|goerli|holesky)\.
+infura\.io
+alchemy(api)?\.io
+quicknode
+api\.(stripe|paypal|wise|plaid)\.com
+swift\.com
+card[^0-9]{0,20}[0-9]{13,19}
+AKIA[0-9A-Z]{16}
+ghp_[A-Za-z0-9]{36}
+xox[baprs]-

@@ -1,0 +1,4 @@
+# Hosts allowed in URLs outside docs/source/. One per line.
+github.com
+docs.github.com
+www.w3.org

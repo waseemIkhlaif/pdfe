@@ -1,0 +1,26 @@
+# Regulatory Assumption Log
+
+Every regulatory or legal assumption the PDFE simulation relies on. **All entries are `unvalidated` until qualified counsel has reviewed them.** An entry may leave `unvalidated` only when a counsel reviewer and a review date are recorded in the same row (check C-8).
+
+Nothing here is legal advice, and nothing here implies that any approval, permission or classification exists. See [simulation-charter.md](../simulation-charter.md).
+
+Status values: `unvalidated` · `validated` · `rejected`.
+
+| ID | Assumption | Source | Validation status | Counsel reviewer | Review date |
+|---|---|---|---|---|---|
+| ASM-001 | The company is a private technology venture. It is not a central bank, a government agency, or a holder of any financial permission or operator status. | docs/source/01_MASTER_PRD.md §1 | unvalidated | — | — |
+| ASM-002 | The DEMO release needs no financial permission, registration or regulator approval, because it is a simulation: all data is synthetic, no real funds move, no real customers are onboarded and no live rail is reachable. | docs/source/01_MASTER_PRD.md Operating principle and regulatory boundary; §2 Non-goals | unvalidated | — | — |
+| ASM-003 | Demonstrating the simulation to investors, regulators and partners, and describing proposed products, is not itself an offer, marketing or provision of a financial service. | docs/source/01_MASTER_PRD.md §2 Non-goals | unvalidated | — | — |
+| ASM-004 | The legal classification, issuer and redemption rights of the proposed ILS-linked stable-value instrument (placeholder code PSH) are undetermined; PSH is not an approved name, classification, issuer, redemption promise or live asset. | docs/source/01_MASTER_PRD.md Terminology; §16 D-03 | unvalidated | — | — |
+| ASM-005 | A hybrid model is viable in principle: a suitably qualified partner is responsible for issuance and reserves, and the company provides technology and distribution within its own regulatory obligations. | docs/source/01_MASTER_PRD.md Terminology; §4 STB | unvalidated | — | — |
+| ASM-006 | The licensing path for each product and jurisdiction is unknown. Any future LIVE mode needs jurisdiction-specific legal opinions, permissions, contracts, capital and safeguarding arrangements, independent security assessments and formal go-live approval. None of these is assumed to exist or to be obtainable on any timeline. | docs/source/01_MASTER_PRD.md Operating principle and regulatory boundary; §16 D-02; §14 Gate F | unvalidated | — | — |
+| ASM-007 | Cross-border remittance in a future LIVE mode would need partners and corridors that hold the required permissions, plus FX permissions. In DEMO, corridors, partners and settlement currencies are simulated only. | docs/source/01_MASTER_PRD.md §4 REM; §16 D-05 | unvalidated | — | — |
+| ASM-008 | A future digital-asset exchange would need legal permission, a custody model and market surveillance. In DEMO, only paper trading of example assets (BTC, ETH) occurs, with no real chain activity. | docs/source/01_MASTER_PRD.md §4 EXC; §16 D-06 | unvalidated | — | — |
+| ASM-009 | Business tools (invoicing, approvals, API sandbox) in a future LIVE mode would need partner agreements and any applicable permissions. | docs/source/01_MASTER_PRD.md §4 BIZ | unvalidated | — | — |
+| ASM-010 | Inclusion services are limited to consented, simulated referrals to a mock partner. The company performs no internal lending or credit decisions, and a future LIVE referral would need consents and credit providers holding the required permissions. | docs/source/01_MASTER_PRD.md §4 INC; §2 Non-goals; FR-INC-001 | unvalidated | — | — |
+| ASM-011 | Mock sanctions and PEP screening on synthetic watchlists carries no regulatory filing or reporting duty, and is never represented as real AML compliance. | docs/source/01_MASTER_PRD.md §2 Non-goals; FR-CMP-002; J6 | unvalidated | — | — |
+| ASM-012 | Data residency and retention rules are undecided. Because only synthetic data is used, no personal-data regime is assumed to apply in DEMO. | docs/source/01_MASTER_PRD.md §16 D-08; docs/source/PDFE_IMPLEMENTATION_PLAN.md Part B.3 | unvalidated | — | — |
+| ASM-013 | The financial-statement accounting policy and the legal-entity boundaries are undecided. The demo uses a synthetic chart of accounts that a qualified accountant reviews. | docs/source/01_MASTER_PRD.md §16 D-11; docs/source/PDFE_IMPLEMENTATION_PLAN.md Part J.2 | unvalidated | — | — |
+| ASM-014 | Fees, limits, reserve policy, liquidity model, FX quotes, yields and performance figures shown in demos are illustrative and configurable placeholders. They are never presented as market facts or as real-world policy. | docs/source/01_MASTER_PRD.md Terminology; §16 D-07 | unvalidated | — | — |
+| ASM-015 | No real personal data ever enters any environment; a synthetic generator is the only source of customer-like data. | docs/source/PDFE_IMPLEMENTATION_PLAN.md Part B.3 | unvalidated | — | — |
+| ASM-016 | Independent validation and demo sign-off authority is not yet assigned. Until the sponsor assigns it, the sponsor holds sign-off authority for the demo. | docs/source/01_MASTER_PRD.md §16 D-12; docs/source/PDFE_IMPLEMENTATION_PLAN.md Part J.2 | unvalidated | — | — |

@@ -1,0 +1,33 @@
+name: governance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  governance-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # actions/checkout v4.2.2, pinned by commit SHA
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Phase 0 governance checks (format mode)
+        run: bash scripts/governance/check-phase0.sh
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      # gitleaks v8.30.1, pinned by image digest (Docker Hub, 2026-11-14)
+      - name: gitleaks (full history)
+        run: >
+          docker run --rm -v "$GITHUB_WORKSPACE:/repo"
+          zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
+          detect --source /repo --redact --exit-code 1
