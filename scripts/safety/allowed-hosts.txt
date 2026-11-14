@@ -2,3 +2,6 @@
 github.com
 docs.github.com
 www.w3.org
+
+# reason: GitHub API URLs appear in exported ruleset evidence (ruleset.json)
+api.github.com

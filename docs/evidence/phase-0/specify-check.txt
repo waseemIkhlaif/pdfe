@@ -1,0 +1,69 @@
+             ███████╗██████╗ ███████╗ ██████╗██╗███████╗██╗   ██╗              
+             ██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔════╝╚██╗ ██╔╝              
+             ███████╗██████╔╝█████╗  ██║     ██║█████╗   ╚████╔╝               
+             ╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══╝    ╚██╔╝                
+             ███████║██║     ███████╗╚██████╗██║██║        ██║                 
+             ╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝        ╚═╝                 
+                                                                               
+               GitHub Spec Kit - Spec-Driven Development Toolkit               
+
+Checking for installed tools...
+
+Check Available Tools
+├── ● Antigravity (not found)
+├── ● Alquimia AI (not found)
+├── ● Amp (not found)
+├── ● Auggie CLI (not found)
+├── ○ IBM Bob (IDE-based, no CLI check)
+├── ● Claude Code (available)
+├── ○ Cline (IDE-based, no CLI check)
+├── ● CodeBuddy (not found)
+├── ● Codex CLI (not found)
+├── ● Command Code (not found)
+├── ○ GitHub Copilot (IDE-based, no CLI check)
+├── ○ Cursor (IDE-based, no CLI check)
+├── ● Devin for Terminal (not found)
+├── ● Docker Agent (not found)
+├── ● Factory Droid (not found)
+├── ● DeepSeek Harness (not found)
+├── ○ Firebender (IDE-based, no CLI check)
+├── ● Forge (not found)
+├── ● Gemini CLI (not found)
+├── ● Goose (not found)
+├── ● Grok Build (not found)
+├── ● Hermes Agent (not found)
+├── ● Junie (not found)
+├── ○ Kilo Code (IDE-based, no CLI check)
+├── ● Kimi Code (not found)
+├── ● Kiro CLI (not found)
+├── ○ Lingma (IDE-based, no CLI check)
+├── ● Muse Code (not found)
+├── ● Oh My Pi (not found)
+├── ● opencode (not found)
+├── ● Pi Coding Agent (not found)
+├── ● Qoder CLI (not found)
+├── ● Qwen Code (not found)
+├── ● RovoDev ACLI (not found)
+├── ● SHAI (not found)
+├── ● Tabnine CLI (not found)
+├── ○ Trae (IDE-based, no CLI check)
+├── ● Mistral Vibe (not found)
+├── ● ZCode (not found)
+├── ○ Zed (IDE-based, no CLI check)
+├── ● Visual Studio Code (available)
+└── ● Visual Studio Code Insiders (not found)
+
+Specify CLI is ready to use!
+Tip: Run 'specify self check' to verify you have the latest CLI version
+$ git --version
+git version 2.56.0.windows.4
+$ node --version
+v25.2.1
+$ pnpm --version
+11.0.9
+$ docker --version
+Docker version 28.1.1, build 4eba377
+$ uv --version
+uv 0.11.12 (63c5f57d3 2026-05-08 x86_64-pc-windows-msvc)
+$ gh --version
+gh version 2.104.0 (2026-11-12)
