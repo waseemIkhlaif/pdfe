@@ -259,7 +259,7 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
   - `stop-work` (red)
 
   Run it, then save `gh label list --limit 200` to `docs/evidence/phase-0/labels.txt`. Expect 40 labels.
-- [ ] T058 [US7] Create the project board:
+- [X] T058 [US7] Create the project board:
   1. Run `gh project create --owner <owner> --title "PDFE Delivery"`.
   2. Link it with `gh project link <n> --owner <owner> --repo <owner>/pdfe`.
   3. Add the single-select field `Level` with options Epic, Feature Spec, User Story, Task, Test Case, Evidence, using `gh project field-create`.
@@ -279,7 +279,7 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
 - [X] T062 [P] [US7] Create `docs/adr/ADR-010-identity-keycloak.md`, `docs/adr/ADR-011-tenant-isolation.md` and `docs/adr/ADR-012-audit-hash-chain.md`.
 - [X] T063 [P] [US7] Create `docs/adr/ADR-013-determinism.md`, `docs/adr/ADR-014-design-tokens.md` and `docs/adr/ADR-015-mobile-expo.md`.
 - [X] T064 [P] [US7] Create `scripts/governance/checks/c13-adrs.sh`, defining `check_c13` (C-13). In gate mode it requires exactly 15 files matching `docs/adr/ADR-0[01][0-9]-*.md`, numbered 001 to 015. In all modes, each existing ADR file must have line 2 `Status: (Proposed|Accepted|Superseded by ADR-[0-9]{3})` and the six `##` sections in contract order, each non-empty.
-- [ ] T065 [US7] Run the checker in gate mode for C-13. Open PR "Backlog labels, project evidence, ADR drafts" containing `scripts/governance/labels.sh`, `docs/evidence/phase-0/labels.txt`, `docs/evidence/phase-0/backlog.md`, `docs/adr/ADR-001`…`ADR-015` and `scripts/governance/checks/c13-adrs.sh`. **HUMAN (sponsor)**: approve and merge. **Solo mode (clarified 2026-11-14):** no approval step; merge once the checks pass.
+- [X] T065 [US7] Run the checker in gate mode for C-13. Open PR "Backlog labels, project evidence, ADR drafts" containing `scripts/governance/labels.sh`, `docs/evidence/phase-0/labels.txt`, `docs/evidence/phase-0/backlog.md`, `docs/adr/ADR-001`…`ADR-015` and `scripts/governance/checks/c13-adrs.sh`. **HUMAN (sponsor)**: approve and merge. **Solo mode (clarified 2026-11-14):** no approval step; merge once the checks pass.
 
 The ADR tasks T059 to T063 each follow the plan Part J.4 template, using the header from [contracts/artifact-formats.md §ADR file](./contracts/artifact-formats.md) with `Status: Proposed` and `Deciders: TBD at Gate 1/B`. Fill the sections as follows:
 
@@ -321,7 +321,7 @@ The ADR tasks T059 to T063 each follow the plan Part J.4 template, using the hea
 
 - [ ] T070 [P] Create `specs/README.md`, a feature-number map. It should note that `000-governance-baseline` is Phase 0, and that later Spec Kit numbers follow plan §J.11. Any mismatch between the auto-assigned number and J.11 is recorded here.
 - [ ] T071 [P] Update `specs/000-governance-baseline/spec.md`, changing `**Status**: Draft` to `**Status**: Accepted (Gate 0/A passed <date>)`.
-- [ ] T072 [P] Open backlog issue "Port governance checker to monorepo tooling" (labels `phase:2`, `P1`), referencing feature 001, so that C-1 to C-17 move into the TypeScript CI stage (plan §I.4, *safety* stage) without being lost. Add the issue number to `docs/evidence/phase-0/backlog.md`.
+- [X] T072 [P] Open backlog issue "Port governance checker to monorepo tooling" (labels `phase:2`, `P1`), referencing feature 001, so that C-1 to C-17 move into the TypeScript CI stage (plan §I.4, *safety* stage) without being lost. Add the issue number to `docs/evidence/phase-0/backlog.md`.
 - [ ] T073 Run every step of [quickstart.md](./quickstart.md) from §1 to §8 on a clean clone in a different folder (`git clone … C:\dev\pdfe-verify`), and confirm that each expected result holds. Record the outcome in `docs/evidence/phase-0/quickstart-run.md` and merge it through a PR approved by the sponsor.
 
 ---
