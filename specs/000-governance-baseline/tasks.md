@@ -130,14 +130,14 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
 
 **Independent Test**: The checker reports C-3, C-12 and C-14 PASS. `bash scripts/governance/verify-signatures.sh` prints `SIGNED` for `docs/simulation-charter.md` and `docs/governance/approved-scope.md`.
 
-- [ ] T030 [P] [US1] Create `docs/simulation-charter.md`. It must contain:
+- [X] T030 [P] [US1] Create `docs/simulation-charter.md`. It must contain:
   - `# PDFE Simulation Charter`.
   - A one-paragraph purpose statement: demonstration only, synthetic data, no live financial service.
   - The bilingual label line `SIMULATION — NOT REAL MONEY / محاكاة — ليست أموالاً حقيقية`.
   - `## Operating principle and regulatory boundary`, holding a verbatim block (`> Source: docs/source/01_MASTER_PRD.md §<n>` … `> End source`) copied exactly from the PRD section of that name.
   - `## Terminology`, holding a verbatim block from the PRD Terminology section.
   - A closing `## Signature` block per [contracts/artifact-formats.md](./contracts/artifact-formats.md), with the sponsor's name and `@<sponsor>` and today's date.
-- [ ] T031 [P] [US1] Create `docs/governance/approved-scope.md` with the header `| ID | Title | Status | Decision ref | Approver | Date |`. Add one row per ID, taking titles from the PRD:
+- [X] T031 [P] [US1] Create `docs/governance/approved-scope.md` with the header `| ID | Title | Status | Decision ref | Approver | Date |`. Add one row per ID, taking titles from the PRD:
   - FR-LED-001, FR-LED-002, FR-LED-003, FR-LED-004, FR-LED-005
   - FR-TXN-001, FR-TXN-002
   - FR-ACC-001, FR-ACC-002
@@ -165,7 +165,7 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
   4. Prints `SIGNED <file> PR#<n> <date>` if an `APPROVED` review by `SPONSOR_LOGIN` exists on the PR's final head commit, and `UNSIGNED/LAPSED <file>` otherwise.
 
   It exits 1 if any file is unsigned, and loads values from `team.env`.
-- [ ] T035 [US1] Run the checker and confirm C-3, C-12 and C-14 pass. Open **separate** PRs: "Simulation charter" (T030), and "Approved P0 scope and journeys" (T031, T032, T033, T034). **HUMAN (sponsor)**: read each PR fully, then approve; the approval is the signature (FR-006a). After both merge, run `bash scripts/governance/verify-signatures.sh` and confirm both files show `SIGNED`. **Solo mode (clarified 2026-11-14):** no sponsor approval. The charter and scope each carry the `Attestation:` line, and the PRs pass the required checks before you merge them.
+- [X] T035 [US1] Run the checker and confirm C-3, C-12 and C-14 pass. Open **separate** PRs: "Simulation charter" (T030), and "Approved P0 scope and journeys" (T031, T032, T033, T034). **HUMAN (sponsor)**: read each PR fully, then approve; the approval is the signature (FR-006a). After both merge, run `bash scripts/governance/verify-signatures.sh` and confirm both files show `SIGNED`. **Solo mode (clarified 2026-11-14):** no sponsor approval. The charter and scope each carry the `Attestation:` line, and the PRs pass the required checks before you merge them.
 
 **Checkpoint (MVP)**: The boundary and scope are signed. This is the minimum outcome that makes Gate 0/A achievable.
 
