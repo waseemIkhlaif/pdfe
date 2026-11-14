@@ -1,0 +1,50 @@
+accessibility	Barrier affecting people with disabilities	#f143ab
+bug	Something isn't working	#d73a4a
+documentation	Improvements or additions to documentation	#0075ca
+duplicate	This issue or pull request already exists	#cfd3d7
+enhancement	New feature or request	#a2eeef
+good first issue	Good for newcomers	#7057ff
+help wanted	Extra attention is needed	#008672
+invalid	This doesn't seem right	#e4e669
+question	Further information is requested	#d876e3
+wontfix	This will not be worked on	#ffffff
+P0	Priority: critical (must pass a gate)	#b60205
+P1	Priority: high	#d93f0b
+P2	Priority: normal	#fbca04
+domain:led	PRD domain: led	#1d76db
+domain:txn	PRD domain: txn	#1d76db
+domain:acc	PRD domain: acc	#1d76db
+domain:aud	PRD domain: aud	#1d76db
+domain:sec	PRD domain: sec	#1d76db
+domain:wal	PRD domain: wal	#1d76db
+domain:pay	PRD domain: pay	#1d76db
+domain:biz	PRD domain: biz	#1d76db
+domain:rem	PRD domain: rem	#1d76db
+domain:stb	PRD domain: stb	#1d76db
+domain:exc	PRD domain: exc	#1d76db
+domain:inc	PRD domain: inc	#1d76db
+domain:int	PRD domain: int	#1d76db
+domain:cmp	PRD domain: cmp	#1d76db
+domain:adm	PRD domain: adm	#1d76db
+domain:ops	PRD domain: ops	#1d76db
+domain:demo	PRD domain: demo	#1d76db
+phase:0	Implementation phase 0	#5319e7
+phase:1	Implementation phase 1	#5319e7
+phase:2	Implementation phase 2	#5319e7
+phase:3	Implementation phase 3	#5319e7
+phase:4	Implementation phase 4	#5319e7
+phase:5	Implementation phase 5	#5319e7
+phase:6	Implementation phase 6	#5319e7
+phase:7	Implementation phase 7	#5319e7
+phase:8	Implementation phase 8	#5319e7
+phase:9	Implementation phase 9	#5319e7
+phase:10	Implementation phase 10	#5319e7
+phase:11	Implementation phase 11	#5319e7
+phase:12	Implementation phase 12	#5319e7
+gate:0	Gate 0	#0e8a16
+gate:1	Gate 1	#0e8a16
+gate:2	Gate 2	#0e8a16
+gate:3	Gate 3	#0e8a16
+gate:4	Gate 4	#0e8a16
+gate:5	Gate 5	#0e8a16
+stop-work	Stop-work trigger (plan Part I.6)	#b60205

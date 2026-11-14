@@ -251,7 +251,7 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
 
 **Independent Test**: The label count matches the quickstart (§6), a sample chain is visible on the board, and the checker reports C-13 PASS in gate mode.
 
-- [ ] T057 [P] [US7] Create `scripts/governance/labels.sh`, which is idempotent and uses `gh label create --force` with values loaded from `team.env`. It creates:
+- [X] T057 [P] [US7] Create `scripts/governance/labels.sh`, which is idempotent and uses `gh label create --force` with values loaded from `team.env`. It creates:
   - `P0`, `P1`, `P2`
   - `domain:led`, `domain:txn`, `domain:acc`, `domain:sec`, `domain:aud`, `domain:wal`, `domain:pay`, `domain:biz`, `domain:rem`, `domain:stb`, `domain:exc`, `domain:inc`, `domain:int`, `domain:cmp`, `domain:ops`, `domain:adm`, `domain:demo`
   - `phase:0` … `phase:12`
@@ -273,11 +273,11 @@ description: "Task list for 000-governance-baseline (Phase 0 — Setup, Governan
   5. Set each issue's `Level` field.
 
   Record the project URL and issue numbers in `docs/evidence/phase-0/backlog.md`.
-- [ ] T059 [P] [US7] Create `docs/adr/ADR-001-modular-monolith.md`, `docs/adr/ADR-002-typescript-monorepo.md` and `docs/adr/ADR-003-money-minor-units.md`.
-- [ ] T060 [P] [US7] Create `docs/adr/ADR-004-double-entry-ledger.md`, `docs/adr/ADR-005-ledger-concurrency.md` and `docs/adr/ADR-006-idempotency.md`.
-- [ ] T061 [P] [US7] Create `docs/adr/ADR-007-txn-state-machines.md`, `docs/adr/ADR-008-transactional-outbox.md` and `docs/adr/ADR-009-adapter-registry-egress.md`.
-- [ ] T062 [P] [US7] Create `docs/adr/ADR-010-identity-keycloak.md`, `docs/adr/ADR-011-tenant-isolation.md` and `docs/adr/ADR-012-audit-hash-chain.md`.
-- [ ] T063 [P] [US7] Create `docs/adr/ADR-013-determinism.md`, `docs/adr/ADR-014-design-tokens.md` and `docs/adr/ADR-015-mobile-expo.md`.
+- [X] T059 [P] [US7] Create `docs/adr/ADR-001-modular-monolith.md`, `docs/adr/ADR-002-typescript-monorepo.md` and `docs/adr/ADR-003-money-minor-units.md`.
+- [X] T060 [P] [US7] Create `docs/adr/ADR-004-double-entry-ledger.md`, `docs/adr/ADR-005-ledger-concurrency.md` and `docs/adr/ADR-006-idempotency.md`.
+- [X] T061 [P] [US7] Create `docs/adr/ADR-007-txn-state-machines.md`, `docs/adr/ADR-008-transactional-outbox.md` and `docs/adr/ADR-009-adapter-registry-egress.md`.
+- [X] T062 [P] [US7] Create `docs/adr/ADR-010-identity-keycloak.md`, `docs/adr/ADR-011-tenant-isolation.md` and `docs/adr/ADR-012-audit-hash-chain.md`.
+- [X] T063 [P] [US7] Create `docs/adr/ADR-013-determinism.md`, `docs/adr/ADR-014-design-tokens.md` and `docs/adr/ADR-015-mobile-expo.md`.
 - [X] T064 [P] [US7] Create `scripts/governance/checks/c13-adrs.sh`, defining `check_c13` (C-13). In gate mode it requires exactly 15 files matching `docs/adr/ADR-0[01][0-9]-*.md`, numbered 001 to 015. In all modes, each existing ADR file must have line 2 `Status: (Proposed|Accepted|Superseded by ADR-[0-9]{3})` and the six `##` sections in contract order, each non-empty.
 - [ ] T065 [US7] Run the checker in gate mode for C-13. Open PR "Backlog labels, project evidence, ADR drafts" containing `scripts/governance/labels.sh`, `docs/evidence/phase-0/labels.txt`, `docs/evidence/phase-0/backlog.md`, `docs/adr/ADR-001`…`ADR-015` and `scripts/governance/checks/c13-adrs.sh`. **HUMAN (sponsor)**: approve and merge. **Solo mode (clarified 2026-11-14):** no approval step; merge once the checks pass.
 
