@@ -322,7 +322,7 @@ The ADR tasks T059 to T063 each follow the plan Part J.4 template, using the hea
 - [X] T070 [P] Create `specs/README.md`, a feature-number map. It should note that `000-governance-baseline` is Phase 0, and that later Spec Kit numbers follow plan §J.11. Any mismatch between the auto-assigned number and J.11 is recorded here.
 - [X] T071 [P] Update `specs/000-governance-baseline/spec.md`, changing `**Status**: Draft` to `**Status**: Accepted (Gate 0/A passed <date>)`.
 - [X] T072 [P] Open backlog issue "Port governance checker to monorepo tooling" (labels `phase:2`, `P1`), referencing feature 001, so that C-1 to C-17 move into the TypeScript CI stage (plan §I.4, *safety* stage) without being lost. Add the issue number to `docs/evidence/phase-0/backlog.md`.
-- [ ] T073 Run every step of [quickstart.md](./quickstart.md) from §1 to §8 on a clean clone in a different folder (`git clone … C:\dev\pdfe-verify`), and confirm that each expected result holds. Record the outcome in `docs/evidence/phase-0/quickstart-run.md` and merge it through a PR approved by the sponsor.
+- [X] T073 Run every step of [quickstart.md](./quickstart.md) from §1 to §8 on a clean clone in a different folder (`git clone … C:\dev\pdfe-verify`), and confirm that each expected result holds. Record the outcome in `docs/evidence/phase-0/quickstart-run.md` and merge it through a PR approved by the sponsor.
 
 ---
 
