@@ -1,0 +1,14 @@
+# P-3 (solo mode): failing check blocks merge
+
+Throwaway PR: https://github.com/waseemIkhlaif/pdfe/pull/7 (adds a non-allowlisted URL so check C-9 fails).
+
+$ gh pr checks 7
+governance-check	fail	4s
+secret-scan	pass	14s
+
+$ gh pr merge 7 --squash
+X Pull request waseemIkhlaif/pdfe#7 is not mergeable: the base branch policy prohibits the merge.
+
+Result: merge blocked while governance-check fails. PR closed unmerged.
+
+# P-4 self-approval: not applicable (solo mode; the ruleset requires 0 approvals).

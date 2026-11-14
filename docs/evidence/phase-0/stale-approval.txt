@@ -1,0 +1,3 @@
+# P-5 / P-6
+
+Not applicable (solo mode): the ruleset requires no approvals and no code-owner review, so there are no approvals to go stale and no separate required reviewer (P-5, P-6).
