@@ -1,50 +1,57 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# PDFE Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Simulation Boundary First
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+DEMO mode is the only supported mode. No code path may reach real banks, payment rails, blockchains (mainnet or public testnet), custody, identity verification, sanctions providers or market data. External dependencies are mock adapters only; unknown adapter types fail closed at startup. Outbound network is denied by default. Real URLs, credentials, private keys, RPC endpoints and real personal data are forbidden in the repository and are blocked by CI.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Ledger Is the Source of Truth
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+All value lives in an immutable, balanced double-entry ledger per currency and legal entity. Posted entries are never updated or deleted; corrections are compensating entries. No value is created except by documented synthetic funding or authorized simulated issuance. Balances are never inferred from frontend state.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Money Safety
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Money is integer minor units (bigint / NUMERIC(38,0)). Floating point is forbidden in money paths. Rounding is explicit and residues post to named accounts.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Idempotency and Explicit State
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Every mutating command takes an idempotency key. Transactions follow typed state machines; illegal transitions are rejected; retries never double-post.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Security, Tenancy and Separation of Duties
+
+Least privilege RBAC, tenant isolation (RLS + guards), MFA for privileged roles, maker-checker for high-risk actions; no one approves their own request; no single role can alter journals, approve issuance and erase audit.
+
+### VI. Auditability and Traceability
+
+Every privileged or financial action records actor, reason, timestamp, correlation ID and approval. Audit is append-only and tamper-evident. Every feature maps PRD ID → spec → ADR → tasks → tests → demo evidence.
+
+### VII. Test-First for P0
+
+P0 work requires positive and negative acceptance tests; financial stories require property-based tests and an accounting mapping reviewed before implementation. Tests are never deleted or weakened to make a build pass.
+
+### VIII. Honest Representation
+
+Every screen, export, statement and dashboard is labeled "SIMULATION — NOT REAL MONEY / محاكاة — ليست أموالاً حقيقية". PSH is a placeholder for a proposed instrument, never presented as approved, issued or redeemable. Figures are illustrative and configurable. Modeled impact is never presented as observed impact.
+
+### IX. Inclusive by Default
+
+Arabic (RTL) and English (LTR) are first-class; WCAG 2.2 AA is the target; every view has empty, loading, error and permission-denied states.
+
+### X. Reproducibility
+
+Deterministic seeds, injected clock/ID/random, versioned fixtures and migrations; a fresh environment can be built, seeded and reset with one command.
+
+### XI. Simplicity
+
+Modular monolith; no new service, dependency or pattern without an ADR. Governance: amendments require an ADR approved by the engineering lead and security lead; the constitution overrides any spec or plan; /speckit.analyze must report no constitution violations before /speckit.implement.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other practices. Every `/speckit-plan` and `/speckit-analyze` run MUST check the work against these articles; a conflict is a CRITICAL finding and is resolved by changing the work, not by silently reinterpreting an article.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Amendments**: an amendment requires an ADR approved by the engineering lead and the security lead, a version bump, and a pull request that updates this file.
+
+**Solo mode**: while one person holds every role, Article V (maker-checker) and the two-approver amendment rule are met only formally. The recorded exception, its compensating controls and its end condition are in `docs/governance/solo-mode-exception.md`.
+
+**Version**: 1.0.0 | **Ratified**: 2026-11-14 | **Last Amended**: 2026-11-14
