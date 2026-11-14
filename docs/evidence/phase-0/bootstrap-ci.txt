@@ -1,0 +1,3 @@
+completed	success	chore: bootstrap governance baseline (unprotected bootstrap commit)	governance	main	push	43642295941	12s	2026-11-14T21:20:31Z
+secret-scan success
+governance-check success
