@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "PDFE Demo",
+    "slug": "pdfe-demo",
+    "version": "0.2.0",
+    "scheme": "pdfe",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-router"],
+    "android": { "package": "org.pdfe.demo" },
+    "ios": { "bundleIdentifier": "org.pdfe.demo" },
+    "extra": { "profile": "demo" }
+  }
+}

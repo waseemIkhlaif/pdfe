@@ -38,35 +38,35 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 **Purpose**: the workspace, the toolchain and the custom lint rules.
 
-- [ ] T001 Check TypeScript 7 for NestJS: in a scratch directory, compile one NestJS controller that uses constructor injection, with `experimentalDecorators` and `emitDecoratorMetadata`, using TypeScript 7.x. If the emitted metadata is right, pin 7.x; otherwise pin the newest 6.x. Record the outcome and the reason under "Implementation notes (Phase 2)" in `docs/adr/ADR-002-typescript-monorepo.md`
-- [ ] T002 Create the root `package.json` with these fields:
+- [X] T001 Check TypeScript 7 for NestJS: in a scratch directory, compile one NestJS controller that uses constructor injection, with `experimentalDecorators` and `emitDecoratorMetadata`, using TypeScript 7.x. If the emitted metadata is right, pin 7.x; otherwise pin the newest 6.x. Record the outcome and the reason under "Implementation notes (Phase 2)" in `docs/adr/ADR-002-typescript-monorepo.md`
+- [X] T002 Create the root `package.json` with these fields:
   - `"private": true`, `"packageManager": "pnpm@11.0.9"`, `"engines": { "node": ">=22" }`;
   - every script listed in `specs/001-platform-foundation/contracts/runtime-config.md` §Root commands, plus `egress:probe` and `totp`.
 
   Also create `pnpm-workspace.yaml` (members `apps/*`, `packages/*`, `tests/*`, `scripts/design/render`; move the `allowBuilds` policy from `packages/design-tokens/pnpm-workspace.yaml` here) and `turbo.json` (pipelines `build`, `lint`, `typecheck`, `test:unit`, `test:int`, each with its outputs)
-- [ ] T003 Bring `packages/design-tokens` (`@pdfe/design-tokens`) and `scripts/design/render` (`@pdfe/design-render`) into the workspace:
+- [X] T003 Bring `packages/design-tokens` (`@pdfe/design-tokens`) and `scripts/design/render` (`@pdfe/design-render`) into the workspace:
   - delete their own `pnpm-lock.yaml` and `pnpm-workspace.yaml`;
   - run `pnpm install` at the root to produce the single `pnpm-lock.yaml`;
   - in `.github/workflows/governance.yml`, change the `design-check` job to one root `pnpm install --frozen-lockfile`, followed by `pnpm --filter @pdfe/design-tokens test|build|verify` and `pnpm --filter @pdfe/design-render verify`.
 
   Confirm that `bash scripts/design/check-design.sh` and `bash scripts/design/tests/run.sh` still pass
-- [ ] T004 [P] Create `packages/config` (`@pdfe/config`): `eslint.config.base.mjs` (typescript-eslint strict, import order), `tsconfig.base.json` (strict, `target` as chosen in T001, decorators enabled), `prettier.config.mjs`. Add the root `eslint.config.mjs`, `tsconfig.json` and `prettier.config.mjs` that re-export them, plus `.prettierignore` (lockfile, `dist/`, `.next/`, `docs/design/packages/**`)
-- [ ] T005 [P] Extend `.gitattributes` with `eol=lf` for `*.sh`, `*.sql`, `Dockerfile*`, `*.Dockerfile`, `.env.example`, `Caddyfile` and `db/seeds/scenarios/**/*.yaml`. Keep the existing `SHA256SUMS`, PDF and PNG rules unchanged
-- [ ] T006 [P] Extend `.gitignore` with `.turbo/`, `.next/`, `.expo/`, `apps/mobile/android/`, `apps/mobile/ios/`, `playwright-report/`, `test-results/` and `/egress-report.txt`. Create `.dockerignore` with `node_modules`, `.git`, `**/.next`, `**/dist`, `.env*` (but not `.env.example`), `coverage`, `docs/design/packages`
-- [ ] T007 [P] Create `.env.example` with placeholder values for every variable in `contracts/runtime-config.md` §Environment variables. Secrets are written as `<generated>`. Hosts are only Compose service names, `localhost` and `10.0.2.2`
-- [ ] T008 [P] Create `packages/test-kit` (`@pdfe/test-kit`) with `vitest.base.ts` (shared Vitest config, fast-check in reduced mode when `CI_REDUCED=1`) and `src/containers.ts`, which starts PostgreSQL 16 and Redis 7 through Testcontainers and returns connection URLs
-- [ ] T009 [P] Create `docs/security/dependency-exceptions.md` with an empty table (columns: package, advisory ID, severity, reason, dated expiry, attested by) and a short rule: an entry needs a dated expiry of 90 days at most
-- [ ] T010 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-nondeterminism.test.ts`:
+- [X] T004 [P] Create `packages/config` (`@pdfe/config`): `eslint.config.base.mjs` (typescript-eslint strict, import order), `tsconfig.base.json` (strict, `target` as chosen in T001, decorators enabled), `prettier.config.mjs`. Add the root `eslint.config.mjs`, `tsconfig.json` and `prettier.config.mjs` that re-export them, plus `.prettierignore` (lockfile, `dist/`, `.next/`, `docs/design/packages/**`)
+- [X] T005 [P] Extend `.gitattributes` with `eol=lf` for `*.sh`, `*.sql`, `Dockerfile*`, `*.Dockerfile`, `.env.example`, `Caddyfile` and `db/seeds/scenarios/**/*.yaml`. Keep the existing `SHA256SUMS`, PDF and PNG rules unchanged
+- [X] T006 [P] Extend `.gitignore` with `.turbo/`, `.next/`, `.expo/`, `apps/mobile/android/`, `apps/mobile/ios/`, `playwright-report/`, `test-results/` and `/egress-report.txt`. Create `.dockerignore` with `node_modules`, `.git`, `**/.next`, `**/dist`, `.env*` (but not `.env.example`), `coverage`, `docs/design/packages`
+- [X] T007 [P] Create `.env.example` with placeholder values for every variable in `contracts/runtime-config.md` §Environment variables. Secrets are written as `<generated>`. Hosts are only Compose service names, `localhost` and `10.0.2.2`
+- [X] T008 [P] Create `packages/test-kit` (`@pdfe/test-kit`) with `vitest.base.ts` (shared Vitest config, fast-check in reduced mode when `CI_REDUCED=1`) and `src/containers.ts`, which starts PostgreSQL 16 and Redis 7 through Testcontainers and returns connection URLs
+- [X] T009 [P] Create `docs/security/dependency-exceptions.md` with an empty table (columns: package, advisory ID, severity, reason, dated expiry, attested by) and a short rule: an entry needs a dated expiry of 90 days at most
+- [X] T010 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-nondeterminism.test.ts`:
   - `Date.now()`, `new Date()` without arguments, `Math.random()` and `crypto.randomUUID()` are reported in any file outside `packages/platform-core/`;
   - `new Date(value)` is allowed;
   - files under `packages/platform-core/` are allowed
-- [ ] T011 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-physical-css.test.ts`:
+- [X] T011 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-physical-css.test.ts`:
   - reported: Tailwind classes `ml-*`, `mr-*`, `pl-*`, `pr-*`, `left-*`, `right-*`, `text-left`, `text-right`, `rounded-l*`, `rounded-r*`, `border-l*`, `border-r*`, and style keys `marginLeft`, `marginRight`, `paddingLeft`, `paddingRight`, `left`, `right`;
   - allowed: `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`, `text-start`, `text-end`
-- [ ] T012 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-hardcoded-ui-string.test.ts`:
+- [X] T012 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-hardcoded-ui-string.test.ts`:
   - reported: a JSX text literal or string literal in `aria-label`, `title`, `placeholder` or `alt` in `apps/web-*/app/**`, `apps/mobile/app/**`, `packages/ui-web/src/**` or `packages/ui-native/src/**`;
   - allowed: `t('…')` calls, `data-testid`, and whitespace-only text
-- [ ] T013 Implement the three rules in `packages/config/eslint/rules/{no-nondeterminism,no-physical-css,no-hardcoded-ui-string}.js` and enable them in `packages/config/eslint.config.base.mjs` (depends on T010–T012). Make the tests in T010–T012 pass
+- [X] T013 Implement the three rules in `packages/config/eslint/rules/{no-nondeterminism,no-physical-css,no-hardcoded-ui-string}.js` and enable them in `packages/config/eslint.config.base.mjs` (depends on T010–T012). Make the tests in T010–T012 pass
 
 ---
 
@@ -78,33 +78,33 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests first
 
-- [ ] T014 [P] Write `packages/platform-core/test/clock.test.ts`:
+- [X] T014 [P] Write `packages/platform-core/test/clock.test.ts`:
   - `SystemClock` returns the current time;
   - `ScenarioClock(base, stepMs)` starts at `base`, advances only on `advance()` or `tick()` by `stepMs`, and two instances with the same base give the same sequence
-- [ ] T015 [P] Write `packages/platform-core/test/ids.test.ts`:
+- [X] T015 [P] Write `packages/platform-core/test/ids.test.ts`:
   - every ID is a valid UUIDv7 (version and variant bits);
   - IDs from one generator increase monotonically;
   - with fast-check: the same seed and the same `ScenarioClock` give an identical ID sequence, and different seeds give different sequences
-- [ ] T016 [P] Write `packages/platform-core/test/random.test.ts`: the seeded `RandomService` (xoroshiro128+) gives the same sequence for the same seed and different sequences for different seeds; `int(min, max)` stays in range (fast-check)
-- [ ] T017 [P] Write `packages/platform-core/test/canonical-json.test.ts` with RFC 8785 vectors: key ordering by UTF-16 code units, number serialization, string escaping, nested arrays; `sha256Hex(canonicalJson(x))` is stable
-- [ ] T018 [P] Write `packages/platform-core/test/errors.test.ts`: `toEnvelope(err, correlationId)` gives `{ error: { code, message_key: "errors.<code_lower>", correlation_id } }`, plus `details` only for validation errors; unknown errors map to `INTERNAL` without leaking the message
-- [ ] T019 [P] Write `packages/platform-core/test/correlation.test.ts`:
+- [X] T016 [P] Write `packages/platform-core/test/random.test.ts`: the seeded `RandomService` (xoroshiro128+) gives the same sequence for the same seed and different sequences for different seeds; `int(min, max)` stays in range (fast-check)
+- [X] T017 [P] Write `packages/platform-core/test/canonical-json.test.ts` with RFC 8785 vectors: key ordering by UTF-16 code units, number serialization, string escaping, nested arrays; `sha256Hex(canonicalJson(x))` is stable
+- [X] T018 [P] Write `packages/platform-core/test/errors.test.ts`: `toEnvelope(err, correlationId)` gives `{ error: { code, message_key: "errors.<code_lower>", correlation_id } }`, plus `details` only for validation errors; unknown errors map to `INTERNAL` without leaking the message
+- [X] T019 [P] Write `packages/platform-core/test/correlation.test.ts`:
   - accepted: values matching `^[A-Za-z0-9._-]{8,64}$`;
   - replaced by `COR-<uuidv7>`: values that are too short, too long or contain other characters;
   - `runWithContext` and `getContext` keep values across `await`
-- [ ] T020 [P] Write `packages/platform-core/test/migrate.int.test.ts` (Testcontainers Postgres):
+- [X] T020 [P] Write `packages/platform-core/test/migrate.int.test.ts` (Testcontainers Postgres):
   - applies files in name order and records `filename` and `sha256` in `platform.schema_migrations`;
   - a second run applies nothing;
   - a changed applied file makes the runner exit non-zero, naming the file;
   - a failing file rolls back only itself
-- [ ] T021 [P] Write `apps/api/test/health.e2e.spec.ts` (Nest testing module and supertest):
+- [X] T021 [P] Write `apps/api/test/health.e2e.spec.ts` (Nest testing module and supertest):
   - `GET /v1/health` returns 200 with `"mode":"DEMO"`;
   - every response has `X-PDFE-Mode: DEMO`;
   - a valid `X-Correlation-Id` is echoed and an invalid one is replaced;
   - an unknown route returns 404 in the error envelope;
   - `GET /v1/meta` returns the version
-- [ ] T022 [P] Write `apps/mock-hub/test/ping.spec.ts`: `GET /mock/{kind}/ping` returns 200 for each of bank, psp, chain, kyc, sanctions, fx, price and notification, and 404 for any other kind
-- [ ] T023 [P] Write `packages/domain-types/test/config-registry.test.ts`:
+- [X] T022 [P] Write `apps/mock-hub/test/ping.spec.ts`: `GET /mock/{kind}/ping` returns 200 for each of bank, psp, chain, kyc, sanctions, fx, price and notification, and 404 for any other kind
+- [X] T023 [P] Write `packages/domain-types/test/config-registry.test.ts`:
   - every default validates against its Zod schema;
   - the safety-locked set is exactly `app.mode`, `adapters.allowlist`, `egress.internal_hosts`;
   - every key ending in `_minor` is an integer schema with a minimum of 0;
@@ -112,11 +112,11 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation
 
-- [ ] T024 [P] Implement `packages/platform-core/src/clock.ts` (`ClockService` interface, `SystemClock`, `ScenarioClock`), the only file allowed to call `Date.now()`. Create `packages/platform-core/package.json` (`@pdfe/platform-core`) and `src/index.ts`
-- [ ] T025 [P] Implement `packages/platform-core/src/random.ts`: `RandomService` with `SeededRandom` (`pure-rand` xoroshiro128+) and `SystemRandom` (crypto)
-- [ ] T026 Implement `packages/platform-core/src/ids.ts`: `IdGenerator`, which builds a UUIDv7 from the `ClockService` time and `RandomService` bytes, monotonic within a millisecond (depends on T024, T025)
-- [ ] T027 [P] Implement `packages/platform-core/src/canonical-json.ts` (RFC 8785) and `packages/platform-core/src/hash.ts` (`sha256Hex`)
-- [ ] T028 [P] Implement `packages/platform-core/src/errors.ts` (`AppError`, `toEnvelope`) and `packages/domain-types/src/error-codes.ts`. The codes list holds every code named in `contracts/http-api.md`:
+- [X] T024 [P] Implement `packages/platform-core/src/clock.ts` (`ClockService` interface, `SystemClock`, `ScenarioClock`), the only file allowed to call `Date.now()`. Create `packages/platform-core/package.json` (`@pdfe/platform-core`) and `src/index.ts`
+- [X] T025 [P] Implement `packages/platform-core/src/random.ts`: `RandomService` with `SeededRandom` (`pure-rand` xoroshiro128+) and `SystemRandom` (crypto)
+- [X] T026 Implement `packages/platform-core/src/ids.ts`: `IdGenerator`, which builds a UUIDv7 from the `ClockService` time and `RandomService` bytes, monotonic within a millisecond (depends on T024, T025)
+- [X] T027 [P] Implement `packages/platform-core/src/canonical-json.ts` (RFC 8785) and `packages/platform-core/src/hash.ts` (`sha256Hex`)
+- [X] T028 [P] Implement `packages/platform-core/src/errors.ts` (`AppError`, `toEnvelope`) and `packages/domain-types/src/error-codes.ts`. The codes list holds every code named in `contracts/http-api.md`:
   - general: `FORBIDDEN`, `UNAUTHENTICATED`, `MFA_REQUIRED`, `NOT_FOUND`, `VALIDATION_FAILED`, `RATE_LIMITED`, `INTERNAL`;
   - idempotency: `IDEMPOTENCY_KEY_REQUIRED`, `IDEMPOTENCY_KEY_REUSED`, `IDEMPOTENCY_IN_PROGRESS`;
   - approvals and IAM: `SELF_APPROVAL`, `NOT_PENDING`, `EXPIRED`, `PAYLOAD_CHANGED`, `SOD_CONFLICT`, `ELEVATION_ACTIVE`, `ELEVATION_READ_ONLY`;
@@ -125,24 +125,24 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - adapters: `LIVE_ADAPTER_DISABLED`.
 
   Create `packages/domain-types/package.json` (`@pdfe/domain-types`)
-- [ ] T029 [P] Implement `packages/platform-core/src/correlation.ts` (AsyncLocalStorage context `{ correlationId, tenantId?, actorId?, elevationId? }`, `acceptOrGenerate(header)`)
-- [ ] T030 [P] Implement `packages/platform-core/src/sim-label.ts`. It exports `SIM_LABEL_EN = "SIMULATION — NOT REAL MONEY"`, `SIM_LABEL_AR = "محاكاة — ليست أموالاً حقيقية"` and `SIM_LABEL = "<en> / <ar>"`, and is the single source of the label text for every later task
-- [ ] T031 Implement `packages/domain-types/src/config-registry.ts` with every key, Zod schema, default and `safetyLocked` flag from `contracts/events-and-config.md`, plus a `ConfigReader` interface and a `DefaultsConfigReader` (the database-backed reader comes in US7) (depends on T023)
-- [ ] T032 Implement the migration runner in `packages/platform-core/src/migrate/{runner.ts,cli.ts}`:
+- [X] T029 [P] Implement `packages/platform-core/src/correlation.ts` (AsyncLocalStorage context `{ correlationId, tenantId?, actorId?, elevationId? }`, `acceptOrGenerate(header)`)
+- [X] T030 [P] Implement `packages/platform-core/src/sim-label.ts`. It exports `SIM_LABEL_EN = "SIMULATION — NOT REAL MONEY"`, `SIM_LABEL_AR = "محاكاة — ليست أموالاً حقيقية"` and `SIM_LABEL = "<en> / <ar>"`, and is the single source of the label text for every later task
+- [X] T031 Implement `packages/domain-types/src/config-registry.ts` with every key, Zod schema, default and `safetyLocked` flag from `contracts/events-and-config.md`, plus a `ConfigReader` interface and a `DefaultsConfigReader` (the database-backed reader comes in US7) (depends on T023)
+- [X] T032 Implement the migration runner in `packages/platform-core/src/migrate/{runner.ts,cli.ts}`:
   - it reads `db/migrations/*.sql` in name order and applies each file in its own transaction;
   - it records SHA-256 hashes and refuses changed files;
   - it connects with `MIGRATOR_DATABASE_URL`;
   - it has a `--check` mode that only verifies.
 
   Make T020 pass (depends on T027)
-- [ ] T033 Create `infra/postgres/init/01-roles.sh`. On first start it creates the login roles `migrator_role` and `app_role` (NOBYPASSRLS), and the roles `readonly_role` and `demo_reset_role`, with passwords from the environment. Then it creates the database `pdfe`, owned by `migrator_role`
-- [ ] T034 Write `db/migrations/0001_platform.sql`:
+- [X] T033 Create `infra/postgres/init/01-roles.sh`. On first start it creates the login roles `migrator_role` and `app_role` (NOBYPASSRLS), and the roles `readonly_role` and `demo_reset_role`, with passwords from the environment. Then it creates the database `pdfe`, owned by `migrator_role`
+- [X] T034 Write `db/migrations/0001_platform.sql`:
   - `CREATE EXTENSION pgcrypto`;
   - schemas `platform`, `iam`, `audit`, `config`, `demo`, `integration`, with `USAGE` for `app_role` and `readonly_role`;
   - `platform.tenants`, `platform.legal_entities` and `platform.organizations`, following `data-model.md` (including `is_synthetic` CHECK, UNIQUE (`tenant_id`, `code`) and `version`);
   - grants for `app_role`
-- [ ] T035 Implement `packages/platform-core/src/db/{pool.ts,tx.ts}`. `withTx(ctx, fn, { readOnly? })` opens a transaction, runs `SET LOCAL app.tenant_id`, `app.correlation_id` and optionally `app.elevation_id`, and sets `READ ONLY` when asked. It exposes a Drizzle instance on the transaction
-- [ ] T036 Create the `apps/api` skeleton (`@pdfe/api`, NestJS, port 4000):
+- [X] T035 Implement `packages/platform-core/src/db/{pool.ts,tx.ts}`. `withTx(ctx, fn, { readOnly? })` opens a transaction, runs `SET LOCAL app.tenant_id`, `app.correlation_id` and optionally `app.elevation_id`, and sets `READ ONLY` when asked. It exposes a Drizzle instance on the transaction
+- [X] T036 Create the `apps/api` skeleton (`@pdfe/api`, NestJS, port 4000):
   - `src/main.ts`, `src/app.module.ts`;
   - `src/core/core.module.ts`, which provides the `ClockService`, `IdGenerator` and `RandomService` tokens;
   - `src/core/error.filter.ts`, which returns the envelope;
@@ -151,20 +151,20 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `src/db/db.module.ts`, `src/db/schema/platform.ts` (Drizzle).
 
   Depends on T024–T035
-- [ ] T037 Implement `apps/api/src/health/health.controller.ts`:
+- [X] T037 Implement `apps/api/src/health/health.controller.ts`:
   - `GET /v1/health` checks Postgres and Redis and reports `mode` and `adapters` (an empty list until US2);
   - `GET /v1/meta` reports the version from `package.json` and the build SHA from the env.
 
   Make T021 pass
-- [ ] T038 [P] Create the `apps/worker` skeleton (`@pdfe/worker`): `src/main.ts` (NestJS standalone application context), `src/worker.module.ts`, a BullMQ connection from `REDIS_URL`, and a heartbeat log every 60 s
-- [ ] T039 [P] Create the `apps/mock-hub` skeleton (`@pdfe/mock-hub`, port 4100): `src/main.ts` and `src/mocks/ping.controller.ts` for the 8 kinds. Make T022 pass
-- [ ] T040 Create `infra/docker/node-app.Dockerfile`, one multi-stage Dockerfile driven by `ARG APP`:
+- [X] T038 [P] Create the `apps/worker` skeleton (`@pdfe/worker`): `src/main.ts` (NestJS standalone application context), `src/worker.module.ts`, a BullMQ connection from `REDIS_URL`, and a heartbeat log every 60 s
+- [X] T039 [P] Create the `apps/mock-hub` skeleton (`@pdfe/mock-hub`, port 4100): `src/main.ts` and `src/mocks/ping.controller.ts` for the 8 kinds. Make T022 pass
+- [X] T040 Create `infra/docker/node-app.Dockerfile`, one multi-stage Dockerfile driven by `ARG APP`:
   - `pnpm fetch` and `pnpm deploy --filter @pdfe/$APP` in the build stage;
   - a non-root user and the Node 22 slim runtime;
   - a `HEALTHCHECK` per app.
 
   It is used by api, worker, mock-hub and the web apps
-- [ ] T041 Create `infra/docker-compose.yml` (base):
+- [X] T041 Create `infra/docker-compose.yml` (base):
   - `postgres:16` with `infra/postgres/init` mounted and a healthcheck;
   - `redis:7`;
   - a one-shot `migrate` service running the runner;
@@ -184,12 +184,12 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 1 ⚠️ (write first, must fail)
 
-- [ ] T042 [P] [US1] Write `scripts/smoke.mjs`, the smoke test used by the fresh-clone job and `pnpm dev:all`:
+- [X] T042 [P] [US1] Write `scripts/smoke.mjs`, the smoke test used by the fresh-clone job and `pnpm dev:all`:
   - for ports 3001–3006, `GET /ar/sign-in` returns 200 and the HTML contains both `SIM_LABEL_EN` and `SIM_LABEL_AR`;
   - `GET http://localhost:4000/v1/health` reports `mode: DEMO`;
   - the exit code is non-zero, with the failing URL named
-- [ ] T043 [P] [US1] Write `packages/ui-web/test/SimulationBanner.test.tsx` (Vitest and Testing Library): the minimal banner renders `role="status"`, `data-sim="1"` and the exact text from `@pdfe/platform-core` `sim-label`
-- [ ] T044 [P] [US1] Write `scripts/test/bootstrap.test.mjs` (`node:test`), with the checks injected:
+- [X] T043 [P] [US1] Write `packages/ui-web/test/SimulationBanner.test.tsx` (Vitest and Testing Library): the minimal banner renders `role="status"`, `data-sim="1"` and the exact text from `@pdfe/platform-core` `sim-label`
+- [X] T044 [P] [US1] Write `scripts/test/bootstrap.test.mjs` (`node:test`), with the checks injected:
   - `bootstrap` fails with a clear message when Node is below 22, pnpm is not 11.0.9, or Docker is missing;
   - it creates `.env` from `.env.example` with fresh random values for every `<generated>`;
   - it never overwrites an existing `.env`;
@@ -197,19 +197,19 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation for User Story 1
 
-- [ ] T045 [US1] Create `packages/ui-web` (`@pdfe/ui-web`): `src/SimulationBanner.tsx` (the minimal banner: bilingual text from `sim-label`, no props, sticky at the top) and `src/index.ts`. Make T043 pass
-- [ ] T046 [US1] Create `apps/web-consumer` (Next.js 16 App Router, port 3001):
+- [X] T045 [US1] Create `packages/ui-web` (`@pdfe/ui-web`): `src/SimulationBanner.tsx` (the minimal banner: bilingual text from `sim-label`, no props, sticky at the top) and `src/index.ts`. Make T043 pass
+- [X] T046 [US1] Create `apps/web-consumer` (Next.js 16 App Router, port 3001):
   - `next.config.ts` (`output: 'standalone'`);
   - `app/[locale]/layout.tsx`, which renders `<SimulationBanner/>` outside `{children}` and sets `<html lang dir>` for `ar` (default) and `en`;
   - placeholder `page.tsx` files for `app/[locale]/page.tsx` and `app/[locale]/sign-in/page.tsx`;
   - `middleware.ts`, which redirects `/` to `/ar`
-- [ ] T047 [P] [US1] Create `apps/web-merchant` (3002), `apps/web-business` (3003), `apps/web-console` (3004), `apps/web-investor` (3005) and `apps/web-devportal` (3006) from the T046 template, with the same files and their own package names and ports (depends on T046)
-- [ ] T048 [P] [US1] Create `packages/ui-native` (`@pdfe/ui-native`) with a minimal `src/SimulationBanner.tsx`. Create `apps/mobile` (Expo SDK 58, Expo Router):
+- [X] T047 [P] [US1] Create `apps/web-merchant` (3002), `apps/web-business` (3003), `apps/web-console` (3004), `apps/web-investor` (3005) and `apps/web-devportal` (3006) from the T046 template, with the same files and their own package names and ports (depends on T046)
+- [X] T048 [P] [US1] Create `packages/ui-native` (`@pdfe/ui-native`) with a minimal `src/SimulationBanner.tsx`. Create `apps/mobile` (Expo SDK 58, Expo Router):
   - `app.json`, with the DEMO profile in `extra`;
   - `app/_layout.tsx`, which renders the banner above the navigator;
   - placeholder screens `app/(tabs)/{index,pay,send,markets,profile}.tsx`
-- [ ] T049 [US1] Add the six web apps to `infra/docker-compose.yml`, built with `infra/docker/node-app.Dockerfile`, with healthchecks and ports 3001–3006 published directly (until US2)
-- [ ] T050 [US1] Implement `scripts/bootstrap.mjs`:
+- [X] T049 [US1] Add the six web apps to `infra/docker-compose.yml`, built with `infra/docker/node-app.Dockerfile`, with healthchecks and ports 3001–3006 published directly (until US2)
+- [X] T050 [US1] Implement `scripts/bootstrap.mjs`:
   - check the prerequisites;
   - `pnpm install --frozen-lockfile`;
   - generate `.env` only if it is missing;
@@ -217,9 +217,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `docker compose -f infra/docker-compose.yml build`.
 
   Wire it to `pnpm bootstrap`. Make T044 pass
-- [ ] T051 [US1] Implement `scripts/dev-all.mjs`: `docker compose -f infra/docker-compose.yml up -d --build --wait`, then run `scripts/smoke.mjs`, then print the URL table. Wire `pnpm dev:all`, `pnpm down` (`compose down`) and `pnpm reset` (`compose down -v`). Implement `pnpm dev` in `scripts/dev.mjs`: infrastructure services in Compose, apps through `turbo dev`. Make T042 pass against the running stack
-- [ ] T052 [US1] Implement `scripts/test-all.mjs` for `pnpm test`: `turbo test:unit`, then `turbo test:int`, then `pnpm --filter @pdfe/e2e-web test` only if `scripts/smoke.mjs` passes. It reports which layers ran
-- [ ] T053 [US1] Implement `scripts/ci/check-dep-exceptions.mjs`, with a `node:test` file `scripts/ci/check-dep-exceptions.test.mjs`. It reads the `pnpm audit --json` and Trivy JSON outputs and fails on any high or critical finding that is not in `docs/security/dependency-exceptions.md` with an unexpired date
+- [X] T051 [US1] Implement `scripts/dev-all.mjs`: `docker compose -f infra/docker-compose.yml up -d --build --wait`, then run `scripts/smoke.mjs`, then print the URL table. Wire `pnpm dev:all`, `pnpm down` (`compose down`) and `pnpm reset` (`compose down -v`). Implement `pnpm dev` in `scripts/dev.mjs`: infrastructure services in Compose, apps through `turbo dev`. Make T042 pass against the running stack
+- [X] T052 [US1] Implement `scripts/test-all.mjs` for `pnpm test`: `turbo test:unit`, then `turbo test:int`, then `pnpm --filter @pdfe/e2e-web test` only if `scripts/smoke.mjs` passes. It reports which layers ran
+- [X] T053 [US1] Implement `scripts/ci/check-dep-exceptions.mjs`, with a `node:test` file `scripts/ci/check-dep-exceptions.test.mjs`. It reads the `pnpm audit --json` and Trivy JSON outputs and fails on any high or critical finding that is not in `docs/security/dependency-exceptions.md` with an unexpired date
 - [ ] T054 [US1] Create `.github/workflows/ci.yml`:
   - triggers: `pull_request`, `push` to `main`, and nightly `schedule`;
   - pnpm pinned explicitly (`corepack prepare pnpm@11.0.9 --activate`) and Node 22;
@@ -228,7 +228,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - a final `ci` job with `needs` on every job and `if: always()`, which fails if any needed job failed or was cancelled.
 
   Follow `contracts/ci-checks.md`
-- [ ] T055 [US1] Write `docs/runbooks/local-setup.md`:
+- [X] T055 [US1] Write `docs/runbooks/local-setup.md`:
   - prerequisites: Windows 11 with Docker Desktop and WSL2, and Linux;
   - bootstrap;
   - the two run modes (`dev:all` versus `dev`) and what each proves;

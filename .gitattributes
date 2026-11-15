@@ -3,3 +3,11 @@ SHA256SUMS text eol=lf
 # Real design exports and baselines are binary evidence; never convert them.
 docs/design/**/*.pdf binary
 docs/design/**/*.png binary
+# Scripts, SQL, container files and manifests must keep LF (shell and checksums break on CRLF).
+*.sh text eol=lf
+*.sql text eol=lf
+Dockerfile* text eol=lf
+*.Dockerfile text eol=lf
+.env.example text eol=lf
+Caddyfile text eol=lf
+db/seeds/scenarios/**/*.yaml text eol=lf

@@ -1,0 +1,36 @@
+{
+  "name": "@pdfe/mock-hub",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Mock partner hub: simulated bank, PSP, chain, KYC, sanctions, FX, price and notification services. Internal only.",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/main.js",
+    "test:unit": "vitest run",
+    "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.5.0",
+    "@nestjs/core": "^12.5.0",
+    "@nestjs/platform-express": "^12.5.0",
+    "@pdfe/domain-types": "workspace:*",
+    "@pdfe/platform-core": "workspace:*",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^12.5.0",
+    "@pdfe/config": "workspace:*",
+    "@pdfe/test-kit": "workspace:*",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/supertest": "^7.2.1",
+    "supertest": "^7.3.2",
+    "vitest": "^5.1.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

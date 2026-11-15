@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", ".next/**", "!.next/cache/**"] },
+    "typecheck": { "dependsOn": ["^build"] },
+    "test:unit": { "dependsOn": ["^build"] },
+    "test:int": { "dependsOn": ["^build"], "cache": false },
+    "dev": { "cache": false, "persistent": true }
+  }
+}
