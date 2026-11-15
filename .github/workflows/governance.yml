@@ -44,8 +44,10 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
-      - name: Install pinned pnpm (packageManager field)
-        run: corepack enable
+      - name: Install pinned pnpm (same version as the packageManager fields)
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
       - name: Design tokens (install, self-test, build, determinism)
         run: |
           pnpm --dir packages/design-tokens install --frozen-lockfile
