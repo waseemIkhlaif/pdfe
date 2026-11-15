@@ -145,7 +145,7 @@ The file starts with these header lines: `**Phase**:`, `**Version**:`, `**Status
 ```
 | Screen ID | Languages | States | Sizes | Spec frame | Baseline |
 ```
-`Baseline` is `done` or `—`. `export/SHA256SUMS` lists every PDF in `export/` in `sha256sum` format.
+`Baseline` is `done` or `—`. `Sizes` lists the sizes that have PNG baselines (a subset of the screen's design sizes; research R-16). `export/SHA256SUMS` lists every PDF in `export/` in `sha256sum` format.
 
 ## 16. Phase 12 QA (`qa/phase-12-*.md`)
 ```

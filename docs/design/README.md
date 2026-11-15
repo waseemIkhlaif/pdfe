@@ -3,6 +3,20 @@
 Index of the PDFE UX/UI design artifacts. Source of truth for what each file must contain:
 `specs/000-ux-design-track/contracts/artifact-formats.md` (AF). Checks: `bash scripts/design/check-design.sh`.
 
+## The prototype (design source)
+
+The screens are an HTML prototype in `prototype/` (research R-16): open `prototype/index.html` in a browser. Pick a screen, switch Arabic or English, the five states (populated, empty, loading, error, permission-denied), the size (360 to 1440) and hi-fi or wireframe mode in its toolbar. Screens are defined in `prototype/data-*.js`; tokens come from `packages/design-tokens`.
+
+```bash
+pnpm --dir packages/design-tokens build          # tokens
+pnpm --dir scripts/design/render install         # once (uses your installed Chrome)
+pnpm --dir scripts/design/render site            # inventory data and token CSS
+pnpm --dir scripts/design/render verify          # every screen, both languages, all states
+pnpm --dir scripts/design/render export          # PDFs, baselines, manifests, copy decks, heuristic reviews
+```
+
+Approvals and reviews are recorded by you with `node scripts/design/attest.mjs` (see its header). Usability testing with people is waived for the first build: `usability/WAIVER.md`.
+
 ## Layout
 
 | Path | Contents |

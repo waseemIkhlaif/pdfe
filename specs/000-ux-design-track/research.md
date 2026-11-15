@@ -155,3 +155,13 @@ Each entry gives the decision, why it was chosen, and what else was considered. 
 
 - **Decision**: Each package is a separate folder and approval row (`phase-07`, `phase-09`, `phase-10`). Shared components that are changed while parallel packages are in progress go through one design-system change (versioned in `docs/design/system/CHANGELOG.md`), which is approved before either package that uses it.
 - **Rationale**: This covers the parallel-phases edge case in the spec without packages conflicting over shared components.
+
+## R-16 Design source: HTML prototype in the repository (amends R-1)
+
+- **Decision**: The screens are designed as a plain HTML, CSS and JavaScript prototype in `docs/design/prototype/` (no framework, no build step, no network). One renderer draws every inventory screen in Arabic (right-to-left) and English, in the five states, in high-fidelity and greyscale wireframe mode, at 360 to 1440 px, using only the token CSS built from `packages/design-tokens`. Layout adapts with container queries, so the same markup serves the clickable prototype, the PDF sheets and the baselines. Figma stays an option for later, but nothing depends on it.
+- **Why**: the agent building the designs cannot operate Figma, the repository is the single source of truth for tokens (R-2), and a code-defined design is reviewed, diffed and checked in CI like everything else.
+- **Tooling**: `scripts/design/render/` holds `prepare.mjs` (inventory data, token CSS), `verify.mjs` (renders every screen in both languages and all states and checks the simulation banner, direction, states, links and values), `export.mjs` (PDF sheets, PNG baselines, manifests, copy decks, heuristic reviews, inventory columns) and `browser.mjs`. The only dependency is `playwright-core` (already in the plan's stack for PDFs and web tests); it drives the system Chrome and downloads no browser.
+- **Baseline sizes**: PNG baselines are kept for two key sizes per interface (CON: 390 and 1280; others: 768 and 1280), both languages, populated state. All five sizes are rendered by the prototype; keeping all of them would add about 70 MB of binaries. The package manifest `Sizes` column lists the sizes that have baselines.
+- **Wireframes**: greyscale mode of the same renderer (`#ID?mode=wire`), exported as one PDF per interface and language in `docs/design/wireframes/`.
+- **Alternatives considered**: Figma (not operable by the agent); Penpot (same); static images (no states or languages from one source).
+- **Consequences**: designers who prefer a visual tool can import the tokens into Figma as before (R-2) and redraw; the prototype stays the reference. The renderer is design tooling, not product code: feature 009 builds the real apps from the approved screens.

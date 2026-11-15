@@ -5,7 +5,7 @@ Built screens are compared automatically with the approved designs, in Arabic an
 ## Baselines
 
 - Location: `docs/design/packages/phase-NN/<latest vN, or the phase folder when there is no vN>/baseline/{ar,en}/<screen-id>@<size>.png`.
-- Sizes: `m360` (360x800) and `m390` (390x844) for mobile; `t768`, `w1280`, `w1440` for tablet and web. The baseline list per screen is in the package manifest (`Sizes` column).
+- Sizes: baselines exist for two key sizes per interface: consumer app `m390` (390x844) and `w1280`; every other interface `t768` and `w1280` (research R-16). The prototype renders all five design sizes (`m360`, `m390`, `t768`, `w1280`, `w1440`); the manifest `Sizes` column lists the sizes that have baselines, and a runner may add more.
 - Baselines are exported from the approved frames, in the approved state (populated unless the screen entry says otherwise), with the SimulationBanner visible.
 - Baseline files are never edited by hand; a change goes through the change process in `docs/design/README.md` (new package version, new approval row).
 

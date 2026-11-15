@@ -52,6 +52,12 @@ jobs:
           pnpm --dir packages/design-tokens test
           pnpm --dir packages/design-tokens build
           pnpm --dir packages/design-tokens verify
+      - name: Design prototype (every screen, both languages, all states; uses the runner's Chrome)
+        run: |
+          pnpm --dir scripts/design/render install --frozen-lockfile
+          node scripts/design/render/prepare.mjs
+          git diff --exit-code -- docs/design/prototype/inventory.js docs/design/prototype/tokens.css
+          pnpm --dir scripts/design/render verify
       - name: Design checker fixture suite
         run: bash scripts/design/tests/run.sh
       - name: Design checks (format mode)
