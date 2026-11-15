@@ -1,0 +1,180 @@
+# Screen list from plan section J.6, decomposed into screens and flow steps. Format: <IF>|<screen name>. Checked by D-3.
+CON|Splash and simulation notice
+CON|Sign-in
+CON|MFA (privileged only)
+CON|Demo role picker
+CON|Language switcher
+CON|App lock
+CON|Error, offline and permission screens
+CON|App shell
+CON|Onboarding – welcome
+CON|Onboarding – personal info
+CON|Onboarding – synthetic document
+CON|Onboarding – simulated selfie
+CON|Onboarding – review
+CON|Onboarding – status
+CON|Home
+CON|Wallet detail
+CON|Add money – enter
+CON|Add money – review
+CON|Add money – result
+CON|Withdraw – enter
+CON|Withdraw – review
+CON|Withdraw – result
+CON|Send – recipient
+CON|Send – amount
+CON|Send – review
+CON|Send – result
+CON|Request money
+CON|Activity list
+CON|Transaction detail
+CON|Statements
+CON|Notifications
+CON|Profile
+CON|Support
+CON|Scan QR
+CON|Pay – review (pay sheet)
+CON|Pay – enter (scan QR)
+CON|Pay – result
+CON|Merchant mode – Charge
+CON|Merchant mode – QR display
+CON|Merchant mode – Today's payments
+CON|Merchant mode – Payment detail
+CON|Merchant mode – Refund – enter
+CON|Merchant mode – Refund – review
+CON|Merchant mode – Refund – result
+CON|Merchant mode – Payouts
+CON|Remittance – receive info
+CON|Remittance – tracking
+CON|Send abroad – enter
+CON|Send abroad – beneficiary
+CON|Send abroad – quote
+CON|Send abroad – review
+CON|Send abroad – result
+CON|Business approvals inbox
+CON|PSH – overview
+CON|PSH convert – enter
+CON|PSH convert – review
+CON|PSH convert – result
+CON|PSH redeem – enter
+CON|PSH redeem – review
+CON|PSH redeem – result
+CON|PSH – history
+CON|Markets
+CON|Pair detail
+CON|Order – enter (order ticket)
+CON|Order – review
+CON|Order – result
+CON|Open orders
+CON|Trades
+CON|Portfolio
+CON|Crypto deposit (sim)
+CON|Crypto withdraw – enter (sim)
+CON|Crypto withdraw – review (sim)
+CON|Crypto withdraw – result (sim)
+CON|Explore partners
+CON|Consent
+CON|Referrals
+MER|App shell
+MER|KYB
+MER|Dashboard
+MER|Create payment and QR
+MER|Static QR
+MER|Payments
+MER|Payment detail
+MER|Refund – enter
+MER|Refund – review
+MER|Refund – result
+MER|Refunds
+MER|Settlements
+MER|Settlement detail
+MER|Payout account
+MER|Staff
+MER|Statements
+MER|Invoices
+BIZ|App shell
+BIZ|Dashboard
+BIZ|Invoices list
+BIZ|Invoice editor
+BIZ|Invoice detail
+BIZ|Customers
+BIZ|Suppliers
+BIZ|Payout request – enter
+BIZ|Payout request – review
+BIZ|Payout request – result
+BIZ|Payouts
+BIZ|Approval inbox
+BIZ|Bank reconciliation
+BIZ|Reports and exports
+BIZ|Team and limits
+BIZ|API keys
+OPS|App shell
+OPS|Scenario controller
+OPS|Home
+OPS|Transaction explorer
+OPS|Queues
+OPS|Transaction detail and trace
+OPS|Settlements overview
+OPS|Partner simulator
+OPS|Reconciliation runs
+OPS|Reconciliation exceptions
+OPS|Market controls
+OPS|Price feed controls
+OPS|Remittance simulator
+OPS|Corridors
+CMP|App shell
+CMP|Onboarding queue
+CMP|Onboarding detail
+CMP|Alerts list
+CMP|Alert detail
+CMP|Cases list
+CMP|Case detail
+CMP|Rules list
+CMP|Rule editor
+CMP|Reports center
+CMP|Audit search
+CMP|Audit verify
+CMP|Audit export
+FIN|App shell
+FIN|Accounts
+FIN|Account detail
+FIN|Journals
+FIN|Journal detail
+FIN|Trial balance
+FIN|General ledger browser
+FIN|Funding request – enter
+FIN|Funding request – review
+FIN|Funding request – result
+FIN|Approvals inbox
+FIN|FX position
+FIN|Close dashboard
+FIN|PSH program
+FIN|PSH reserves
+FIN|PSH issuance – enter
+FIN|PSH issuance – review
+FIN|PSH issuance – result
+FIN|PSH redemptions
+FIN|PSH events
+FIN|PSH reconciliation
+ADM|Users
+ADM|Roles
+ADM|Config list
+ADM|Config history
+ADM|Config diff and approve
+ADM|Config rollback
+ADM|Feature flags
+ADM|Tenants
+INV|App shell
+INV|Landing
+INV|Guided scenarios
+INV|KPIs
+INV|Controls and architecture
+INV|System health
+INV|About the simulation
+DEV|App shell
+DEV|Getting started
+DEV|Auth
+DEV|API reference
+DEV|Webhook catalog
+DEV|Delivery explorer
+DEV|Sandbox

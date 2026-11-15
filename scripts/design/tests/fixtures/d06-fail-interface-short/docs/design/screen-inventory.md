@@ -1,0 +1,33 @@
+| Screen ID | Interface | Name | Phase | Journeys | PRD IDs | Sizes | Money | Skeleton | Wireframe | Hi-fi | States | Frame | Export |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CON-001 | CON | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CON-002 | CON | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CON-003 | CON | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CON-004 | CON | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| MER-001 | MER | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| MER-002 | MER | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| MER-003 | MER | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| BIZ-001 | BIZ | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| BIZ-002 | BIZ | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| BIZ-003 | BIZ | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| BIZ-004 | BIZ | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| OPS-001 | OPS | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| OPS-002 | OPS | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| OPS-003 | OPS | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| OPS-004 | OPS | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CMP-001 | CMP | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CMP-002 | CMP | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CMP-003 | CMP | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| CMP-004 | CMP | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| FIN-001 | FIN | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| FIN-002 | FIN | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| FIN-003 | FIN | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| FIN-004 | FIN | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| INV-001 | INV | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| INV-002 | INV | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| INV-003 | INV | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| INV-004 | INV | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| DEV-001 | DEV | Screen 1 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| DEV-002 | DEV | Screen 2 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| DEV-003 | DEV | Screen 3 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |
+| DEV-004 | DEV | Screen 4 | 2 | J1 | — | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | — |

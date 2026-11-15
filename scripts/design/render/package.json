@@ -1,0 +1,17 @@
+{
+  "name": "@pdfe/design-render",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Builds and exports the PDFE design prototype (inventory data, PDF sheets, screenshot baselines). Uses the system Chrome; downloads no browser.",
+  "engines": { "node": ">=22" },
+  "packageManager": "pnpm@11.0.9",
+  "scripts": {
+    "site": "node prepare.mjs",
+    "verify": "node verify.mjs",
+    "export": "node export.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "1.65.1"
+  }
+}

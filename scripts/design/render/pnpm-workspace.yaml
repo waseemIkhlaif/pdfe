@@ -1,0 +1,2 @@
+# No dependency install scripts are needed; keep them off.
+allowBuilds: {}

@@ -5,3 +5,6 @@ www.w3.org
 
 # reason: GitHub API URLs appear in exported ruleset evidence (ruleset.json)
 api.github.com
+
+# reason: live design-frame links in docs/design (research R-6)
+www.figma.com

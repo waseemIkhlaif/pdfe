@@ -1,0 +1,2 @@
+J1|insufficient balance
+J1|blocked recipient

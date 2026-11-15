@@ -1,0 +1,240 @@
+[
+  {
+    "id": "text-primary-on-default",
+    "fg": "color.text.primary",
+    "bg": "color.surface.default",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-secondary-on-default",
+    "fg": "color.text.secondary",
+    "bg": "color.surface.default",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-primary-on-muted",
+    "fg": "color.text.primary",
+    "bg": "color.surface.muted",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-secondary-on-muted",
+    "fg": "color.text.secondary",
+    "bg": "color.surface.muted",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-primary-on-sunken",
+    "fg": "color.text.primary",
+    "bg": "color.surface.sunken",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-secondary-on-sunken",
+    "fg": "color.text.secondary",
+    "bg": "color.surface.sunken",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-link-on-default",
+    "fg": "color.text.link",
+    "bg": "color.surface.default",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "text-link-on-muted",
+    "fg": "color.text.link",
+    "bg": "color.surface.muted",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "button-primary-label",
+    "fg": "color.brand.onPrimary",
+    "bg": "color.brand.primary",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "focus-ring-on-default",
+    "fg": "color.brand.focus",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "focus-ring-on-muted",
+    "fg": "color.brand.focus",
+    "bg": "color.surface.muted",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "border-strong-on-default",
+    "fg": "color.border.strong",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "success-text-on-bg",
+    "fg": "color.semantic.success.fg",
+    "bg": "color.semantic.success.bg",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "success-label-on-solid",
+    "fg": "color.semantic.success.onSolid",
+    "bg": "color.semantic.success.solid",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "success-solid-on-default",
+    "fg": "color.semantic.success.solid",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "warning-text-on-bg",
+    "fg": "color.semantic.warning.fg",
+    "bg": "color.semantic.warning.bg",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "warning-label-on-solid",
+    "fg": "color.semantic.warning.onSolid",
+    "bg": "color.semantic.warning.solid",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "warning-solid-on-default",
+    "fg": "color.semantic.warning.solid",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "danger-text-on-bg",
+    "fg": "color.semantic.danger.fg",
+    "bg": "color.semantic.danger.bg",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "danger-label-on-solid",
+    "fg": "color.semantic.danger.onSolid",
+    "bg": "color.semantic.danger.solid",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "danger-solid-on-default",
+    "fg": "color.semantic.danger.solid",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "info-text-on-bg",
+    "fg": "color.semantic.info.fg",
+    "bg": "color.semantic.info.bg",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "info-label-on-solid",
+    "fg": "color.semantic.info.onSolid",
+    "bg": "color.semantic.info.solid",
+    "usage": "text",
+    "group": "general"
+  },
+  {
+    "id": "info-solid-on-default",
+    "fg": "color.semantic.info.solid",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-1-on-default",
+    "fg": "color.dataviz.1",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-2-on-default",
+    "fg": "color.dataviz.2",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-3-on-default",
+    "fg": "color.dataviz.3",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-4-on-default",
+    "fg": "color.dataviz.4",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-5-on-default",
+    "fg": "color.dataviz.5",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-6-on-default",
+    "fg": "color.dataviz.6",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-7-on-default",
+    "fg": "color.dataviz.7",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "dataviz-8-on-default",
+    "fg": "color.dataviz.8",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "general"
+  },
+  {
+    "id": "sim-banner-text",
+    "fg": "color.simulation.accentFg",
+    "bg": "color.simulation.accentBg",
+    "usage": "text",
+    "group": "simulation"
+  },
+  {
+    "id": "sim-accent-on-default",
+    "fg": "color.simulation.accent",
+    "bg": "color.surface.default",
+    "usage": "ui",
+    "group": "simulation"
+  }
+]

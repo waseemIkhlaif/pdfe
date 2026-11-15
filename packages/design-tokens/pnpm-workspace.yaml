@@ -1,0 +1,4 @@
+# Dependency install scripts are not needed by the token build; keep them off (no lifecycle scripts run).
+allowBuilds:
+  '@bundled-es-modules/glob': false
+  style-dictionary: false

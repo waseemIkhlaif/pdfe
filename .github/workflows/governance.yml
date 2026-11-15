@@ -31,3 +31,36 @@ jobs:
           docker run --rm -v "$GITHUB_WORKSPACE:/repo"
           zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
           detect --source /repo --redact --exit-code 1
+
+  design-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # actions/checkout v4.2.2, pinned by commit SHA
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0 # D-13 compares approval dates with the first commit date of each plan
+      # actions/setup-node v4.4.0, pinned by commit SHA
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm (same version as the packageManager fields)
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - name: Design tokens (install, self-test, build, determinism)
+        run: |
+          pnpm --dir packages/design-tokens install --frozen-lockfile
+          pnpm --dir packages/design-tokens test
+          pnpm --dir packages/design-tokens build
+          pnpm --dir packages/design-tokens verify
+      - name: Design prototype (every screen, both languages, all states; uses the runner's Chrome)
+        run: |
+          pnpm --dir scripts/design/render install --frozen-lockfile
+          node scripts/design/render/prepare.mjs
+          git diff --exit-code -- docs/design/prototype/inventory.js docs/design/prototype/tokens.css
+          pnpm --dir scripts/design/render verify
+      - name: Design checker fixture suite
+        run: bash scripts/design/tests/run.sh
+      - name: Design checks (format mode)
+        run: bash scripts/design/check-design.sh

@@ -1,0 +1,32 @@
+# PRD section 8 exception terms per journey, word for word. Format: J<n>|<term> (case-insensitive match in flows/J<n>.md).
+# J6 and J7 list failure points implied by their steps, as "step: <name>" (contracts/artifact-formats.md section 7).
+J1|insufficient balance
+J1|duplicate submission
+J1|blocked recipient
+J1|service timeout
+J1|reversal
+J2|expired intent
+J2|duplicate capture
+J2|disputed transaction
+J2|partial settlement failure
+J3|quote expiry
+J3|partner rejection
+J3|FX mismatch
+J3|review hold
+J3|payout failure
+J4|insufficient reserves
+J4|approval conflict
+J4|out-of-balance state
+J5|price gap
+J5|insufficient asset
+J5|stale quote
+J5|order race
+J5|market halt
+J6|step: hold
+J6|step: independent approval
+J6|step: release/reject
+J7|step: customer pays
+J7|step: matching
+J7|step: manager approves
+J7|step: mock settlement
+J7|step: bank statement reconciliation
