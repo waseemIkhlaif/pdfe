@@ -220,7 +220,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 - [X] T051 [US1] Implement `scripts/dev-all.mjs`: `docker compose -f infra/docker-compose.yml up -d --build --wait`, then run `scripts/smoke.mjs`, then print the URL table. Wire `pnpm dev:all`, `pnpm down` (`compose down`) and `pnpm reset` (`compose down -v`). Implement `pnpm dev` in `scripts/dev.mjs`: infrastructure services in Compose, apps through `turbo dev`. Make T042 pass against the running stack
 - [X] T052 [US1] Implement `scripts/test-all.mjs` for `pnpm test`: `turbo test:unit`, then `turbo test:int`, then `pnpm --filter @pdfe/e2e-web test` only if `scripts/smoke.mjs` passes. It reports which layers ran
 - [X] T053 [US1] Implement `scripts/ci/check-dep-exceptions.mjs`, with a `node:test` file `scripts/ci/check-dep-exceptions.test.mjs`. It reads the `pnpm audit --json` and Trivy JSON outputs and fails on any high or critical finding that is not in `docs/security/dependency-exceptions.md` with an unexpired date
-- [ ] T054 [US1] Create `.github/workflows/ci.yml`:
+- [X] T054 [US1] Create `.github/workflows/ci.yml`:
   - triggers: `pull_request`, `push` to `main`, and nightly `schedule`;
   - pnpm pinned explicitly (`corepack prepare pnpm@11.0.9 --activate`) and Node 22;
   - jobs `static` (`pnpm lint`, `pnpm typecheck`, `pnpm format:check`), `unit`, `deps` (`pnpm audit --audit-level=high`, a Trivy filesystem scan for HIGH and CRITICAL, then T053), `build` (`turbo build`, `docker compose build`), `integration` (`turbo test:int`) and `fresh-clone`;

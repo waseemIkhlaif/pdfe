@@ -1,6 +1,6 @@
 # Evidence: fresh-clone run (FR-004, SC-001)
 
-Status: **in progress.** The local run below passed. The CI `fresh-clone` job link and the owner's self-attestation are still to be added.
+Status: **waiting for the owner's self-attestation.** The local run and the CI run both passed.
 
 ## Local run (workstation)
 
@@ -13,7 +13,8 @@ Status: **in progress.** The local run below passed. The CI `fresh-clone` job li
 
 ## CI run
 
-- `fresh-clone` job, first green run: _link to be added after the first green run on a pull request._
+- `fresh-clone` job, green on pull request #24 (4 min 26 s): the `ci` run for commit `0e0672a`'s branch. Pull request: https://github.com/waseemIkhlaif/pdfe/pull/24
+- The `ci` check was added to the `main-protection-solo` ruleset on 2026-11-15 after this first green run. Export: `ruleset.json` in this folder.
 
 ## Self-attestation (solo mode)
 
