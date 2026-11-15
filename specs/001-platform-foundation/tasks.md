@@ -92,18 +92,18 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - accepted: values matching `^[A-Za-z0-9._-]{8,64}$`;
   - replaced by `COR-<uuidv7>`: values that are too short, too long or contain other characters;
   - `runWithContext` and `getContext` keep values across `await`
-- [ ] T020 [P] Write `packages/platform-core/test/migrate.int.test.ts` (Testcontainers Postgres):
+- [X] T020 [P] Write `packages/platform-core/test/migrate.int.test.ts` (Testcontainers Postgres):
   - applies files in name order and records `filename` and `sha256` in `platform.schema_migrations`;
   - a second run applies nothing;
   - a changed applied file makes the runner exit non-zero, naming the file;
   - a failing file rolls back only itself
-- [ ] T021 [P] Write `apps/api/test/health.e2e.spec.ts` (Nest testing module and supertest):
+- [X] T021 [P] Write `apps/api/test/health.e2e.spec.ts` (Nest testing module and supertest):
   - `GET /v1/health` returns 200 with `"mode":"DEMO"`;
   - every response has `X-PDFE-Mode: DEMO`;
   - a valid `X-Correlation-Id` is echoed and an invalid one is replaced;
   - an unknown route returns 404 in the error envelope;
   - `GET /v1/meta` returns the version
-- [ ] T022 [P] Write `apps/mock-hub/test/ping.spec.ts`: `GET /mock/{kind}/ping` returns 200 for each of bank, psp, chain, kyc, sanctions, fx, price and notification, and 404 for any other kind
+- [X] T022 [P] Write `apps/mock-hub/test/ping.spec.ts`: `GET /mock/{kind}/ping` returns 200 for each of bank, psp, chain, kyc, sanctions, fx, price and notification, and 404 for any other kind
 - [X] T023 [P] Write `packages/domain-types/test/config-registry.test.ts`:
   - every default validates against its Zod schema;
   - the safety-locked set is exactly `app.mode`, `adapters.allowlist`, `egress.internal_hosts`;
@@ -128,21 +128,21 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 - [X] T029 [P] Implement `packages/platform-core/src/correlation.ts` (AsyncLocalStorage context `{ correlationId, tenantId?, actorId?, elevationId? }`, `acceptOrGenerate(header)`)
 - [X] T030 [P] Implement `packages/platform-core/src/sim-label.ts`. It exports `SIM_LABEL_EN = "SIMULATION — NOT REAL MONEY"`, `SIM_LABEL_AR = "محاكاة — ليست أموالاً حقيقية"` and `SIM_LABEL = "<en> / <ar>"`, and is the single source of the label text for every later task
 - [X] T031 Implement `packages/domain-types/src/config-registry.ts` with every key, Zod schema, default and `safetyLocked` flag from `contracts/events-and-config.md`, plus a `ConfigReader` interface and a `DefaultsConfigReader` (the database-backed reader comes in US7) (depends on T023)
-- [ ] T032 Implement the migration runner in `packages/platform-core/src/migrate/{runner.ts,cli.ts}`:
+- [X] T032 Implement the migration runner in `packages/platform-core/src/migrate/{runner.ts,cli.ts}`:
   - it reads `db/migrations/*.sql` in name order and applies each file in its own transaction;
   - it records SHA-256 hashes and refuses changed files;
   - it connects with `MIGRATOR_DATABASE_URL`;
   - it has a `--check` mode that only verifies.
 
   Make T020 pass (depends on T027)
-- [ ] T033 Create `infra/postgres/init/01-roles.sh`. On first start it creates the login roles `migrator_role` and `app_role` (NOBYPASSRLS), and the roles `readonly_role` and `demo_reset_role`, with passwords from the environment. Then it creates the database `pdfe`, owned by `migrator_role`
-- [ ] T034 Write `db/migrations/0001_platform.sql`:
+- [X] T033 Create `infra/postgres/init/01-roles.sh`. On first start it creates the login roles `migrator_role` and `app_role` (NOBYPASSRLS), and the roles `readonly_role` and `demo_reset_role`, with passwords from the environment. Then it creates the database `pdfe`, owned by `migrator_role`
+- [X] T034 Write `db/migrations/0001_platform.sql`:
   - `CREATE EXTENSION pgcrypto`;
   - schemas `platform`, `iam`, `audit`, `config`, `demo`, `integration`, with `USAGE` for `app_role` and `readonly_role`;
   - `platform.tenants`, `platform.legal_entities` and `platform.organizations`, following `data-model.md` (including `is_synthetic` CHECK, UNIQUE (`tenant_id`, `code`) and `version`);
   - grants for `app_role`
-- [ ] T035 Implement `packages/platform-core/src/db/{pool.ts,tx.ts}`. `withTx(ctx, fn, { readOnly? })` opens a transaction, runs `SET LOCAL app.tenant_id`, `app.correlation_id` and optionally `app.elevation_id`, and sets `READ ONLY` when asked. It exposes a Drizzle instance on the transaction
-- [ ] T036 Create the `apps/api` skeleton (`@pdfe/api`, NestJS, port 4000):
+- [X] T035 Implement `packages/platform-core/src/db/{pool.ts,tx.ts}`. `withTx(ctx, fn, { readOnly? })` opens a transaction, runs `SET LOCAL app.tenant_id`, `app.correlation_id` and optionally `app.elevation_id`, and sets `READ ONLY` when asked. It exposes a Drizzle instance on the transaction
+- [X] T036 Create the `apps/api` skeleton (`@pdfe/api`, NestJS, port 4000):
   - `src/main.ts`, `src/app.module.ts`;
   - `src/core/core.module.ts`, which provides the `ClockService`, `IdGenerator` and `RandomService` tokens;
   - `src/core/error.filter.ts`, which returns the envelope;
@@ -151,13 +151,13 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `src/db/db.module.ts`, `src/db/schema/platform.ts` (Drizzle).
 
   Depends on T024–T035
-- [ ] T037 Implement `apps/api/src/health/health.controller.ts`:
+- [X] T037 Implement `apps/api/src/health/health.controller.ts`:
   - `GET /v1/health` checks Postgres and Redis and reports `mode` and `adapters` (an empty list until US2);
   - `GET /v1/meta` reports the version from `package.json` and the build SHA from the env.
 
   Make T021 pass
-- [ ] T038 [P] Create the `apps/worker` skeleton (`@pdfe/worker`): `src/main.ts` (NestJS standalone application context), `src/worker.module.ts`, a BullMQ connection from `REDIS_URL`, and a heartbeat log every 60 s
-- [ ] T039 [P] Create the `apps/mock-hub` skeleton (`@pdfe/mock-hub`, port 4100): `src/main.ts` and `src/mocks/ping.controller.ts` for the 8 kinds. Make T022 pass
+- [X] T038 [P] Create the `apps/worker` skeleton (`@pdfe/worker`): `src/main.ts` (NestJS standalone application context), `src/worker.module.ts`, a BullMQ connection from `REDIS_URL`, and a heartbeat log every 60 s
+- [X] T039 [P] Create the `apps/mock-hub` skeleton (`@pdfe/mock-hub`, port 4100): `src/main.ts` and `src/mocks/ping.controller.ts` for the 8 kinds. Make T022 pass
 - [ ] T040 Create `infra/docker/node-app.Dockerfile`, one multi-stage Dockerfile driven by `ARG APP`:
   - `pnpm fetch` and `pnpm deploy --filter @pdfe/$APP` in the build stage;
   - a non-root user and the Node 22 slim runtime;
