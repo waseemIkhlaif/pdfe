@@ -8,3 +8,18 @@ api.github.com
 
 # reason: live design-frame links in docs/design (research R-6)
 www.figma.com
+
+# reason: internal-only Compose service names, loopback and the Android emulator loopback (Phase 2, specs/001-platform-foundation/contracts/runtime-config.md). None resolve outside the internal network.
+localhost
+127.0.0.1
+10.0.2.2
+api
+worker
+mock-hub
+keycloak
+lgtm
+postgres
+redis
+gateway
+# reason: IANA-reserved example domain (RFC 2606), used only as the target that egress probes must fail to reach
+example.com
