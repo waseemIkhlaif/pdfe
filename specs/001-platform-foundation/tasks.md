@@ -158,13 +158,13 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   Make T021 pass
 - [X] T038 [P] Create the `apps/worker` skeleton (`@pdfe/worker`): `src/main.ts` (NestJS standalone application context), `src/worker.module.ts`, a BullMQ connection from `REDIS_URL`, and a heartbeat log every 60 s
 - [X] T039 [P] Create the `apps/mock-hub` skeleton (`@pdfe/mock-hub`, port 4100): `src/main.ts` and `src/mocks/ping.controller.ts` for the 8 kinds. Make T022 pass
-- [ ] T040 Create `infra/docker/node-app.Dockerfile`, one multi-stage Dockerfile driven by `ARG APP`:
+- [X] T040 Create `infra/docker/node-app.Dockerfile`, one multi-stage Dockerfile driven by `ARG APP`:
   - `pnpm fetch` and `pnpm deploy --filter @pdfe/$APP` in the build stage;
   - a non-root user and the Node 22 slim runtime;
   - a `HEALTHCHECK` per app.
 
   It is used by api, worker, mock-hub and the web apps
-- [ ] T041 Create `infra/docker-compose.yml` (base):
+- [X] T041 Create `infra/docker-compose.yml` (base):
   - `postgres:16` with `infra/postgres/init` mounted and a healthcheck;
   - `redis:7`;
   - a one-shot `migrate` service running the runner;
@@ -184,12 +184,12 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 1 ⚠️ (write first, must fail)
 
-- [ ] T042 [P] [US1] Write `scripts/smoke.mjs`, the smoke test used by the fresh-clone job and `pnpm dev:all`:
+- [X] T042 [P] [US1] Write `scripts/smoke.mjs`, the smoke test used by the fresh-clone job and `pnpm dev:all`:
   - for ports 3001–3006, `GET /ar/sign-in` returns 200 and the HTML contains both `SIM_LABEL_EN` and `SIM_LABEL_AR`;
   - `GET http://localhost:4000/v1/health` reports `mode: DEMO`;
   - the exit code is non-zero, with the failing URL named
-- [ ] T043 [P] [US1] Write `packages/ui-web/test/SimulationBanner.test.tsx` (Vitest and Testing Library): the minimal banner renders `role="status"`, `data-sim="1"` and the exact text from `@pdfe/platform-core` `sim-label`
-- [ ] T044 [P] [US1] Write `scripts/test/bootstrap.test.mjs` (`node:test`), with the checks injected:
+- [X] T043 [P] [US1] Write `packages/ui-web/test/SimulationBanner.test.tsx` (Vitest and Testing Library): the minimal banner renders `role="status"`, `data-sim="1"` and the exact text from `@pdfe/platform-core` `sim-label`
+- [X] T044 [P] [US1] Write `scripts/test/bootstrap.test.mjs` (`node:test`), with the checks injected:
   - `bootstrap` fails with a clear message when Node is below 22, pnpm is not 11.0.9, or Docker is missing;
   - it creates `.env` from `.env.example` with fresh random values for every `<generated>`;
   - it never overwrites an existing `.env`;
@@ -197,19 +197,19 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation for User Story 1
 
-- [ ] T045 [US1] Create `packages/ui-web` (`@pdfe/ui-web`): `src/SimulationBanner.tsx` (the minimal banner: bilingual text from `sim-label`, no props, sticky at the top) and `src/index.ts`. Make T043 pass
-- [ ] T046 [US1] Create `apps/web-consumer` (Next.js 16 App Router, port 3001):
+- [X] T045 [US1] Create `packages/ui-web` (`@pdfe/ui-web`): `src/SimulationBanner.tsx` (the minimal banner: bilingual text from `sim-label`, no props, sticky at the top) and `src/index.ts`. Make T043 pass
+- [X] T046 [US1] Create `apps/web-consumer` (Next.js 16 App Router, port 3001):
   - `next.config.ts` (`output: 'standalone'`);
   - `app/[locale]/layout.tsx`, which renders `<SimulationBanner/>` outside `{children}` and sets `<html lang dir>` for `ar` (default) and `en`;
   - placeholder `page.tsx` files for `app/[locale]/page.tsx` and `app/[locale]/sign-in/page.tsx`;
   - `middleware.ts`, which redirects `/` to `/ar`
-- [ ] T047 [P] [US1] Create `apps/web-merchant` (3002), `apps/web-business` (3003), `apps/web-console` (3004), `apps/web-investor` (3005) and `apps/web-devportal` (3006) from the T046 template, with the same files and their own package names and ports (depends on T046)
-- [ ] T048 [P] [US1] Create `packages/ui-native` (`@pdfe/ui-native`) with a minimal `src/SimulationBanner.tsx`. Create `apps/mobile` (Expo SDK 58, Expo Router):
+- [X] T047 [P] [US1] Create `apps/web-merchant` (3002), `apps/web-business` (3003), `apps/web-console` (3004), `apps/web-investor` (3005) and `apps/web-devportal` (3006) from the T046 template, with the same files and their own package names and ports (depends on T046)
+- [X] T048 [P] [US1] Create `packages/ui-native` (`@pdfe/ui-native`) with a minimal `src/SimulationBanner.tsx`. Create `apps/mobile` (Expo SDK 58, Expo Router):
   - `app.json`, with the DEMO profile in `extra`;
   - `app/_layout.tsx`, which renders the banner above the navigator;
   - placeholder screens `app/(tabs)/{index,pay,send,markets,profile}.tsx`
-- [ ] T049 [US1] Add the six web apps to `infra/docker-compose.yml`, built with `infra/docker/node-app.Dockerfile`, with healthchecks and ports 3001–3006 published directly (until US2)
-- [ ] T050 [US1] Implement `scripts/bootstrap.mjs`:
+- [X] T049 [US1] Add the six web apps to `infra/docker-compose.yml`, built with `infra/docker/node-app.Dockerfile`, with healthchecks and ports 3001–3006 published directly (until US2)
+- [X] T050 [US1] Implement `scripts/bootstrap.mjs`:
   - check the prerequisites;
   - `pnpm install --frozen-lockfile`;
   - generate `.env` only if it is missing;
@@ -217,9 +217,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `docker compose -f infra/docker-compose.yml build`.
 
   Wire it to `pnpm bootstrap`. Make T044 pass
-- [ ] T051 [US1] Implement `scripts/dev-all.mjs`: `docker compose -f infra/docker-compose.yml up -d --build --wait`, then run `scripts/smoke.mjs`, then print the URL table. Wire `pnpm dev:all`, `pnpm down` (`compose down`) and `pnpm reset` (`compose down -v`). Implement `pnpm dev` in `scripts/dev.mjs`: infrastructure services in Compose, apps through `turbo dev`. Make T042 pass against the running stack
-- [ ] T052 [US1] Implement `scripts/test-all.mjs` for `pnpm test`: `turbo test:unit`, then `turbo test:int`, then `pnpm --filter @pdfe/e2e-web test` only if `scripts/smoke.mjs` passes. It reports which layers ran
-- [ ] T053 [US1] Implement `scripts/ci/check-dep-exceptions.mjs`, with a `node:test` file `scripts/ci/check-dep-exceptions.test.mjs`. It reads the `pnpm audit --json` and Trivy JSON outputs and fails on any high or critical finding that is not in `docs/security/dependency-exceptions.md` with an unexpired date
+- [X] T051 [US1] Implement `scripts/dev-all.mjs`: `docker compose -f infra/docker-compose.yml up -d --build --wait`, then run `scripts/smoke.mjs`, then print the URL table. Wire `pnpm dev:all`, `pnpm down` (`compose down`) and `pnpm reset` (`compose down -v`). Implement `pnpm dev` in `scripts/dev.mjs`: infrastructure services in Compose, apps through `turbo dev`. Make T042 pass against the running stack
+- [X] T052 [US1] Implement `scripts/test-all.mjs` for `pnpm test`: `turbo test:unit`, then `turbo test:int`, then `pnpm --filter @pdfe/e2e-web test` only if `scripts/smoke.mjs` passes. It reports which layers ran
+- [X] T053 [US1] Implement `scripts/ci/check-dep-exceptions.mjs`, with a `node:test` file `scripts/ci/check-dep-exceptions.test.mjs`. It reads the `pnpm audit --json` and Trivy JSON outputs and fails on any high or critical finding that is not in `docs/security/dependency-exceptions.md` with an unexpired date
 - [ ] T054 [US1] Create `.github/workflows/ci.yml`:
   - triggers: `pull_request`, `push` to `main`, and nightly `schedule`;
   - pnpm pinned explicitly (`corepack prepare pnpm@11.0.9 --activate`) and Node 22;
@@ -228,7 +228,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - a final `ci` job with `needs` on every job and `if: always()`, which fails if any needed job failed or was cancelled.
 
   Follow `contracts/ci-checks.md`
-- [ ] T055 [US1] Write `docs/runbooks/local-setup.md`:
+- [X] T055 [US1] Write `docs/runbooks/local-setup.md`:
   - prerequisites: Windows 11 with Docker Desktop and WSL2, and Linux;
   - bootstrap;
   - the two run modes (`dev:all` versus `dev`) and what each proves;

@@ -8,3 +8,11 @@ docs/design/packages/**
 docs/design/prototype/**
 specs/**
 *.md
+packages/design-tokens/
+scripts/design/
+scripts/governance/
+scripts/safety/
+.github/
+.claude/
+.specify/
+docs/

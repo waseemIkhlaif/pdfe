@@ -7,11 +7,17 @@ import { PG_POOL, REDIS } from '../core/tokens';
 @Global()
 @Module({
   providers: [
-    { provide: PG_POOL, useFactory: () => createPool(process.env.DATABASE_URL ?? 'postgres://localhost/unconfigured') },
+    {
+      provide: PG_POOL,
+      useFactory: () => createPool(process.env.DATABASE_URL ?? 'postgres://localhost/unconfigured'),
+    },
     {
       provide: REDIS,
       useFactory: () =>
-        new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379', { lazyConnect: true, maxRetriesPerRequest: 1 }),
+        new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379', {
+          lazyConnect: true,
+          maxRetriesPerRequest: 1,
+        }),
     },
   ],
   exports: [PG_POOL, REDIS],

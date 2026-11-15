@@ -6,7 +6,11 @@ describe('toEnvelope', () => {
     const e = toEnvelope(new AppError('SELF_APPROVAL', 409), 'COR-123');
     expect(e.status).toBe(409);
     expect(e.body).toEqual({
-      error: { code: 'SELF_APPROVAL', message_key: 'errors.self_approval', correlation_id: 'COR-123' },
+      error: {
+        code: 'SELF_APPROVAL',
+        message_key: 'errors.self_approval',
+        correlation_id: 'COR-123',
+      },
     });
   });
   it('adds details only for validation errors', () => {
@@ -15,7 +19,10 @@ describe('toEnvelope', () => {
       'COR-1',
     );
     expect(v.body.error.details).toEqual([{ path: 'a.b', message_key: 'errors.too_small' }]);
-    const f = toEnvelope(new AppError('FORBIDDEN', 403, [{ path: 'x', message_key: 'y' }]), 'COR-1');
+    const f = toEnvelope(
+      new AppError('FORBIDDEN', 403, [{ path: 'x', message_key: 'y' }]),
+      'COR-1',
+    );
     expect(f.body.error.details).toBeUndefined();
   });
   it('maps unknown errors to INTERNAL without leaking the message', () => {

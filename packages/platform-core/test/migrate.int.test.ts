@@ -59,18 +59,20 @@ describe('migration runner', () => {
     const r = await runMigrations({ url: db.url, dir, checkOnly: true });
     expect(r.applied).toEqual([]);
     expect(r.pending).toEqual(['0003_c.sql']);
-    const t = await q('SELECT to_regclass(\'public.t_c\') AS r');
+    const t = await q("SELECT to_regclass('public.t_c') AS r");
     expect(t[0]).toEqual({ r: null });
   });
 
   it('a failing file rolls back only itself', async () => {
     put('0004_bad.sql', 'CREATE TABLE t_d (id int); SELECT 1/0;');
     await expect(runMigrations({ url: db.url, dir })).rejects.toThrow(/0004_bad\.sql/);
-    const names = (await q<{ filename: string }>('SELECT filename FROM platform.schema_migrations ORDER BY filename')).map(
-      (x) => x.filename,
-    );
+    const names = (
+      await q<{ filename: string }>(
+        'SELECT filename FROM platform.schema_migrations ORDER BY filename',
+      )
+    ).map((x) => x.filename);
     expect(names).toEqual(['0001_a.sql', '0002_b.sql', '0003_c.sql']);
-    const t = await q('SELECT to_regclass(\'public.t_d\') AS r');
+    const t = await q("SELECT to_regclass('public.t_d') AS r");
     expect(t[0]).toEqual({ r: null });
   });
 });

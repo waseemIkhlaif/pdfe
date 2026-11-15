@@ -1,7 +1,8 @@
 import type { ClockService } from './clock';
 import type { RandomService } from './random';
 
-const hex = (bytes: ArrayLike<number>): string => Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+const hex = (bytes: ArrayLike<number>): string =>
+  Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
 
 /**
  * UUIDv7 generator: 48-bit millisecond time, version 7, a 12-bit sequence that makes IDs strictly

@@ -23,7 +23,10 @@ export class AppError extends Error {
 }
 
 /** The single error format of the HTTP API (FR-042). Unknown errors never leak their message. */
-export function toEnvelope(err: unknown, correlationId: string): { status: number; body: ErrorEnvelope } {
+export function toEnvelope(
+  err: unknown,
+  correlationId: string,
+): { status: number; body: ErrorEnvelope } {
   if (err instanceof AppError) {
     const error: ErrorEnvelope['error'] = {
       code: err.code,
@@ -35,6 +38,8 @@ export function toEnvelope(err: unknown, correlationId: string): { status: numbe
   }
   return {
     status: 500,
-    body: { error: { code: 'INTERNAL', message_key: 'errors.internal', correlation_id: correlationId } },
+    body: {
+      error: { code: 'INTERNAL', message_key: 'errors.internal', correlation_id: correlationId },
+    },
   };
 }

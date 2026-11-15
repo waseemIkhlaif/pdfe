@@ -29,7 +29,11 @@ describe('config registry', () => {
   });
 
   it('the safety-locked set is exactly app.mode, adapters.allowlist and egress.internal_hosts', () => {
-    expect([...safetyLockedKeys].sort()).toEqual(['adapters.allowlist', 'app.mode', 'egress.internal_hosts']);
+    expect([...safetyLockedKeys].sort()).toEqual([
+      'adapters.allowlist',
+      'app.mode',
+      'egress.internal_hosts',
+    ]);
   });
 
   it('every money value (key ending in _minor) is a non-negative integer', () => {
@@ -50,7 +54,9 @@ describe('config registry', () => {
     expect(s('approvals.default_expiry_hours').safeParse(0).success).toBe(false);
     expect(s('approvals.default_expiry_hours').safeParse(168).success).toBe(true);
     expect(s('fx.spread_bps').safeParse(1001).success).toBe(false);
-    expect(s('api.rate_limit').safeParse({ per_user_per_minute: 9, per_ip_per_minute: 100 }).success).toBe(false);
+    expect(
+      s('api.rate_limit').safeParse({ per_user_per_minute: 9, per_ip_per_minute: 100 }).success,
+    ).toBe(false);
     expect(s('app.mode').safeParse('LIVE').success).toBe(false);
     expect(s('adapters.allowlist').safeParse(['http:real']).success).toBe(false);
     expect(s('features.flags').safeParse({ x: 'yes' }).success).toBe(false);

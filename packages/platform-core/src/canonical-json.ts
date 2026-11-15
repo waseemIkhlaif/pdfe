@@ -9,12 +9,14 @@ export function canonicalJson(value: unknown): string {
     case 'boolean':
       return value ? 'true' : 'false';
     case 'number':
-      if (!Number.isFinite(value)) throw new Error('canonicalJson: NaN and Infinity are not valid JSON');
+      if (!Number.isFinite(value))
+        throw new Error('canonicalJson: NaN and Infinity are not valid JSON');
       return JSON.stringify(value);
     case 'string':
       return JSON.stringify(value);
     case 'object': {
-      if (Array.isArray(value)) return `[${value.map((v) => canonicalJson(v === undefined ? null : v)).join(',')}]`;
+      if (Array.isArray(value))
+        return `[${value.map((v) => canonicalJson(v === undefined ? null : v)).join(',')}]`;
       const obj = value as Record<string, unknown>;
       const parts: string[] = [];
       for (const k of Object.keys(obj).sort()) {

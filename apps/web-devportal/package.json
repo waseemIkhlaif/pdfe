@@ -1,0 +1,26 @@
+{
+  "name": "@pdfe/web-devportal",
+  "version": "0.2.0",
+  "private": true,
+  "description": "PDFE devportal web app (port 3006).",
+  "scripts": {
+    "dev": "next dev -p 3006",
+    "build": "next build",
+    "start": "next start -p 3006",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "echo no unit tests yet"
+  },
+  "dependencies": {
+    "@pdfe/design-tokens": "workspace:*",
+    "@pdfe/ui-web": "workspace:*",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@pdfe/config": "workspace:*",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
+}

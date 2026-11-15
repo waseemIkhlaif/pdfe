@@ -4,7 +4,9 @@
   "private": true,
   "description": "PDFE - simulation-only Palestinian Digital Financial Ecosystem (synthetic data, no real money).",
   "packageManager": "pnpm@11.0.9",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "bootstrap": "node scripts/bootstrap.mjs",
     "dev:all": "node scripts/dev-all.mjs",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@pdfe/config": "workspace:*",
     "eslint": "^10.15.0",
     "prettier": "^3.10.1",
     "turbo": "^2.11.11",

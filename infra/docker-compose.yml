@@ -1,0 +1,269 @@
+# Local stack. Run from the repository root:  docker compose --env-file .env -f infra/docker-compose.yml up -d --build --wait
+# `pnpm dev:all` does this and then runs the smoke test. Secrets come from .env (written by `pnpm bootstrap`).
+name: pdfe
+
+x-app-env: &app-env
+  APP_MODE: DEMO
+  INTERNAL_HOSTS: postgres,redis,keycloak,mock-hub,api,worker,lgtm,localhost,127.0.0.1
+  REDIS_URL: redis://redis:6379
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run pnpm bootstrap first}
+      MIGRATOR_PASSWORD: ${MIGRATOR_PASSWORD:?run pnpm bootstrap first}
+      APP_ROLE_PASSWORD: ${APP_ROLE_PASSWORD:?run pnpm bootstrap first}
+      READONLY_PASSWORD: ${READONLY_PASSWORD:?run pnpm bootstrap first}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d pdfe']
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: migrate
+      args: { APP: platform-core }
+    environment:
+      MIGRATOR_DATABASE_URL: postgres://migrator_role:${MIGRATOR_PASSWORD}@postgres:5432/pdfe
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: 'no'
+
+  mock-hub:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: service
+      args: { APP: mock-hub }
+    environment:
+      <<: *app-env
+      PORT: '4100'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:4100/mock/bank/ping').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: service
+      args: { APP: api }
+    environment:
+      <<: *app-env
+      PORT: '4000'
+      DATABASE_URL: postgres://app_role:${APP_ROLE_PASSWORD}@postgres:5432/pdfe
+    ports:
+      - '4000:4000' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+      mock-hub: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:4000/v1/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: service
+      args: { APP: worker }
+    environment:
+      <<: *app-env
+      DATABASE_URL: postgres://app_role:${APP_ROLE_PASSWORD}@postgres:5432/pdfe
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+
+  web-consumer:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: web
+      args: { APP: web-consumer }
+    environment:
+      PORT: '3001'
+      HOSTNAME: 0.0.0.0
+      API_BASE_URL: http://api:4000
+    ports:
+      - '3001:3001' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3001/ar/sign-in').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web-merchant:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: web
+      args: { APP: web-merchant }
+    environment:
+      PORT: '3002'
+      HOSTNAME: 0.0.0.0
+      API_BASE_URL: http://api:4000
+    ports:
+      - '3002:3002' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3002/ar/sign-in').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web-business:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: web
+      args: { APP: web-business }
+    environment:
+      PORT: '3003'
+      HOSTNAME: 0.0.0.0
+      API_BASE_URL: http://api:4000
+    ports:
+      - '3003:3003' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3003/ar/sign-in').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web-console:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: web
+      args: { APP: web-console }
+    environment:
+      PORT: '3004'
+      HOSTNAME: 0.0.0.0
+      API_BASE_URL: http://api:4000
+    ports:
+      - '3004:3004' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3004/ar/sign-in').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web-investor:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: web
+      args: { APP: web-investor }
+    environment:
+      PORT: '3005'
+      HOSTNAME: 0.0.0.0
+      API_BASE_URL: http://api:4000
+    ports:
+      - '3005:3005' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3005/ar/sign-in').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web-devportal:
+    build:
+      context: ..
+      dockerfile: infra/docker/node-app.Dockerfile
+      target: web
+      args: { APP: web-devportal }
+    environment:
+      PORT: '3006'
+      HOSTNAME: 0.0.0.0
+      API_BASE_URL: http://api:4000
+    ports:
+      - '3006:3006' # until the gateway takes over publishing (safety-boundary story)
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3006/ar/sign-in').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata: {}

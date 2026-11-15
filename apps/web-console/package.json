@@ -1,0 +1,26 @@
+{
+  "name": "@pdfe/web-console",
+  "version": "0.2.0",
+  "private": true,
+  "description": "PDFE console web app (port 3004).",
+  "scripts": {
+    "dev": "next dev -p 3004",
+    "build": "next build",
+    "start": "next start -p 3004",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "echo no unit tests yet"
+  },
+  "dependencies": {
+    "@pdfe/design-tokens": "workspace:*",
+    "@pdfe/ui-web": "workspace:*",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@pdfe/config": "workspace:*",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
+}

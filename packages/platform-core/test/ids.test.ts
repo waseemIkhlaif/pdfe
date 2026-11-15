@@ -6,7 +6,8 @@ import { IdGenerator } from '../src/ids';
 import { SeededRandom, SystemRandom } from '../src/random';
 
 const V7 = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-const gen = (seed: number) => new IdGenerator(new ScenarioClock('2026-01-15T08:00:00Z', 1), new SeededRandom(seed));
+const gen = (seed: number) =>
+  new IdGenerator(new ScenarioClock('2026-01-15T08:00:00Z', 1), new SeededRandom(seed));
 
 describe('IdGenerator', () => {
   it('produces valid UUIDv7 (version and variant bits)', () => {

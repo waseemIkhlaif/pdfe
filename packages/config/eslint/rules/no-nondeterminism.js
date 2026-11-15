@@ -5,7 +5,8 @@ export default {
   meta: {
     type: 'problem',
     messages: {
-      banned: 'Use the injected ClockService, RandomService or IdGenerator from @pdfe/platform-core instead of {{what}}.',
+      banned:
+        'Use the injected ClockService, RandomService or IdGenerator from @pdfe/platform-core instead of {{what}}.',
     },
     schema: [],
   },
@@ -17,13 +18,20 @@ export default {
         const c = node.callee;
         if (c.type !== 'MemberExpression' || c.computed) return;
         const prop = c.property.name;
-        if (isId(c.object, 'Date') && prop === 'now') context.report({ node, messageId: 'banned', data: { what: 'Date.now()' } });
-        else if (isId(c.object, 'Math') && prop === 'random') context.report({ node, messageId: 'banned', data: { what: 'Math.random()' } });
-        else if (prop === 'randomUUID') context.report({ node, messageId: 'banned', data: { what: 'crypto.randomUUID()' } });
+        if (isId(c.object, 'Date') && prop === 'now')
+          context.report({ node, messageId: 'banned', data: { what: 'Date.now()' } });
+        else if (isId(c.object, 'Math') && prop === 'random')
+          context.report({ node, messageId: 'banned', data: { what: 'Math.random()' } });
+        else if (prop === 'randomUUID')
+          context.report({ node, messageId: 'banned', data: { what: 'crypto.randomUUID()' } });
       },
       NewExpression(node) {
         if (isId(node.callee, 'Date') && node.arguments.length === 0) {
-          context.report({ node, messageId: 'banned', data: { what: 'new Date() with no argument' } });
+          context.report({
+            node,
+            messageId: 'banned',
+            data: { what: 'new Date() with no argument' },
+          });
         }
       },
     };

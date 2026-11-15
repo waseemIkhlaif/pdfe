@@ -21,7 +21,9 @@ describe('acceptOrGenerate', () => {
     '<script>alert(1)</script>',
   ])('replaces %j with COR-<uuidv7>', (v) => {
     const out = acceptOrGenerate(v, ids);
-    expect(out).toMatch(/^COR-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    expect(out).toMatch(
+      /^COR-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+    );
     expect(out).not.toBe(v);
   });
 });

@@ -5,14 +5,20 @@ import rule from '../no-physical-css.js';
 RuleTester.describe = describe;
 RuleTester.it = it;
 const tester = new RuleTester({
-  languageOptions: { ecmaVersion: 2022, sourceType: 'module', parserOptions: { ecmaFeatures: { jsx: true } } },
+  languageOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+    parserOptions: { ecmaFeatures: { jsx: true } },
+  },
 });
 
 const bad = (code: string) => ({ code, errors: [{ messageId: 'physical' }] });
 
 tester.run('no-physical-css', rule, {
   valid: [
-    { code: '<div className="ms-2 me-2 ps-4 pe-4 start-0 end-0 text-start text-end rounded-s-md border-s" />' },
+    {
+      code: '<div className="ms-2 me-2 ps-4 pe-4 start-0 end-0 text-start text-end rounded-s-md border-s" />',
+    },
     { code: 'const s = { marginInlineStart: 4, insetInlineEnd: 0 };' },
   ],
   invalid: [

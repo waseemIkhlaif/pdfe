@@ -9,7 +9,10 @@ async function main(): Promise<void> {
   const checkOnly = process.argv.includes('--check');
   const r = await runMigrations({ url, dir, checkOnly });
   console.log(
-    JSON.stringify({ migrations: { applied: r.applied, skipped: r.skipped.length, pending: r.pending }, checkOnly }),
+    JSON.stringify({
+      migrations: { applied: r.applied, skipped: r.skipped.length, pending: r.pending },
+      checkOnly,
+    }),
   );
   if (checkOnly && r.pending.length > 0) process.exitCode = 1;
 }

@@ -25,7 +25,12 @@ export interface Tx {
  * app.tenant_id (RLS), app.correlation_id and app.elevation_id. An elevation forces READ ONLY.
  * Commits on success and rolls back on any error.
  */
-export async function withTx<T>(pool: Pool, ctx: TxContext, fn: (tx: Tx) => Promise<T>, opts: TxOptions = {}): Promise<T> {
+export async function withTx<T>(
+  pool: Pool,
+  ctx: TxContext,
+  fn: (tx: Tx) => Promise<T>,
+  opts: TxOptions = {},
+): Promise<T> {
   const client = await pool.connect();
   const readOnly = opts.readOnly === true || ctx.elevationId !== undefined;
   try {

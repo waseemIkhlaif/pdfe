@@ -46,9 +46,13 @@ describe('GET /v1/health', () => {
   });
 
   it('echoes a valid correlation ID and replaces an invalid one', async () => {
-    const good = await request(app.getHttpServer()).get('/v1/health').set('X-Correlation-Id', 'my-corr-id-12345');
+    const good = await request(app.getHttpServer())
+      .get('/v1/health')
+      .set('X-Correlation-Id', 'my-corr-id-12345');
     expect(good.headers['x-correlation-id']).toBe('my-corr-id-12345');
-    const bad = await request(app.getHttpServer()).get('/v1/health').set('X-Correlation-Id', 'bad id with spaces');
+    const bad = await request(app.getHttpServer())
+      .get('/v1/health')
+      .set('X-Correlation-Id', 'bad id with spaces');
     expect(bad.headers['x-correlation-id']).toMatch(/^COR-[0-9a-f-]{36}$/);
     expect(bad.headers['x-correlation-id']).not.toContain('bad id');
   });

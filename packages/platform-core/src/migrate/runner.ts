@@ -50,15 +50,18 @@ export async function runMigrations(opts: MigrateOptions): Promise<MigrateResult
        )`,
     );
     // Only one runner at a time.
-    await client.query('SELECT pg_advisory_lock(hashtext(\'pdfe.migrate\'))');
+    await client.query("SELECT pg_advisory_lock(hashtext('pdfe.migrate'))");
     const applied = new Map(
-      (await client.query<{ filename: string; sha256: string }>('SELECT filename, sha256 FROM platform.schema_migrations')).rows.map(
-        (r) => [r.filename, r.sha256],
-      ),
+      (
+        await client.query<{ filename: string; sha256: string }>(
+          'SELECT filename, sha256 FROM platform.schema_migrations',
+        )
+      ).rows.map((r) => [r.filename, r.sha256]),
     );
     // An applied file that is gone from the directory is also a change of history.
     for (const name of applied.keys()) {
-      if (!files.includes(name)) throw new MigrationError(`Applied migration ${name} is missing from ${opts.dir}`, name);
+      if (!files.includes(name))
+        throw new MigrationError(`Applied migration ${name} is missing from ${opts.dir}`, name);
     }
     for (const name of files) {
       const sql = readFileSync(join(opts.dir, name), 'utf8');
@@ -66,7 +69,10 @@ export async function runMigrations(opts: MigrateOptions): Promise<MigrateResult
       const known = applied.get(name);
       if (known !== undefined) {
         if (known !== hash) {
-          throw new MigrationError(`Migration ${name} was changed after it was applied. Add a new numbered file instead.`, name);
+          throw new MigrationError(
+            `Migration ${name} was changed after it was applied. Add a new numbered file instead.`,
+            name,
+          );
         }
         result.skipped.push(name);
         continue;
@@ -78,7 +84,10 @@ export async function runMigrations(opts: MigrateOptions): Promise<MigrateResult
       try {
         await client.query('BEGIN');
         await client.query(sql);
-        await client.query('INSERT INTO platform.schema_migrations (filename, sha256) VALUES ($1, $2)', [name, hash]);
+        await client.query(
+          'INSERT INTO platform.schema_migrations (filename, sha256) VALUES ($1, $2)',
+          [name, hash],
+        );
         await client.query('COMMIT');
         result.applied.push(name);
       } catch (err) {

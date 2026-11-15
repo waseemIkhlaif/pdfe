@@ -34,7 +34,17 @@ export const configRegistry = {
   }),
   'egress.internal_hosts': item({
     schema: z.array(hostname).min(1),
-    default: ['postgres', 'redis', 'keycloak', 'mock-hub', 'api', 'worker', 'lgtm', 'localhost', '127.0.0.1'],
+    default: [
+      'postgres',
+      'redis',
+      'keycloak',
+      'mock-hub',
+      'api',
+      'worker',
+      'lgtm',
+      'localhost',
+      '127.0.0.1',
+    ],
     safetyLocked: true,
     description: 'Hosts application components may connect to.',
   }),
@@ -95,7 +105,9 @@ export type ConfigKey = keyof typeof configRegistry;
 export type ConfigValue<K extends ConfigKey> = z.infer<(typeof configRegistry)[K]['schema']>;
 
 export const configKeys = Object.keys(configRegistry) as ConfigKey[];
-export const safetyLockedKeys: ConfigKey[] = configKeys.filter((k) => configRegistry[k].safetyLocked);
+export const safetyLockedKeys: ConfigKey[] = configKeys.filter(
+  (k) => configRegistry[k].safetyLocked,
+);
 
 /** Reads the active value of a setting. The database-backed reader replaces the defaults one in the configuration story. */
 export interface ConfigReader {

@@ -1,0 +1,192 @@
+name: ci
+
+# Phase 2 build and test checks. The final job `ci` is the single required check: it fails if any job that ran failed.
+# Heavy jobs run only when relevant paths change, and every job runs nightly on main.
+# Contract: specs/001-platform-foundation/contracts/ci-checks.md
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  COMPOSE_PARALLEL_LIMIT: '1'
+  CI_REDUCED: ${{ github.event_name == 'pull_request' && '1' || '0' }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      fresh_clone: ${{ steps.f.outputs.fresh_clone }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - id: f
+        name: Decide which path-filtered jobs run
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "fresh_clone=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          if echo "$files" | grep -Eq '^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|infra/|scripts/(bootstrap|dev-all|smoke)|apps/|packages/|db/|\.github/workflows/ci\.yml)'; then
+            echo "fresh_clone=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "fresh_clone=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Lint (includes the determinism, logical-CSS and UI-string rules)
+        run: pnpm lint
+      - name: Format
+        run: pnpm format:check
+      - name: Type check
+        run: pnpm typecheck
+
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Script tests
+        run: node --test "scripts/**/*.test.mjs"
+      - name: Unit tests
+        run: pnpm test:unit
+
+  deps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: pnpm audit (JSON; the exception check below decides)
+        run: pnpm audit --audit-level=high --json > audit.json || true
+      - name: Trivy filesystem scan (HIGH and CRITICAL)
+        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: json
+          output: trivy.json
+          severity: HIGH,CRITICAL
+          exit-code: '0'
+      - name: Fail on any high or critical finding without a dated exception
+        run: node scripts/ci/check-dep-exceptions.mjs audit.json trivy.json
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Build every app and package
+        run: pnpm build
+      - name: Build container images
+        run: |
+          node -e "import('./scripts/bootstrap.mjs').then((m) => m.ensureEnv())"
+          docker compose --env-file .env -f infra/docker-compose.yml build
+
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Integration tests (Testcontainers: Postgres, Redis)
+        run: pnpm test:int
+
+  fresh-clone:
+    needs: changes
+    if: needs.changes.outputs.fresh_clone == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - name: Bootstrap (clean checkout, no cache)
+        run: pnpm bootstrap
+      - name: Start the whole stack and run the smoke test
+        run: pnpm dev:all
+      - name: Logs (on failure)
+        if: failure()
+        run: docker compose --env-file .env -f infra/docker-compose.yml logs --no-color > compose.log
+      - name: Upload logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: fresh-clone-compose-log
+          path: compose.log
+      - name: Stop and delete the stack
+        if: always()
+        run: docker compose --env-file .env -f infra/docker-compose.yml down -v
+
+  # The single required check. Skipped path-filtered jobs do not fail it.
+  ci:
+    if: always()
+    needs: [changes, static, unit, deps, build, integration, fresh-clone]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any job failed or was cancelled
+        run: |
+          echo '${{ toJSON(needs) }}'
+          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ] || [ "${{ contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "A required job did not pass."; exit 1
+          fi

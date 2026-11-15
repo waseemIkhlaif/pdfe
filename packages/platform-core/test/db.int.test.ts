@@ -23,16 +23,33 @@ afterAll(async () => {
 
 describe('migrations from zero', () => {
   it('creates the six schemas and the platform tables', async () => {
-    const s = await pool.query("SELECT schema_name FROM information_schema.schemata WHERE schema_name = ANY($1) ORDER BY 1", [
-      ['platform', 'iam', 'audit', 'config', 'demo', 'integration'],
+    const s = await pool.query(
+      'SELECT schema_name FROM information_schema.schemata WHERE schema_name = ANY($1) ORDER BY 1',
+      [['platform', 'iam', 'audit', 'config', 'demo', 'integration']],
+    );
+    expect(s.rows.map((r) => r.schema_name)).toEqual([
+      'audit',
+      'config',
+      'demo',
+      'iam',
+      'integration',
+      'platform',
     ]);
-    expect(s.rows.map((r) => r.schema_name)).toEqual(['audit', 'config', 'demo', 'iam', 'integration', 'platform']);
-    const t = await pool.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'platform' ORDER BY 1");
-    expect(t.rows.map((r) => r.table_name)).toEqual(['legal_entities', 'organizations', 'schema_migrations', 'tenants']);
+    const t = await pool.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema = 'platform' ORDER BY 1",
+    );
+    expect(t.rows.map((r) => r.table_name)).toEqual([
+      'legal_entities',
+      'organizations',
+      'schema_migrations',
+      'tenants',
+    ]);
   });
 
   it('refuses a non-synthetic legal entity', async () => {
-    await pool.query("INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ('00000000-0000-7000-8000-000000000001','t1','T1','merchant','2026-01-15T08:00:00Z')");
+    await pool.query(
+      "INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ('00000000-0000-7000-8000-000000000001','t1','T1','merchant','2026-01-15T08:00:00Z')",
+    );
     await expect(
       pool.query(
         "INSERT INTO platform.legal_entities (id, tenant_id, code, name, is_synthetic, created_at) VALUES ('00000000-0000-7000-8000-000000000002','00000000-0000-7000-8000-000000000001','le','LE',false,'2026-01-15T08:00:00Z')",
@@ -48,10 +65,16 @@ describe('migrations from zero', () => {
 
 describe('withTx', () => {
   it('sets the transaction-local settings', async () => {
-    const got = await withTx(pool, { tenantId: 'T-1', correlationId: 'COR-1' }, async ({ client }) => {
-      const r = await client.query("SELECT current_setting('app.tenant_id') t, current_setting('app.correlation_id') c");
-      return r.rows[0];
-    });
+    const got = await withTx(
+      pool,
+      { tenantId: 'T-1', correlationId: 'COR-1' },
+      async ({ client }) => {
+        const r = await client.query(
+          "SELECT current_setting('app.tenant_id') t, current_setting('app.correlation_id') c",
+        );
+        return r.rows[0];
+      },
+    );
     expect(got).toEqual({ t: 'T-1', c: 'COR-1' });
     // The settings do not leak to the next transaction on the same pool.
     const after = await pool.query("SELECT current_setting('app.tenant_id', true) t");
@@ -61,7 +84,9 @@ describe('withTx', () => {
   it('rolls back on error', async () => {
     await expect(
       withTx(pool, {}, async ({ client }) => {
-        await client.query("INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ('00000000-0000-7000-8000-0000000000aa','rb','RB','merchant','2026-01-15T08:00:00Z')");
+        await client.query(
+          "INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ('00000000-0000-7000-8000-0000000000aa','rb','RB','merchant','2026-01-15T08:00:00Z')",
+        );
         throw new Error('boom');
       }),
     ).rejects.toThrow('boom');
@@ -72,7 +97,9 @@ describe('withTx', () => {
   it('an elevation makes the transaction read-only at the database level', async () => {
     await expect(
       withTx(pool, { tenantId: 'T-1', elevationId: 'EL-1' }, async ({ client }) => {
-        await client.query("INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ('00000000-0000-7000-8000-0000000000bb','ro','RO','merchant','2026-01-15T08:00:00Z')");
+        await client.query(
+          "INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ('00000000-0000-7000-8000-0000000000bb','ro','RO','merchant','2026-01-15T08:00:00Z')",
+        );
       }),
     ).rejects.toThrow(/read-only/i);
   });

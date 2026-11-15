@@ -7,7 +7,14 @@ const CLASS_BAD = [
   /^(?:[\w[\]:-]+:)?border-(?:l|r)(?:-|$)/,
 ];
 const KEYS = new Set([
-  'marginLeft', 'marginRight', 'paddingLeft', 'paddingRight', 'left', 'right', 'borderLeft', 'borderRight',
+  'marginLeft',
+  'marginRight',
+  'paddingLeft',
+  'paddingRight',
+  'left',
+  'right',
+  'borderLeft',
+  'borderRight',
 ]);
 
 export default {
@@ -28,8 +35,14 @@ export default {
       },
       Property(node) {
         const k = node.key;
-        const name = !node.computed && k.type === 'Identifier' ? k.name : k.type === 'Literal' ? String(k.value) : null;
-        if (name && KEYS.has(name)) context.report({ node, messageId: 'physical', data: { what: name } });
+        const name =
+          !node.computed && k.type === 'Identifier'
+            ? k.name
+            : k.type === 'Literal'
+              ? String(k.value)
+              : null;
+        if (name && KEYS.has(name))
+          context.report({ node, messageId: 'physical', data: { what: name } });
       },
     };
   },

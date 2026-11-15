@@ -1,7 +1,16 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 
 /** The eight external dependency kinds the platform simulates. */
-export const MOCK_KINDS = ['bank', 'psp', 'chain', 'kyc', 'sanctions', 'fx', 'price', 'notification'] as const;
+export const MOCK_KINDS = [
+  'bank',
+  'psp',
+  'chain',
+  'kyc',
+  'sanctions',
+  'fx',
+  'price',
+  'notification',
+] as const;
 export type MockKind = (typeof MOCK_KINDS)[number];
 
 @Controller('mock')

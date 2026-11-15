@@ -5,7 +5,11 @@ import rule from '../no-hardcoded-ui-string.js';
 RuleTester.describe = describe;
 RuleTester.it = it;
 const tester = new RuleTester({
-  languageOptions: { ecmaVersion: 2022, sourceType: 'module', parserOptions: { ecmaFeatures: { jsx: true } } },
+  languageOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+    parserOptions: { ecmaFeatures: { jsx: true } },
+  },
 });
 const web = 'apps/web-consumer/app/[locale]/page.tsx';
 
@@ -20,8 +24,20 @@ tester.run('no-hardcoded-ui-string', rule, {
   invalid: [
     { code: '<p>Hello</p>', filename: web, errors: [{ messageId: 'literal' }] },
     { code: '<button aria-label="Close" />', filename: web, errors: [{ messageId: 'literal' }] },
-    { code: '<input placeholder="Name" />', filename: 'packages/ui-native/src/A.tsx', errors: [{ messageId: 'literal' }] },
-    { code: '<img alt="logo" />', filename: 'packages/ui-web/src/A.tsx', errors: [{ messageId: 'literal' }] },
-    { code: '<a title="Go">{t("x")}</a>', filename: 'apps/mobile/app/(tabs)/index.tsx', errors: [{ messageId: 'literal' }] },
+    {
+      code: '<input placeholder="Name" />',
+      filename: 'packages/ui-native/src/A.tsx',
+      errors: [{ messageId: 'literal' }],
+    },
+    {
+      code: '<img alt="logo" />',
+      filename: 'packages/ui-web/src/A.tsx',
+      errors: [{ messageId: 'literal' }],
+    },
+    {
+      code: '<a title="Go">{t("x")}</a>',
+      filename: 'apps/mobile/app/(tabs)/index.tsx',
+      errors: [{ messageId: 'literal' }],
+    },
   ],
 });

@@ -23,7 +23,10 @@ describe('mock hub ping', () => {
     expect(res.body).toEqual({ kind, status: 'ok', type: `mock:${kind}` });
   });
 
-  it.each(['card', 'swift', 'bank2', '..'])('GET /mock/%s/ping returns 404 for an unknown kind', async (kind) => {
-    await request(app.getHttpServer()).get(`/mock/${kind}/ping`).expect(404);
-  });
+  it.each(['card', 'swift', 'bank2', '..'])(
+    'GET /mock/%s/ping returns 404 for an unknown kind',
+    async (kind) => {
+      await request(app.getHttpServer()).get(`/mock/${kind}/ping`).expect(404);
+    },
+  );
 });

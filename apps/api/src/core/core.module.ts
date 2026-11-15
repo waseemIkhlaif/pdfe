@@ -1,5 +1,11 @@
 import { Global, Module } from '@nestjs/common';
-import { IdGenerator, SystemClock, SystemRandom, type ClockService, type RandomService } from '@pdfe/platform-core';
+import {
+  IdGenerator,
+  SystemClock,
+  SystemRandom,
+  type ClockService,
+  type RandomService,
+} from '@pdfe/platform-core';
 import { CLOCK, RANDOM } from './tokens';
 
 /** Provides the injected time, randomness and ID sources. Application code never reads the wall clock directly. */
