@@ -1,6 +1,7 @@
 # Specs feature-number map
 
 - `000-governance-baseline` is Phase 0 (setup, governance and control baseline).
+- `001-platform-foundation` is Phase 2 as one umbrella spec (requested 2026-11-15). Plan features 001 to 009 below are its user stories 1 to 9 (story to plan feature: US1=001, US6=002, US5=003, US3=004, US4=005, US2=006, US7=007, US8=008, US9=009). A story that later gets its own spec keeps its plan number.
 - `000-ux-design-track` is Phase 1 (UX/UI design track, continuous M0 → M7). Phase 1 has no number in plan §J.11, so it uses the `000-` prefix and leaves 001 onward free for the engineering features.
 - Later Spec Kit feature numbers follow plan §J.11 (Feature index, Spec Kit run order):
 

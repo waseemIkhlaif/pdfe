@@ -1,0 +1,5 @@
+# Checksum lists must keep LF line endings on every platform (sha256sum reads CRLF as part of the file name).
+SHA256SUMS text eol=lf
+# Real design exports and baselines are binary evidence; never convert them.
+docs/design/**/*.pdf binary
+docs/design/**/*.png binary
