@@ -286,12 +286,12 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 - [x] T069 [P] [US2] Implement the disabled live adapters in `apps/api/src/integration/adapters/live/disabled-{bank,psp,chain,kyc,sanctions,fx,price,notification}.adapter.ts`. Every method throws `LiveAdapterDisabledError`, and they are never registered in DEMO. Make T061 pass
 - [x] T070 [US2] Implement `apps/api/src/integration/adapter-config.loader.ts`. It reads `ADAPTERS_CONFIG` and refuses an unknown kind, a missing kind, a type outside `mock:*` or a type with no implementation, naming the key. Create `infra/adapters.demo.json` as in `contracts/runtime-config.md`. `GET /v1/health` lists the adapter types. Make T059 pass
 - [x] T071 [US2] Write `db/migrations/0002_integration.sql` with `integration.partner_adapters` (`adapter_type CHECK (adapter_type LIKE 'mock:%')`). At start, the registry upserts one row per configured kind
-- [ ] T072 [US2] Change `infra/docker-compose.yml` to two networks:
+- [x] T072 [US2] Change `infra/docker-compose.yml` to two networks:
   - `app` (`internal: true`): every service except the gateway;
   - `edge`: the gateway.
 
   Add the `gateway` service (Caddy) with `infra/Caddyfile`, which proxies `localhost:3001–3006` to the web apps and `localhost:4000` to the api. Remove every directly published port. Postgres, Redis, worker and mock-hub are never published
-- [ ] T073 [US2] Implement `scripts/egress-probe.mjs` (`pnpm egress:probe`). With `docker compose exec`, it runs the three probes from `contracts/ci-checks.md` §Egress probes inside api, worker and mock-hub. It writes `egress-report.txt` and exits non-zero if any probe succeeds
+- [x] T073 [US2] Implement `scripts/egress-probe.mjs` (`pnpm egress:probe`). With `docker compose exec`, it runs the three probes from `contracts/ci-checks.md` §Egress probes inside api, worker and mock-hub. It writes `egress-report.txt` and exits non-zero if any probe succeeds
 - [x] T074 [US2] Implement `apps/mobile/scripts/check-api-base.mjs` and run it in the mobile `prebuild` and `test` scripts. Make T064 pass
 - [x] T075 [US2] Extend `scripts/safety/forbidden-patterns.txt` with the patterns from `contracts/ci-checks.md` §Repository scans:
   - RPC host fragments;
@@ -300,7 +300,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - a national-ID-like pattern next to `ID` or `هوية`.
 
   Add an exclusion for `SIM-`-prefixed fixture values. Run `scripts/safety/tests/run.sh` in the `governance-check` job of `.github/workflows/governance.yml`. Make T063 pass, and keep `check-phase0.sh` at 17/17
-- [ ] T076 [US2] Update `.github/workflows/ci.yml`:
+- [x] T076 [US2] Update `.github/workflows/ci.yml`:
   - add an `egress` job (path-filtered to `infra/**`, `apps/api/**`, `apps/worker/**`, `apps/mock-hub/**`, and nightly) that starts the stack, runs `pnpm egress:probe` and uploads `egress-report.txt`;
   - add a `startup-guard` step inside `integration`;
   - add both to the `needs` of `ci`
