@@ -144,7 +144,7 @@ jobs:
           corepack enable
           corepack prepare pnpm@11.0.9 --activate
       - run: pnpm install --frozen-lockfile
-      - name: Integration tests (Testcontainers: Postgres, Redis)
+      - name: Integration tests (Testcontainers with Postgres and Redis)
         run: pnpm test:int
 
   fresh-clone:
