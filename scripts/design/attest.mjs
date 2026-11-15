@@ -26,6 +26,19 @@ const flag = (f) => rest.includes(f);
 const cells = (l) => l.split('|').slice(1, -1).map((x) => x.trim());
 const today = new Date().toISOString().slice(0, 10);
 
+// On Windows, `bash` on PATH is usually WSL (C:\Windows\System32\bash.exe), which cannot run the checks.
+// Use Git Bash instead: $PDFE_BASH, then the Git for Windows install next to git.exe, then the default paths.
+function findBash() {
+  if (process.platform !== 'win32') return 'bash';
+  const cands = [process.env.PDFE_BASH];
+  const where = spawnSync('where', ['git'], { encoding: 'utf8' });
+  for (const g of (where.stdout || '').split(/\r?\n/).filter(Boolean)) cands.push(path.join(path.dirname(path.dirname(g)), 'bin', 'bash.exe'));
+  cands.push('C:\\Program Files\\Git\\bin\\bash.exe', 'C:\\Program Files (x86)\\Git\\bin\\bash.exe');
+  const hit = cands.find((p) => p && fs.existsSync(p));
+  if (!hit) { console.error('Git Bash not found. Install Git for Windows or set PDFE_BASH to the full path of bash.exe.'); process.exit(2); }
+  return hit;
+}
+
 function copy() {
   const file = path.join(D, 'copy-decks', `phase-${NN}.md`);
   const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
@@ -68,9 +81,15 @@ function pkg() {
     fs.writeFileSync(files.man, backup.man.replace(/^\*\*Status\*\*:.*$/m, '**Status**: approved'));
     const row = `| phase-${NN} | 1 | Design lead + Product owner + Legal/compliance | @${by.replace(/^@/, '')} | ${today} | yes | docs/design/packages/phase-${NN}/export | — | | |`;
     fs.writeFileSync(files.app, backup.app.replace(/\s*$/, '\n') + row + '\n');
-    const r = spawnSync('bash', ['scripts/design/check-design.sh', '--gate', `phase-${NN}`], { cwd: root, encoding: 'utf8' });
+    const r = spawnSync(findBash(), ['scripts/design/check-design.sh', '--gate', `phase-${NN}`], { cwd: root, encoding: 'utf8' });
     process.stdout.write((r.stdout || '').split('\n').filter((l) => /^FAIL|^PASS D-(2|13|16)/.test(l)).join('\n') + '\n');
-    if (r.status !== 0) { restore(); console.error(`The gate for phase-${NN} failed; nothing was changed.`); process.exit(1); }
+    if (r.status !== 0) {
+      restore();
+      const fails = (r.stdout || '').split('\n').filter((l) => l.startsWith('FAIL'));
+      if (!fails.length) console.error(`The gate could not run (exit ${r.status}${r.error ? ', ' + r.error.message : ''}):\n${(r.stderr || '').trim().split('\n').slice(-10).join('\n')}`);
+      console.error(`The gate for phase-${NN} failed; nothing was changed.`);
+      process.exit(1);
+    }
     console.log(`phase-${NN} approved by @${by} on ${today} (solo self-attestation, Solo=yes). Commit these changes in a pull request.`);
   } catch (e) { restore(); throw e; }
 }
