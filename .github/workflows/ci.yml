@@ -29,6 +29,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       fresh_clone: ${{ steps.f.outputs.fresh_clone }}
+      egress: ${{ steps.f.outputs.egress }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -37,13 +38,18 @@ jobs:
         name: Decide which path-filtered jobs run
         run: |
           if [ "${{ github.event_name }}" != "pull_request" ]; then
-            echo "fresh_clone=true" >> "$GITHUB_OUTPUT"; exit 0
+            echo "fresh_clone=true" >> "$GITHUB_OUTPUT"; echo "egress=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
           if echo "$files" | grep -Eq '^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|infra/|scripts/(bootstrap|dev-all|smoke)|apps/|packages/|db/|\.github/workflows/ci\.yml)'; then
             echo "fresh_clone=true" >> "$GITHUB_OUTPUT"
           else
             echo "fresh_clone=false" >> "$GITHUB_OUTPUT"
+          fi
+          if echo "$files" | grep -Eq '^(infra/|apps/api/|apps/worker/|apps/mock-hub/|packages/platform-core/|packages/domain-types/|\.github/workflows/ci\.yml)'; then
+            echo "egress=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "egress=false" >> "$GITHUB_OUTPUT"
           fi
 
   static:
@@ -146,6 +152,10 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Integration tests (Testcontainers with Postgres and Redis)
         run: pnpm test:int
+      - name: Startup guard (LIVE mode, non-mock adapter, unknown adapter and missing kind must all refuse to start)
+        run: |
+          pnpm turbo run build --filter @pdfe/api
+          pnpm --filter @pdfe/api exec vitest run test/startup-guard.spec.ts
 
   fresh-clone:
     needs: changes
@@ -178,10 +188,44 @@ jobs:
         if: always()
         run: docker compose --env-file .env -f infra/docker-compose.yml down -v
 
+  egress:
+    needs: changes
+    if: needs.changes.outputs.egress == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Start the stack
+        run: |
+          node -e "import('./scripts/bootstrap.mjs').then((m) => m.ensureEnv())"
+          docker compose --env-file .env -f infra/docker-compose.yml up -d --build --wait
+      - name: Egress probes (every probe from api, worker and mock-hub must be blocked)
+        run: node scripts/egress-probe.mjs
+      - name: Upload the egress report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: egress-report
+          path: egress-report.txt
+      - name: Logs (on failure)
+        if: failure()
+        run: docker compose --env-file .env -f infra/docker-compose.yml logs --no-color | tail -300
+      - name: Stop and delete the stack
+        if: always()
+        run: docker compose --env-file .env -f infra/docker-compose.yml down -v
+
   # The single required check. Skipped path-filtered jobs do not fail it.
   ci:
     if: always()
-    needs: [changes, static, unit, deps, build, integration, fresh-clone]
+    needs: [changes, static, unit, deps, build, integration, fresh-clone, egress]
     runs-on: ubuntu-latest
     steps:
       - name: Fail if any job failed or was cancelled

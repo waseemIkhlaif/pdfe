@@ -1,0 +1,32 @@
+# Gateway: publishes each app on its own loopback port and forwards to the internal service.
+{
+	auto_https off
+}
+
+:3001 {
+	reverse_proxy web-consumer:3001
+}
+
+:3002 {
+	reverse_proxy web-merchant:3002
+}
+
+:3003 {
+	reverse_proxy web-business:3003
+}
+
+:3004 {
+	reverse_proxy web-console:3004
+}
+
+:3005 {
+	reverse_proxy web-investor:3005
+}
+
+:3006 {
+	reverse_proxy web-devportal:3006
+}
+
+:4000 {
+	reverse_proxy api:4000
+}

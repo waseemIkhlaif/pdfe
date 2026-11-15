@@ -7,7 +7,8 @@
   "scripts": {
     "start": "expo start",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test:unit": "echo no unit tests yet"
+    "test:unit": "node --test \"scripts/*.test.mjs\"",
+    "prebuild:check": "node scripts/check-api-base.mjs"
   },
   "dependencies": {
     "@pdfe/ui-native": "workspace:*",

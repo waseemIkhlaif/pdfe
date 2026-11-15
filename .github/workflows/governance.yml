@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Phase 0 governance checks (format mode)
         run: bash scripts/governance/check-phase0.sh
+      - name: Safety scan fixtures (forbidden patterns must flag the fail- samples and pass the clean ones)
+        run: bash scripts/safety/tests/run.sh
 
   secret-scan:
     runs-on: ubuntu-latest

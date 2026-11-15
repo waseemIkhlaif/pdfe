@@ -253,47 +253,47 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 2 ⚠️ (write first, must fail)
 
-- [ ] T059 [P] [US2] Write `apps/api/test/startup-guard.spec.ts`, which spawns the built api with `--once` and the fixtures `apps/api/test/fixtures/adapters.{http-real,mock-unknown,missing-kind,unknown-kind}.json`. Expected results:
+- [x] T059 [P] [US2] Write `apps/api/test/startup-guard.spec.ts`, which spawns the built api with `--once` and the fixtures `apps/api/test/fixtures/adapters.{http-real,mock-unknown,missing-kind,unknown-kind}.json`. Expected results:
   - `APP_MODE=LIVE`, `APP_MODE` unset and `APP_MODE=demo` (wrong case) each exit 1 with `LIVE mode is not supported` or `APP_MODE must be DEMO`;
   - each adapter fixture exits 1, and the message names the offending key, for example `bank: http:real`;
   - `infra/adapters.demo.json` starts normally
-- [ ] T060 [P] [US2] Write `packages/platform-core/test/egress-guard.test.ts`. After `installEgressGuard(['localhost','127.0.0.1','api'])`:
+- [x] T060 [P] [US2] Write `packages/platform-core/test/egress-guard.test.ts`. After `installEgressGuard(['localhost','127.0.0.1','api'])`:
   - `fetch`, `http.get`, `https.get`, `net.connect` and `tls.connect` to `example.com` and `1.1.1.1` reject with `EgressBlockedError` before any DNS lookup (spy on `dns.lookup`);
   - a local test server on `127.0.0.1` stays reachable
-- [ ] T061 [P] [US2] Write `apps/api/test/live-adapters.spec.ts`: every method of every `Disabled*Adapter` throws `LiveAdapterDisabledError` (code `LIVE_ADAPTER_DISABLED`), and no socket is opened (spy on `net.Socket.prototype.connect`)
-- [ ] T062 [P] [US2] Write `apps/api/test/adapter-registry.spec.ts`: registering a kind twice is refused; resolving an unregistered kind or type throws; `list()` returns `kind → type`, and every type starts with `mock:`
-- [ ] T063 [P] [US2] Add scan fixtures in the D-11 style under `scripts/safety/tests/fixtures/`. A runner, `scripts/safety/tests/run.sh`, asserts that the forbidden-pattern scan fails or passes as expected:
+- [x] T061 [P] [US2] Write `apps/api/test/live-adapters.spec.ts`: every method of every `Disabled*Adapter` throws `LiveAdapterDisabledError` (code `LIVE_ADAPTER_DISABLED`), and no socket is opened (spy on `net.Socket.prototype.connect`)
+- [x] T062 [P] [US2] Write `apps/api/test/adapter-registry.spec.ts`: registering a kind twice is refused; resolving an unregistered kind or type throws; `list()` returns `kind → type`, and every type starts with `mock:`
+- [x] T063 [P] [US2] Add scan fixtures in the D-11 style under `scripts/safety/tests/fixtures/`. A runner, `scripts/safety/tests/run.sh`, asserts that the forbidden-pattern scan fails or passes as expected:
   - expected to fail: `rpc-mainnet/` (an RPC hostname fragment from the extended list), `iban-real-looking/`, `national-id/` (9 digits next to `ID` and next to `هوية`), `private-key/`;
   - expected to pass: `iban-sim/` (a `SIM-`-prefixed fixture)
-- [ ] T064 [P] [US2] Write `apps/mobile/scripts/check-api-base.test.mjs`. In the DEMO profile, `EXPO_PUBLIC_API_BASE_URL` values `http://10.0.2.2:4000` and `http://localhost:4000` pass, and `http://example.com` fails
+- [x] T064 [P] [US2] Write `apps/mobile/scripts/check-api-base.test.mjs`. In the DEMO profile, `EXPO_PUBLIC_API_BASE_URL` values `http://10.0.2.2:4000` and `http://localhost:4000` pass, and `http://example.com` fails
 
 ### Implementation for User Story 2
 
-- [ ] T065 [US2] Implement `packages/platform-core/src/egress-guard.ts`:
+- [x] T065 [US2] Implement `packages/platform-core/src/egress-guard.ts`:
   - `installEgressGuard(hosts)` sets an undici global dispatcher that rejects non-internal origins;
   - it patches `http.globalAgent`, `https.globalAgent`, `net.connect`, `net.createConnection` and `tls.connect`;
   - `EgressBlockedError` is added to `errors.ts`.
 
   Call it as the first statement of `apps/api/src/main.ts`, `apps/worker/src/main.ts` and `apps/mock-hub/src/main.ts`, with `INTERNAL_HOSTS`. Make T060 pass
-- [ ] T066 [US2] Implement `packages/platform-core/src/startup-guard.ts`:
+- [x] T066 [US2] Implement `packages/platform-core/src/startup-guard.ts`:
   - `assertDemoMode(env)`;
   - `assertSafetyEnv(env)`: `INTERNAL_HOSTS` and the adapter allowlist equal the registry defaults of the safety-locked keys;
   - on failure, print `system.start_refused: <reason>` to stderr and exit 1.
 
   Call it in the api, worker and mock-hub mains before Nest starts. Add the `--once` flag to the api (`start:once` script: start, check, exit 0)
-- [ ] T067 [US2] Add `packages/domain-types/src/adapters.ts`: the 8 kinds and their port interfaces (`BankPort`, `PspPort`, `ChainPort`, `KycPort`, `SanctionsPort`, `FxPort`, `PricePort`, `NotificationPort`), each with `ping()` in Phase 2. Implement `apps/api/src/integration/adapter-registry.ts` (`register`, `resolve`, `list`). Make T062 pass
-- [ ] T068 [P] [US2] Implement the mock adapters in `apps/api/src/integration/adapters/mock/{bank,psp,chain,kyc,sanctions,fx,price,notification}.mock.ts`. Each calls `http://mock-hub:4100/mock/<kind>/ping`
-- [ ] T069 [P] [US2] Implement the disabled live adapters in `apps/api/src/integration/adapters/live/disabled-{bank,psp,chain,kyc,sanctions,fx,price,notification}.adapter.ts`. Every method throws `LiveAdapterDisabledError`, and they are never registered in DEMO. Make T061 pass
-- [ ] T070 [US2] Implement `apps/api/src/integration/adapter-config.loader.ts`. It reads `ADAPTERS_CONFIG` and refuses an unknown kind, a missing kind, a type outside `mock:*` or a type with no implementation, naming the key. Create `infra/adapters.demo.json` as in `contracts/runtime-config.md`. `GET /v1/health` lists the adapter types. Make T059 pass
-- [ ] T071 [US2] Write `db/migrations/0002_integration.sql` with `integration.partner_adapters` (`adapter_type CHECK (adapter_type LIKE 'mock:%')`). At start, the registry upserts one row per configured kind
+- [x] T067 [US2] Add `packages/domain-types/src/adapters.ts`: the 8 kinds and their port interfaces (`BankPort`, `PspPort`, `ChainPort`, `KycPort`, `SanctionsPort`, `FxPort`, `PricePort`, `NotificationPort`), each with `ping()` in Phase 2. Implement `apps/api/src/integration/adapter-registry.ts` (`register`, `resolve`, `list`). Make T062 pass
+- [x] T068 [P] [US2] Implement the mock adapters in `apps/api/src/integration/adapters/mock/{bank,psp,chain,kyc,sanctions,fx,price,notification}.mock.ts`. Each calls `http://mock-hub:4100/mock/<kind>/ping`
+- [x] T069 [P] [US2] Implement the disabled live adapters in `apps/api/src/integration/adapters/live/disabled-{bank,psp,chain,kyc,sanctions,fx,price,notification}.adapter.ts`. Every method throws `LiveAdapterDisabledError`, and they are never registered in DEMO. Make T061 pass
+- [x] T070 [US2] Implement `apps/api/src/integration/adapter-config.loader.ts`. It reads `ADAPTERS_CONFIG` and refuses an unknown kind, a missing kind, a type outside `mock:*` or a type with no implementation, naming the key. Create `infra/adapters.demo.json` as in `contracts/runtime-config.md`. `GET /v1/health` lists the adapter types. Make T059 pass
+- [x] T071 [US2] Write `db/migrations/0002_integration.sql` with `integration.partner_adapters` (`adapter_type CHECK (adapter_type LIKE 'mock:%')`). At start, the registry upserts one row per configured kind
 - [ ] T072 [US2] Change `infra/docker-compose.yml` to two networks:
   - `app` (`internal: true`): every service except the gateway;
   - `edge`: the gateway.
 
   Add the `gateway` service (Caddy) with `infra/Caddyfile`, which proxies `localhost:3001–3006` to the web apps and `localhost:4000` to the api. Remove every directly published port. Postgres, Redis, worker and mock-hub are never published
 - [ ] T073 [US2] Implement `scripts/egress-probe.mjs` (`pnpm egress:probe`). With `docker compose exec`, it runs the three probes from `contracts/ci-checks.md` §Egress probes inside api, worker and mock-hub. It writes `egress-report.txt` and exits non-zero if any probe succeeds
-- [ ] T074 [US2] Implement `apps/mobile/scripts/check-api-base.mjs` and run it in the mobile `prebuild` and `test` scripts. Make T064 pass
-- [ ] T075 [US2] Extend `scripts/safety/forbidden-patterns.txt` with the patterns from `contracts/ci-checks.md` §Repository scans:
+- [x] T074 [US2] Implement `apps/mobile/scripts/check-api-base.mjs` and run it in the mobile `prebuild` and `test` scripts. Make T064 pass
+- [x] T075 [US2] Extend `scripts/safety/forbidden-patterns.txt` with the patterns from `contracts/ci-checks.md` §Repository scans:
   - RPC host fragments;
   - real bank API host fragments;
   - an IBAN-like pattern;

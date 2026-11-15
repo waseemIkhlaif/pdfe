@@ -56,6 +56,24 @@ Every page shows the banner **SIMULATION — NOT REAL MONEY / محاكاة — �
 | `pnpm down`                                                   | Stop the stack, keep the data                         |
 | `pnpm reset`                                                  | Stop the stack and delete its volumes                 |
 
+## Safety boundary
+
+The platform cannot reach anything real. Three layers enforce this:
+
+1. **Start-up checks.** The api refuses to start (exit code 1, message starting `system.start_refused`) if `APP_MODE` is not `DEMO`, if `INTERNAL_HOSTS` differs from the fixed list, or if `ADAPTERS_CONFIG` names any adapter that is not its own mock (`mock:bank`, `mock:psp`, and so on), an unknown kind, or leaves a kind out. Live adapter classes exist but are never registered and fail before doing anything.
+2. **In-code egress guard.** The api, worker and mock-hub refuse any connection to a host outside the internal list, before any name lookup.
+3. **Container network.** In `pnpm dev:all` every service sits on an internal Compose network with no route to the internet. Only the gateway container is also on the outside network, and it publishes the apps on `127.0.0.1` only.
+
+Check layer 3 any time the stack is running:
+
+```bash
+pnpm egress:probe     # tries to reach the internet from inside api, worker and mock-hub; every probe must be blocked
+```
+
+It writes `egress-report.txt` (not committed) and exits non-zero if anything got through.
+
+`pnpm dev` (fast mode) has only layers 1 and 2, because the apps run on your machine. Use `pnpm dev:all` when you need to prove the boundary.
+
 ## Troubleshooting
 
 - **A script fails with `\r: command not found` or a checksum mismatch.** Git converted line endings to CRLF. `.gitattributes` forces LF for scripts, SQL, Dockerfiles and checksum lists. Re-clone, or run `git add --renormalize .`.

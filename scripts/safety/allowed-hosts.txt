@@ -23,3 +23,5 @@ redis
 gateway
 # reason: IANA-reserved example domain (RFC 2606), used only as the target that egress probes must fail to reach
 example.com
+# reason: public DNS resolver address, used only as the target of the egress probe, which must fail to reach it
+1.1.1.1

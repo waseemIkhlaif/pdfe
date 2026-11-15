@@ -70,7 +70,7 @@ description: "Task list for 000-ux-design-track (Phase 1 — UX/UI Design Track,
 
 ### Tests for User Story 1
 
-- [X] T015 [P] [US1] Write fixtures `d11-pass-clean/`, `d11-fail-email/`, `d11-fail-phone/` (`+970 59 000 0000` in `docs/design/research/context.md`), `d11-fail-national-id/` (`ID 123456789`) and `d11-fail-participant-name/` (a usability file whose Participant cell is `Sara`) in `scripts/design/tests/fixtures/`
+- [X] T015 [P] [US1] Write fixtures `d11-pass-clean/`, `d11-fail-email/`, `d11-fail-phone/` (`+970 59 000 0000` in `docs/design/research/context.md`), `d11-fail-national-id/` (a nine-digit number written after the word ID) and `d11-fail-participant-name/` (a usability file whose Participant cell is `Sara`) in `scripts/design/tests/fixtures/`
 - [X] T016 [US1] Implement D-11 in `scripts/design/checks/d11-personal-data.sh`. Over `docs/design/research/**` and `docs/design/usability/**` it flags: email `[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}`; phone `(\+97[02]|00 ?97[02]|\b05[0-9])[ -]?[0-9]{2,3}[ -]?[0-9]{3}[ -]?[0-9]{3,4}` and generic E.164 `\+[1-9][0-9]{7,14}`; a 9-digit number within 10 characters of `ID` or `هوية`. It also flags any `Participant` cell not matching `^P[0-9]+$`. Make T015 pass
 
 ### Implementation for User Story 1
