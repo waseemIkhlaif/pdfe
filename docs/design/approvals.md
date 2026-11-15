@@ -9,3 +9,4 @@ Append-only record of approved design artifacts (specs/000-ux-design-track/contr
 
 | Artifact | Version | Approver role | Approver | Date | Solo | Export | Live link | Re-reviewed by | Re-review date |
 |---|---|---|---|---|---|---|---|---|---|
+| phase-02 | 1 | Design lead + Product owner + Legal/compliance | @waseemIkhlaif | 2026-11-15 | yes | docs/design/packages/phase-02/export | — | | |

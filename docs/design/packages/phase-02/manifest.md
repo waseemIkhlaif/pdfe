@@ -4,7 +4,7 @@ High-fidelity screens, wireframes and a clickable prototype for engineering phas
 
 **Phase**: 2
 **Version**: 1
-**Status**: ready-for-approval
+**Status**: approved
 **Prototype**: docs/design/prototype/index.html
 **Copy deck**: docs/design/copy-decks/phase-02.md
 **Testing**: heuristics/phase-02

@@ -9,14 +9,14 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 
 | Screen ID | Interface | Name | Phase | Journeys | PRD IDs | Sizes | Money | Skeleton | Wireframe | Hi-fi | States | Frame | Export |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| CON-001 | CON | Splash and simulation notice | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-002 | CON | Sign-in | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-003 | CON | MFA (privileged only) | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-004 | CON | Demo role picker | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-005 | CON | Language switcher | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-006 | CON | App lock | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-007 | CON | Error, offline and permission screens | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CON-008 | CON | App shell | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-001 | CON | Splash and simulation notice | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-002 | CON | Sign-in | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-003 | CON | MFA (privileged only) | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-004 | CON | Demo role picker | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-005 | CON | Language switcher | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-006 | CON | App lock | 2 | — | FR-SEC-001 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-007 | CON | Error, offline and permission screens | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CON-008 | CON | App shell | 2 | — | FR-DEMO-002 | m360,m390,t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | CON-009 | CON | Onboarding – welcome | 4 | J1 | FR-CMP-001 | m360,m390,t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | CON-010 | CON | Onboarding – personal info | 4 | J1 | FR-CMP-001 | m360,m390,t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | CON-011 | CON | Onboarding – synthetic document | 4 | J1 | FR-CMP-001 | m360,m390,t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
@@ -85,7 +85,7 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 | CON-074 | CON | Explore partners | 11 | — | FR-INC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | CON-075 | CON | Consent | 11 | — | FR-INC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | CON-076 | CON | Referrals | 11 | — | FR-INC-001 | m360,m390,t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
-| MER-001 | MER | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| MER-001 | MER | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | MER-002 | MER | KYB | 4 | — | FR-CMP-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | MER-003 | MER | Dashboard | 6 | J2 | FR-PAY-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-06/export |
 | MER-004 | MER | Create payment and QR | 6 | J2 | FR-PAY-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-06/export |
@@ -102,7 +102,7 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 | MER-015 | MER | Staff | 6 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-06/export |
 | MER-016 | MER | Statements | 6 | J2 | FR-ACC-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-06/export |
 | MER-017 | MER | Invoices | 8 | J7 | FR-BIZ-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
-| BIZ-001 | BIZ | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| BIZ-001 | BIZ | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | BIZ-002 | BIZ | Dashboard | 8 | J7 | FR-BIZ-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
 | BIZ-003 | BIZ | Invoices list | 8 | J7 | FR-BIZ-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
 | BIZ-004 | BIZ | Invoice editor | 8 | J7 | FR-BIZ-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
@@ -118,8 +118,8 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 | BIZ-014 | BIZ | Reports and exports | 8 | J7 | FR-BIZ-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
 | BIZ-015 | BIZ | Team and limits | 8 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
 | BIZ-016 | BIZ | API keys | 8 | — | FR-INT-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
-| OPS-001 | OPS | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| OPS-002 | OPS | Scenario controller | 2 | — | FR-DEMO-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| OPS-001 | OPS | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| OPS-002 | OPS | Scenario controller | 2 | — | FR-DEMO-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | OPS-003 | OPS | Home | 11 | — | FR-OPS-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | OPS-004 | OPS | Transaction explorer | 11 | — | FR-OPS-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | OPS-005 | OPS | Queues | 11 | — | FR-OPS-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
@@ -132,7 +132,7 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 | OPS-012 | OPS | Price feed controls | 10 | J5 | FR-EXC-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-10/export |
 | OPS-013 | OPS | Remittance simulator | 7 | J3 | FR-REM-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-07/export |
 | OPS-014 | OPS | Corridors | 7 | J3 | FR-REM-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-07/export |
-| CMP-001 | CMP | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CMP-001 | CMP | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | CMP-002 | CMP | Onboarding queue | 4 | J6 | FR-CMP-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | CMP-003 | CMP | Onboarding detail | 4 | J6 | FR-CMP-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | CMP-004 | CMP | Alerts list | 4 | J6 | FR-CMP-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
@@ -142,10 +142,10 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 | CMP-008 | CMP | Rules list | 4 | J6 | FR-CMP-003 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | CMP-009 | CMP | Rule editor | 4 | J6 | FR-CMP-003 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-04/export |
 | CMP-010 | CMP | Reports center | 11 | J6 | FR-CMP-004 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
-| CMP-011 | CMP | Audit search | 2 | — | FR-AUD-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CMP-012 | CMP | Audit verify | 2 | — | FR-AUD-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| CMP-013 | CMP | Audit export | 2 | — | FR-AUD-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| FIN-001 | FIN | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CMP-011 | CMP | Audit search | 2 | — | FR-AUD-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CMP-012 | CMP | Audit verify | 2 | — | FR-AUD-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| CMP-013 | CMP | Audit export | 2 | — | FR-AUD-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| FIN-001 | FIN | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | FIN-002 | FIN | Accounts | 3 | — | FR-LED-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-03/export |
 | FIN-003 | FIN | Account detail | 3 | — | FR-LED-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-03/export |
 | FIN-004 | FIN | Journals | 3 | — | FR-LED-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-03/export |
@@ -166,22 +166,22 @@ Checks: D-1 (format), D-3 (covers the plan list), D-6 (skeleton), D-7 (approved 
 | FIN-019 | FIN | PSH redemptions | 9 | J4 | FR-STB-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-09/export |
 | FIN-020 | FIN | PSH events | 9 | J4 | FR-STB-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-09/export |
 | FIN-021 | FIN | PSH reconciliation | 9 | J4 | FR-STB-003 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-09/export |
-| ADM-001 | ADM | Users | 2 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-002 | ADM | Roles | 2 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-003 | ADM | Config list | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-004 | ADM | Config history | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-005 | ADM | Config diff and approve | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-006 | ADM | Config rollback | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-007 | ADM | Feature flags | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| ADM-008 | ADM | Tenants | 2 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
-| INV-001 | INV | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-001 | ADM | Users | 2 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-002 | ADM | Roles | 2 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-003 | ADM | Config list | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-004 | ADM | Config history | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-005 | ADM | Config diff and approve | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-006 | ADM | Config rollback | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-007 | ADM | Feature flags | 2 | — | FR-ADM-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| ADM-008 | ADM | Tenants | 2 | — | FR-SEC-001 | t768,w1280,w1440 | no | no | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| INV-001 | INV | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | INV-002 | INV | Landing | 11 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | INV-003 | INV | Guided scenarios | 11 | — | FR-DEMO-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | INV-004 | INV | KPIs | 11 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | INV-005 | INV | Controls and architecture | 11 | — | FR-DEMO-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | INV-006 | INV | System health | 11 | — | FR-DEMO-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
 | INV-007 | INV | About the simulation | 11 | — | FR-DEMO-002 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-11/export |
-| DEV-001 | DEV | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-02/export |
+| DEV-001 | DEV | App shell | 2 | — | FR-DEMO-002 | t768,w1280,w1440 | no | yes | done | approved | P,E,L,X,D | — | docs/design/packages/phase-02/export |
 | DEV-002 | DEV | Getting started | 8 | — | FR-INT-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
 | DEV-003 | DEV | Auth | 8 | — | FR-INT-001 | t768,w1280,w1440 | no | no | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
 | DEV-004 | DEV | API reference | 8 | — | FR-INT-001 | t768,w1280,w1440 | no | yes | done | in-review | P,E,L,X,D | — | docs/design/packages/phase-08/export |
