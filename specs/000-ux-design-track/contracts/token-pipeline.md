@@ -39,10 +39,10 @@ packages/design-tokens/
 1. **Format**: W3C DTCG (`$value`, `$type`, `$description`). References use `{group.token}` aliases.
 2. **Names**:
    - CSS variables are `--pdfe-<path-kebab>`, for example `--pdfe-color-semantic-danger-fg`.
-   - TS keys use the camelCase path, for example `theme.color.semantic.dangerFg`.
+   - TS keys are the nested path with each segment in camelCase, for example `theme.color.semantic.danger.fg`. Numeric segments stay as quoted keys (`theme.space["4"]`).
    - Outputs never use physical names such as `left` or `right`. Spacing tokens are direction-free, and the components apply them with logical properties.
 3. **Reserved accent**: tokens under `color.simulation.*` carry `$extensions.pdfe.reserved = "simulation-only"`. The contrast checker fails if any pair with `group != "simulation"` references one of them.
-4. **Brand token**: `color.brand.primary` is the only token that D-04 changes. Every other brand-tinted token aliases it.
+4. **Brand token**: `color.brand.primary` is the only token that D-04 changes. Every other brand-tinted token (`color.brand.focus`) aliases it, and the text on it (`color.brand.onPrimary`) aliases a neutral.
 5. **Motion**: every `motion.duration.*` token has a `motion.reduced.*` twin, which is `0ms` or a fade-only duration.
 6. **Determinism**: the same input always gives byte-identical output, with no timestamps in the generated files (Article X). CI builds twice and compares the two outputs.
 7. **Pairs file** (`pairs.json`): an array of `{ "id", "fg", "bg", "usage": "text"|"large-text"|"ui", "group": "general"|"simulation" }`. The required ratio is derived from `usage`: `text` needs 4.5, while `large-text` and `ui` need 3.0.

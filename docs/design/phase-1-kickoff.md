@@ -22,3 +22,7 @@
 | 6 | Design principles | `principles.md` |
 
 All research uses synthetic data only. Designs for Phase N are approved before Phase N's `/speckit-plan`.
+
+## Status
+
+Track tooling, Stage 1 and Stage 2 drafts, the screen inventory and the design-system tokens are in the repository. Approvals are recorded in [approvals.md](approvals.md); the spec, plan and tasks are in `specs/000-ux-design-track/`.

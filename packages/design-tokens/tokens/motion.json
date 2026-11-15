@@ -1,0 +1,28 @@
+{
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$value": "150ms"
+      },
+      "base": {
+        "$value": "250ms"
+      }
+    },
+    "reduced": {
+      "$type": "duration",
+      "fast": {
+        "$value": "0ms"
+      },
+      "base": {
+        "$value": "0ms"
+      }
+    },
+    "easing": {
+      "$type": "string",
+      "standard": {
+        "$value": "cubic-bezier(0.2, 0, 0, 1)"
+      }
+    }
+  }
+}

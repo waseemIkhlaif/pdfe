@@ -18,7 +18,7 @@ docs/design/
 │   └── test-plan.md
 ├── personas/PER-01-individual.md … PER-10-demo-viewer.md
 ├── ia/
-│   ├── sitemaps/CON.md MER.md BIZ.md OPS.md CMP.md FIN.md INV.md DEV.md
+│   ├── sitemaps/CON-sitemap.md MER-sitemap.md BIZ-sitemap.md OPS-sitemap.md CMP-sitemap.md FIN-sitemap.md INV-sitemap.md DEV-sitemap.md
 │   ├── navigation-model.md
 │   └── permission-matrix.md
 ├── flows/J1.md … J7.md
@@ -57,7 +57,8 @@ It contains these `## ` sections: `Participants`, `Session formats`, `Tasks by j
 ```
 Each persona cell is `full`, `read` or `—`.
 
-## 6. Sitemaps (`ia/sitemaps/<IF>.md`)
+## 6. Sitemaps (`ia/sitemaps/<IF>-sitemap.md`)
+The `-sitemap` suffix is required: `CON` is a reserved device name on Windows, so a file named `CON.md` cannot be added to git there.
 Each file has a Mermaid `flowchart` block and this table:
 ```
 | Nav ID | Label key | Target screen | Roles |

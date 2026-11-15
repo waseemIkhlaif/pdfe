@@ -4,7 +4,7 @@ check_c16() {
   local f term bad=0 text
   while IFS= read -r f; do
     case "$f" in
-      docs/source/*|scripts/safety/*|specs/000-governance-baseline/contracts/governance-check.md|.claude/*|.specify/templates/*) continue ;;
+      docs/source/*|scripts/safety/*|specs/000-governance-baseline/contracts/governance-check.md|.claude/*|.specify/templates/*|scripts/design/tests/fixtures/*) continue ;;
     esac
     text="$(tr -d '\r' < "$f" | awk '/^> Source: /{s=1;next} /^> End source/{s=0;next} !s{print NR": "$0}')"
     while IFS= read -r term; do
