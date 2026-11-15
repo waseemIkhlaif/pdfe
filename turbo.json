@@ -1,9 +1,25 @@
 {
   "tasks": {
-    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", ".next/**", "!.next/cache/**"] },
-    "typecheck": { "dependsOn": ["^build"] },
-    "test:unit": { "dependsOn": ["^build"] },
-    "test:int": { "dependsOn": ["^build"], "cache": false },
-    "dev": { "cache": false, "persistent": true }
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test:unit": {
+      "dependsOn": ["^build"]
+    },
+    "test:int": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "@pdfe/api#test:unit": {
+      "dependsOn": ["^build", "build"]
+    }
   }
 }

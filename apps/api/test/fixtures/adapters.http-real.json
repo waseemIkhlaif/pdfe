@@ -1,0 +1,10 @@
+{
+  "bank": "http:real",
+  "psp": "mock:psp",
+  "chain": "mock:chain",
+  "kyc": "mock:kyc",
+  "sanctions": "mock:sanctions",
+  "fx": "mock:fx",
+  "price": "mock:price",
+  "notification": "mock:notification"
+}

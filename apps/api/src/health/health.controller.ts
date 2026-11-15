@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Controller, Get, Inject, Res } from '@nestjs/common';
 import type { Response } from 'express';
+import { AdapterRegistry } from '../integration/adapter-registry';
 import { HEALTH_CHECKS, type HealthCheck } from './health.checks';
 
 const version: string = (
@@ -10,9 +11,12 @@ const version: string = (
 
 @Controller('v1')
 export class HealthController {
-  constructor(@Inject(HEALTH_CHECKS) private readonly checks: HealthCheck[]) {}
+  constructor(
+    @Inject(HEALTH_CHECKS) private readonly checks: HealthCheck[],
+    private readonly adapters: AdapterRegistry,
+  ) {}
 
-  /** Public. Liveness and readiness; always reports the mode. Adapter types are listed once the registry exists. */
+  /** Public. Liveness and readiness; always reports the mode. Lists the adapter types, which are all mock types. */
   @Get('health')
   async health(@Res({ passthrough: true }) res: Response) {
     const results = await Promise.all(
@@ -21,7 +25,12 @@ export class HealthController {
     const checks = Object.fromEntries(results);
     const ok = results.every(([, s]) => s === 'up');
     res.status(ok ? 200 : 503);
-    return { status: ok ? 'ok' : 'degraded', mode: 'DEMO', checks, adapters: [] as string[] };
+    return {
+      status: ok ? 'ok' : 'degraded',
+      mode: 'DEMO',
+      checks,
+      adapters: Object.values(this.adapters.list()).sort(),
+    };
   }
 
   /** Public. API version and build. */
