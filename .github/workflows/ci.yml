@@ -100,7 +100,7 @@ jobs:
       - name: pnpm audit (JSON; the exception check below decides)
         run: pnpm audit --audit-level=high --json > audit.json || true
       - name: Trivy filesystem scan (HIGH and CRITICAL)
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           scan-type: fs
           scan-ref: .
