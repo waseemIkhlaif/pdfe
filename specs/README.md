@@ -1,6 +1,7 @@
 # Specs feature-number map
 
 - `000-governance-baseline` is Phase 0 (setup, governance and control baseline).
+- `000-ux-design-track` is Phase 1 (UX/UI design track, continuous M0 → M7). Phase 1 has no number in plan §J.11, so it uses the `000-` prefix and leaves 001 onward free for the engineering features.
 - Later Spec Kit feature numbers follow plan §J.11 (Feature index, Spec Kit run order):
 
 | # | Feature | Phase | Priority |
