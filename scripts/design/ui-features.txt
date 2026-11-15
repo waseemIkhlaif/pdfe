@@ -1,4 +1,5 @@
-# features with no UI (001 002 006 012 091) are not listed. Format: NNN phase-NN (feature index: plan section J.11)
+# features with no UI (002 006 012 091) are not listed. 001 is the Phase 2 umbrella spec (specs/001-platform-foundation), which includes the app shells. Format: NNN phase-NN (feature index: plan section J.11)
+001 phase-02
 003 phase-02
 004 phase-02
 005 phase-02
