@@ -1,0 +1,15 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "tests/*"
+  - "scripts/design/render"
+
+# Dependency install scripts stay off unless a package is listed here with a reason.
+# style-dictionary and glob: the token build needs no install scripts.
+# cpu-features, protobufjs, ssh2: Testcontainers transitive add-ons; the pure-JS fallbacks are enough.
+allowBuilds:
+  "@bundled-es-modules/glob": false
+  style-dictionary: false
+  cpu-features: false
+  protobufjs: false
+  ssh2: false

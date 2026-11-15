@@ -31,3 +31,7 @@ R-04; constitution Articles X and XI; plan Part D.
 ## Verification
 
 Planned in feature 001: a clean-clone install and build with one command; CI runs affected-package tasks.
+
+## Implementation notes (Phase 2)
+
+- **TypeScript version (2026-11-15):** TypeScript 7.0.2 compiles NestJS constructor injection correctly (`design:paramtypes` is emitted with `experimentalDecorators` and `emitDecoratorMetadata`). It cannot be used repository-wide, because `typescript-eslint` 8.x supports only TypeScript below 6.1 and TypeScript 7 has no JavaScript compiler API for it. The workspace therefore pins **TypeScript ~6.0.3** in the root `package.json`, one version for every package. Revisit when `typescript-eslint` supports 7.x.

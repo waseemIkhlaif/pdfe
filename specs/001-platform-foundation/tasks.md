@@ -38,35 +38,35 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 **Purpose**: the workspace, the toolchain and the custom lint rules.
 
-- [ ] T001 Check TypeScript 7 for NestJS: in a scratch directory, compile one NestJS controller that uses constructor injection, with `experimentalDecorators` and `emitDecoratorMetadata`, using TypeScript 7.x. If the emitted metadata is right, pin 7.x; otherwise pin the newest 6.x. Record the outcome and the reason under "Implementation notes (Phase 2)" in `docs/adr/ADR-002-typescript-monorepo.md`
-- [ ] T002 Create the root `package.json` with these fields:
+- [X] T001 Check TypeScript 7 for NestJS: in a scratch directory, compile one NestJS controller that uses constructor injection, with `experimentalDecorators` and `emitDecoratorMetadata`, using TypeScript 7.x. If the emitted metadata is right, pin 7.x; otherwise pin the newest 6.x. Record the outcome and the reason under "Implementation notes (Phase 2)" in `docs/adr/ADR-002-typescript-monorepo.md`
+- [X] T002 Create the root `package.json` with these fields:
   - `"private": true`, `"packageManager": "pnpm@11.0.9"`, `"engines": { "node": ">=22" }`;
   - every script listed in `specs/001-platform-foundation/contracts/runtime-config.md` §Root commands, plus `egress:probe` and `totp`.
 
   Also create `pnpm-workspace.yaml` (members `apps/*`, `packages/*`, `tests/*`, `scripts/design/render`; move the `allowBuilds` policy from `packages/design-tokens/pnpm-workspace.yaml` here) and `turbo.json` (pipelines `build`, `lint`, `typecheck`, `test:unit`, `test:int`, each with its outputs)
-- [ ] T003 Bring `packages/design-tokens` (`@pdfe/design-tokens`) and `scripts/design/render` (`@pdfe/design-render`) into the workspace:
+- [X] T003 Bring `packages/design-tokens` (`@pdfe/design-tokens`) and `scripts/design/render` (`@pdfe/design-render`) into the workspace:
   - delete their own `pnpm-lock.yaml` and `pnpm-workspace.yaml`;
   - run `pnpm install` at the root to produce the single `pnpm-lock.yaml`;
   - in `.github/workflows/governance.yml`, change the `design-check` job to one root `pnpm install --frozen-lockfile`, followed by `pnpm --filter @pdfe/design-tokens test|build|verify` and `pnpm --filter @pdfe/design-render verify`.
 
   Confirm that `bash scripts/design/check-design.sh` and `bash scripts/design/tests/run.sh` still pass
-- [ ] T004 [P] Create `packages/config` (`@pdfe/config`): `eslint.config.base.mjs` (typescript-eslint strict, import order), `tsconfig.base.json` (strict, `target` as chosen in T001, decorators enabled), `prettier.config.mjs`. Add the root `eslint.config.mjs`, `tsconfig.json` and `prettier.config.mjs` that re-export them, plus `.prettierignore` (lockfile, `dist/`, `.next/`, `docs/design/packages/**`)
-- [ ] T005 [P] Extend `.gitattributes` with `eol=lf` for `*.sh`, `*.sql`, `Dockerfile*`, `*.Dockerfile`, `.env.example`, `Caddyfile` and `db/seeds/scenarios/**/*.yaml`. Keep the existing `SHA256SUMS`, PDF and PNG rules unchanged
-- [ ] T006 [P] Extend `.gitignore` with `.turbo/`, `.next/`, `.expo/`, `apps/mobile/android/`, `apps/mobile/ios/`, `playwright-report/`, `test-results/` and `/egress-report.txt`. Create `.dockerignore` with `node_modules`, `.git`, `**/.next`, `**/dist`, `.env*` (but not `.env.example`), `coverage`, `docs/design/packages`
-- [ ] T007 [P] Create `.env.example` with placeholder values for every variable in `contracts/runtime-config.md` §Environment variables. Secrets are written as `<generated>`. Hosts are only Compose service names, `localhost` and `10.0.2.2`
-- [ ] T008 [P] Create `packages/test-kit` (`@pdfe/test-kit`) with `vitest.base.ts` (shared Vitest config, fast-check in reduced mode when `CI_REDUCED=1`) and `src/containers.ts`, which starts PostgreSQL 16 and Redis 7 through Testcontainers and returns connection URLs
-- [ ] T009 [P] Create `docs/security/dependency-exceptions.md` with an empty table (columns: package, advisory ID, severity, reason, dated expiry, attested by) and a short rule: an entry needs a dated expiry of 90 days at most
-- [ ] T010 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-nondeterminism.test.ts`:
+- [X] T004 [P] Create `packages/config` (`@pdfe/config`): `eslint.config.base.mjs` (typescript-eslint strict, import order), `tsconfig.base.json` (strict, `target` as chosen in T001, decorators enabled), `prettier.config.mjs`. Add the root `eslint.config.mjs`, `tsconfig.json` and `prettier.config.mjs` that re-export them, plus `.prettierignore` (lockfile, `dist/`, `.next/`, `docs/design/packages/**`)
+- [X] T005 [P] Extend `.gitattributes` with `eol=lf` for `*.sh`, `*.sql`, `Dockerfile*`, `*.Dockerfile`, `.env.example`, `Caddyfile` and `db/seeds/scenarios/**/*.yaml`. Keep the existing `SHA256SUMS`, PDF and PNG rules unchanged
+- [X] T006 [P] Extend `.gitignore` with `.turbo/`, `.next/`, `.expo/`, `apps/mobile/android/`, `apps/mobile/ios/`, `playwright-report/`, `test-results/` and `/egress-report.txt`. Create `.dockerignore` with `node_modules`, `.git`, `**/.next`, `**/dist`, `.env*` (but not `.env.example`), `coverage`, `docs/design/packages`
+- [X] T007 [P] Create `.env.example` with placeholder values for every variable in `contracts/runtime-config.md` §Environment variables. Secrets are written as `<generated>`. Hosts are only Compose service names, `localhost` and `10.0.2.2`
+- [X] T008 [P] Create `packages/test-kit` (`@pdfe/test-kit`) with `vitest.base.ts` (shared Vitest config, fast-check in reduced mode when `CI_REDUCED=1`) and `src/containers.ts`, which starts PostgreSQL 16 and Redis 7 through Testcontainers and returns connection URLs
+- [X] T009 [P] Create `docs/security/dependency-exceptions.md` with an empty table (columns: package, advisory ID, severity, reason, dated expiry, attested by) and a short rule: an entry needs a dated expiry of 90 days at most
+- [X] T010 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-nondeterminism.test.ts`:
   - `Date.now()`, `new Date()` without arguments, `Math.random()` and `crypto.randomUUID()` are reported in any file outside `packages/platform-core/`;
   - `new Date(value)` is allowed;
   - files under `packages/platform-core/` are allowed
-- [ ] T011 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-physical-css.test.ts`:
+- [X] T011 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-physical-css.test.ts`:
   - reported: Tailwind classes `ml-*`, `mr-*`, `pl-*`, `pr-*`, `left-*`, `right-*`, `text-left`, `text-right`, `rounded-l*`, `rounded-r*`, `border-l*`, `border-r*`, and style keys `marginLeft`, `marginRight`, `paddingLeft`, `paddingRight`, `left`, `right`;
   - allowed: `ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`, `text-start`, `text-end`
-- [ ] T012 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-hardcoded-ui-string.test.ts`:
+- [X] T012 [P] Write failing RuleTester tests in `packages/config/eslint/rules/__tests__/no-hardcoded-ui-string.test.ts`:
   - reported: a JSX text literal or string literal in `aria-label`, `title`, `placeholder` or `alt` in `apps/web-*/app/**`, `apps/mobile/app/**`, `packages/ui-web/src/**` or `packages/ui-native/src/**`;
   - allowed: `t('…')` calls, `data-testid`, and whitespace-only text
-- [ ] T013 Implement the three rules in `packages/config/eslint/rules/{no-nondeterminism,no-physical-css,no-hardcoded-ui-string}.js` and enable them in `packages/config/eslint.config.base.mjs` (depends on T010–T012). Make the tests in T010–T012 pass
+- [X] T013 Implement the three rules in `packages/config/eslint/rules/{no-nondeterminism,no-physical-css,no-hardcoded-ui-string}.js` and enable them in `packages/config/eslint.config.base.mjs` (depends on T010–T012). Make the tests in T010–T012 pass
 
 ---
 
@@ -78,17 +78,17 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests first
 
-- [ ] T014 [P] Write `packages/platform-core/test/clock.test.ts`:
+- [X] T014 [P] Write `packages/platform-core/test/clock.test.ts`:
   - `SystemClock` returns the current time;
   - `ScenarioClock(base, stepMs)` starts at `base`, advances only on `advance()` or `tick()` by `stepMs`, and two instances with the same base give the same sequence
-- [ ] T015 [P] Write `packages/platform-core/test/ids.test.ts`:
+- [X] T015 [P] Write `packages/platform-core/test/ids.test.ts`:
   - every ID is a valid UUIDv7 (version and variant bits);
   - IDs from one generator increase monotonically;
   - with fast-check: the same seed and the same `ScenarioClock` give an identical ID sequence, and different seeds give different sequences
-- [ ] T016 [P] Write `packages/platform-core/test/random.test.ts`: the seeded `RandomService` (xoroshiro128+) gives the same sequence for the same seed and different sequences for different seeds; `int(min, max)` stays in range (fast-check)
-- [ ] T017 [P] Write `packages/platform-core/test/canonical-json.test.ts` with RFC 8785 vectors: key ordering by UTF-16 code units, number serialization, string escaping, nested arrays; `sha256Hex(canonicalJson(x))` is stable
-- [ ] T018 [P] Write `packages/platform-core/test/errors.test.ts`: `toEnvelope(err, correlationId)` gives `{ error: { code, message_key: "errors.<code_lower>", correlation_id } }`, plus `details` only for validation errors; unknown errors map to `INTERNAL` without leaking the message
-- [ ] T019 [P] Write `packages/platform-core/test/correlation.test.ts`:
+- [X] T016 [P] Write `packages/platform-core/test/random.test.ts`: the seeded `RandomService` (xoroshiro128+) gives the same sequence for the same seed and different sequences for different seeds; `int(min, max)` stays in range (fast-check)
+- [X] T017 [P] Write `packages/platform-core/test/canonical-json.test.ts` with RFC 8785 vectors: key ordering by UTF-16 code units, number serialization, string escaping, nested arrays; `sha256Hex(canonicalJson(x))` is stable
+- [X] T018 [P] Write `packages/platform-core/test/errors.test.ts`: `toEnvelope(err, correlationId)` gives `{ error: { code, message_key: "errors.<code_lower>", correlation_id } }`, plus `details` only for validation errors; unknown errors map to `INTERNAL` without leaking the message
+- [X] T019 [P] Write `packages/platform-core/test/correlation.test.ts`:
   - accepted: values matching `^[A-Za-z0-9._-]{8,64}$`;
   - replaced by `COR-<uuidv7>`: values that are too short, too long or contain other characters;
   - `runWithContext` and `getContext` keep values across `await`
@@ -104,7 +104,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - an unknown route returns 404 in the error envelope;
   - `GET /v1/meta` returns the version
 - [ ] T022 [P] Write `apps/mock-hub/test/ping.spec.ts`: `GET /mock/{kind}/ping` returns 200 for each of bank, psp, chain, kyc, sanctions, fx, price and notification, and 404 for any other kind
-- [ ] T023 [P] Write `packages/domain-types/test/config-registry.test.ts`:
+- [X] T023 [P] Write `packages/domain-types/test/config-registry.test.ts`:
   - every default validates against its Zod schema;
   - the safety-locked set is exactly `app.mode`, `adapters.allowlist`, `egress.internal_hosts`;
   - every key ending in `_minor` is an integer schema with a minimum of 0;
@@ -112,11 +112,11 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation
 
-- [ ] T024 [P] Implement `packages/platform-core/src/clock.ts` (`ClockService` interface, `SystemClock`, `ScenarioClock`), the only file allowed to call `Date.now()`. Create `packages/platform-core/package.json` (`@pdfe/platform-core`) and `src/index.ts`
-- [ ] T025 [P] Implement `packages/platform-core/src/random.ts`: `RandomService` with `SeededRandom` (`pure-rand` xoroshiro128+) and `SystemRandom` (crypto)
-- [ ] T026 Implement `packages/platform-core/src/ids.ts`: `IdGenerator`, which builds a UUIDv7 from the `ClockService` time and `RandomService` bytes, monotonic within a millisecond (depends on T024, T025)
-- [ ] T027 [P] Implement `packages/platform-core/src/canonical-json.ts` (RFC 8785) and `packages/platform-core/src/hash.ts` (`sha256Hex`)
-- [ ] T028 [P] Implement `packages/platform-core/src/errors.ts` (`AppError`, `toEnvelope`) and `packages/domain-types/src/error-codes.ts`. The codes list holds every code named in `contracts/http-api.md`:
+- [X] T024 [P] Implement `packages/platform-core/src/clock.ts` (`ClockService` interface, `SystemClock`, `ScenarioClock`), the only file allowed to call `Date.now()`. Create `packages/platform-core/package.json` (`@pdfe/platform-core`) and `src/index.ts`
+- [X] T025 [P] Implement `packages/platform-core/src/random.ts`: `RandomService` with `SeededRandom` (`pure-rand` xoroshiro128+) and `SystemRandom` (crypto)
+- [X] T026 Implement `packages/platform-core/src/ids.ts`: `IdGenerator`, which builds a UUIDv7 from the `ClockService` time and `RandomService` bytes, monotonic within a millisecond (depends on T024, T025)
+- [X] T027 [P] Implement `packages/platform-core/src/canonical-json.ts` (RFC 8785) and `packages/platform-core/src/hash.ts` (`sha256Hex`)
+- [X] T028 [P] Implement `packages/platform-core/src/errors.ts` (`AppError`, `toEnvelope`) and `packages/domain-types/src/error-codes.ts`. The codes list holds every code named in `contracts/http-api.md`:
   - general: `FORBIDDEN`, `UNAUTHENTICATED`, `MFA_REQUIRED`, `NOT_FOUND`, `VALIDATION_FAILED`, `RATE_LIMITED`, `INTERNAL`;
   - idempotency: `IDEMPOTENCY_KEY_REQUIRED`, `IDEMPOTENCY_KEY_REUSED`, `IDEMPOTENCY_IN_PROGRESS`;
   - approvals and IAM: `SELF_APPROVAL`, `NOT_PENDING`, `EXPIRED`, `PAYLOAD_CHANGED`, `SOD_CONFLICT`, `ELEVATION_ACTIVE`, `ELEVATION_READ_ONLY`;
@@ -125,9 +125,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - adapters: `LIVE_ADAPTER_DISABLED`.
 
   Create `packages/domain-types/package.json` (`@pdfe/domain-types`)
-- [ ] T029 [P] Implement `packages/platform-core/src/correlation.ts` (AsyncLocalStorage context `{ correlationId, tenantId?, actorId?, elevationId? }`, `acceptOrGenerate(header)`)
-- [ ] T030 [P] Implement `packages/platform-core/src/sim-label.ts`. It exports `SIM_LABEL_EN = "SIMULATION — NOT REAL MONEY"`, `SIM_LABEL_AR = "محاكاة — ليست أموالاً حقيقية"` and `SIM_LABEL = "<en> / <ar>"`, and is the single source of the label text for every later task
-- [ ] T031 Implement `packages/domain-types/src/config-registry.ts` with every key, Zod schema, default and `safetyLocked` flag from `contracts/events-and-config.md`, plus a `ConfigReader` interface and a `DefaultsConfigReader` (the database-backed reader comes in US7) (depends on T023)
+- [X] T029 [P] Implement `packages/platform-core/src/correlation.ts` (AsyncLocalStorage context `{ correlationId, tenantId?, actorId?, elevationId? }`, `acceptOrGenerate(header)`)
+- [X] T030 [P] Implement `packages/platform-core/src/sim-label.ts`. It exports `SIM_LABEL_EN = "SIMULATION — NOT REAL MONEY"`, `SIM_LABEL_AR = "محاكاة — ليست أموالاً حقيقية"` and `SIM_LABEL = "<en> / <ar>"`, and is the single source of the label text for every later task
+- [X] T031 Implement `packages/domain-types/src/config-registry.ts` with every key, Zod schema, default and `safetyLocked` flag from `contracts/events-and-config.md`, plus a `ConfigReader` interface and a `DefaultsConfigReader` (the database-backed reader comes in US7) (depends on T023)
 - [ ] T032 Implement the migration runner in `packages/platform-core/src/migrate/{runner.ts,cli.ts}`:
   - it reads `db/migrations/*.sql` in name order and applies each file in its own transaction;
   - it records SHA-256 hashes and refuses changed files;

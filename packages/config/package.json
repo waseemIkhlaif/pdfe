@@ -1,0 +1,21 @@
+{
+  "name": "@pdfe/config",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared ESLint, TypeScript and Prettier configuration, including the PDFE custom rules.",
+  "exports": {
+    "./eslint": "./eslint.config.base.mjs",
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./prettier": "./prettier.config.mjs"
+  },
+  "scripts": {
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "typescript-eslint": "^8.72.2",
+    "vitest": "^5.1.0"
+  }
+}

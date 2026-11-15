@@ -1,0 +1,10 @@
+pnpm-lock.yaml
+dist/
+.next/
+.turbo/
+node_modules/
+coverage/
+docs/design/packages/**
+docs/design/prototype/**
+specs/**
+*.md

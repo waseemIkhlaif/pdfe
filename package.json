@@ -1,0 +1,35 @@
+{
+  "name": "pdfe",
+  "version": "0.2.0",
+  "private": true,
+  "description": "PDFE - simulation-only Palestinian Digital Financial Ecosystem (synthetic data, no real money).",
+  "packageManager": "pnpm@11.0.9",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "dev:all": "node scripts/dev-all.mjs",
+    "dev": "node scripts/dev.mjs",
+    "down": "docker compose -f infra/docker-compose.yml down",
+    "reset": "docker compose -f infra/docker-compose.yml down -v",
+    "test": "node scripts/test-all.mjs",
+    "test:unit": "turbo run test:unit",
+    "test:int": "turbo run test:int",
+    "test:e2e": "pnpm --filter @pdfe/e2e-web test",
+    "lint": "eslint .",
+    "typecheck": "turbo run typecheck",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "build": "turbo run build",
+    "scenario": "node scripts/scenario.mjs",
+    "egress:probe": "node scripts/egress-probe.mjs",
+    "totp": "node scripts/totp.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "prettier": "^3.10.1",
+    "turbo": "^2.11.11",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.2"
+  }
+}

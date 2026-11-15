@@ -1,0 +1,32 @@
+{
+  "name": "@pdfe/test-kit",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Shared test helpers: Vitest base config and Testcontainers for Postgres and Redis.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./vitest.base": {
+      "types": "./vitest.base.d.ts",
+      "default": "./vitest.base.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@testcontainers/postgresql": "^12.2.1",
+    "@testcontainers/redis": "^12.2.1",
+    "testcontainers": "^12.2.1"
+  },
+  "devDependencies": {
+    "@pdfe/config": "workspace:*",
+    "@types/node": "^22.0.0",
+    "vitest": "^5.1.0"
+  }
+}
