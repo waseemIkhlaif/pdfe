@@ -1,0 +1,1 @@
+const rpc = "https://rpc.ankr.com/eth";

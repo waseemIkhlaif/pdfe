@@ -466,6 +466,9 @@ importers:
 
   packages/platform-core:
     dependencies:
+      '@pdfe/domain-types':
+        specifier: workspace:*
+        version: link:../domain-types
       drizzle-orm:
         specifier: ^0.45.4
         version: 0.45.4(@types/pg@8.23.1)(pg@8.23.1)

@@ -1,8 +1,8 @@
 # C-9: forbidden patterns and non-allowlisted URLs (FR-028). All modes.
-# Scope: tracked files except docs/source/** and scripts/safety/**.
+# Scope: tracked files except docs/source/**, scripts/safety/** and the design checker's deliberate-failure fixtures.
 check_c09() {
   local files pats bad=0 line host
-  files="$(tracked_files | grep -Ev '^(docs/source/|scripts/safety/|\.git/)' )"
+  files="$(tracked_files | grep -Ev '^(docs/source/|scripts/safety/|scripts/design/tests/fixtures/|\.git/)' )"
   pats="$(mktemp)"
   grep -Ev '^[[:space:]]*(#|$)' scripts/safety/forbidden-patterns.txt > "$pats"
   if [ -n "$files" ]; then

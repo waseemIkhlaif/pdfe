@@ -13,8 +13,11 @@ WORKDIR /repo
 
 FROM base AS build
 ARG APP
+# Download dependencies from the lockfile alone first. This layer is reused until the lockfile changes.
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+RUN pnpm fetch
 COPY . .
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --offline --frozen-lockfile
 RUN pnpm turbo run build --filter=@pdfe/${APP}...
 
 FROM build AS deployed

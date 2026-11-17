@@ -1,8 +1,11 @@
 # Used only by `pnpm dev` (host mode): publishes Postgres and Redis on the loopback interface for apps running on the host.
+# Published ports need a non-internal network, so these two also join `edge` in this mode.
 services:
   postgres:
+    networks: [app, edge]
     ports:
       - '127.0.0.1:5432:5432'
   redis:
+    networks: [app, edge]
     ports:
       - '127.0.0.1:6379:6379'

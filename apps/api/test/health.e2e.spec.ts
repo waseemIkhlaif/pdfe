@@ -35,7 +35,8 @@ describe('GET /v1/health', () => {
     expect(res.body.mode).toBe('DEMO');
     expect(res.body.status).toBe('ok');
     expect(res.body.checks).toEqual({ database: 'up' });
-    expect(res.body.adapters).toEqual([]);
+    expect(res.body.adapters).toHaveLength(8);
+    for (const t of res.body.adapters as string[]) expect(t.startsWith('mock:')).toBe(true);
   });
 
   it('puts X-PDFE-Mode: DEMO on every response, including errors', async () => {

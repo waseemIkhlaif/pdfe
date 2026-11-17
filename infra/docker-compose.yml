@@ -9,6 +9,7 @@ x-app-env: &app-env
 
 services:
   postgres:
+    networks: [app]
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
@@ -26,6 +27,7 @@ services:
       retries: 30
 
   redis:
+    networks: [app]
     image: redis:7
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
@@ -34,6 +36,7 @@ services:
       retries: 30
 
   migrate:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -46,6 +49,7 @@ services:
     restart: 'no'
 
   mock-hub:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -67,6 +71,7 @@ services:
       retries: 20
 
   api:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -75,9 +80,10 @@ services:
     environment:
       <<: *app-env
       PORT: '4000'
+      ADAPTERS_CONFIG: /app/infra/adapters.demo.json
       DATABASE_URL: postgres://app_role:${APP_ROLE_PASSWORD}@postgres:5432/pdfe
-    ports:
-      - '4000:4000' # until the gateway takes over publishing (safety-boundary story)
+    volumes:
+      - ./adapters.demo.json:/app/infra/adapters.demo.json:ro
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -96,6 +102,7 @@ services:
       retries: 20
 
   worker:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -110,6 +117,7 @@ services:
       migrate: { condition: service_completed_successfully }
 
   web-consumer:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -119,8 +127,6 @@ services:
       PORT: '3001'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
-    ports:
-      - '3001:3001' # until the gateway takes over publishing (safety-boundary story)
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -136,6 +142,7 @@ services:
       retries: 20
 
   web-merchant:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -145,8 +152,6 @@ services:
       PORT: '3002'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
-    ports:
-      - '3002:3002' # until the gateway takes over publishing (safety-boundary story)
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -162,6 +167,7 @@ services:
       retries: 20
 
   web-business:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -171,8 +177,6 @@ services:
       PORT: '3003'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
-    ports:
-      - '3003:3003' # until the gateway takes over publishing (safety-boundary story)
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -188,6 +192,7 @@ services:
       retries: 20
 
   web-console:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -197,8 +202,6 @@ services:
       PORT: '3004'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
-    ports:
-      - '3004:3004' # until the gateway takes over publishing (safety-boundary story)
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -214,6 +217,7 @@ services:
       retries: 20
 
   web-investor:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -223,8 +227,6 @@ services:
       PORT: '3005'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
-    ports:
-      - '3005:3005' # until the gateway takes over publishing (safety-boundary story)
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -240,6 +242,7 @@ services:
       retries: 20
 
   web-devportal:
+    networks: [app]
     build:
       context: ..
       dockerfile: infra/docker/node-app.Dockerfile
@@ -249,8 +252,6 @@ services:
       PORT: '3006'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
-    ports:
-      - '3006:3006' # until the gateway takes over publishing (safety-boundary story)
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -264,6 +265,41 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+
+  # The only container with a route to the outside. It publishes the apps on the loopback interface and
+  # forwards to services on the internal network.
+  gateway:
+    image: caddy:2
+    networks: [app, edge]
+    ports:
+      - '127.0.0.1:3001:3001'
+      - '127.0.0.1:3002:3002'
+      - '127.0.0.1:3003:3003'
+      - '127.0.0.1:3004:3004'
+      - '127.0.0.1:3005:3005'
+      - '127.0.0.1:3006:3006'
+      - '127.0.0.1:4000:4000'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      api: { condition: service_healthy }
+      web-consumer: { condition: service_healthy }
+      web-merchant: { condition: service_healthy }
+      web-business: { condition: service_healthy }
+      web-console: { condition: service_healthy }
+      web-investor: { condition: service_healthy }
+      web-devportal: { condition: service_healthy }
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:2019/config/']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+networks:
+  # No route to the internet: containers on this network can only reach each other.
+  app:
+    internal: true
+  edge: {}
 
 volumes:
   pgdata: {}

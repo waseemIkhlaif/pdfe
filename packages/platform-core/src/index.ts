@@ -6,3 +6,5 @@ export * from './hash';
 export * from './errors';
 export * from './correlation';
 export * from './sim-label';
+export * from './egress-guard';
+export * from './startup-guard';

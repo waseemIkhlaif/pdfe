@@ -14,6 +14,7 @@ export default [
       'specs/**',
       'scripts/design/**',
       'packages/design-tokens/**',
+      'scripts/safety/tests/fixtures/**',
       '**/coverage/**',
     ],
   },
