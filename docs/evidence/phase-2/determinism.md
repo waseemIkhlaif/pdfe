@@ -41,4 +41,24 @@ clock and system randomness, and the digest leaves them out (the contract says s
 
 ## CI run
 
-To be added when the pull request's CI has run.
+Run <https://github.com/waseemIkhlaif/pdfe/actions/runs/44199573454> (pull request 38, Linux runner):
+
+- `integration`: `determinism.int.spec.ts` (4 tests), `determinism-bypass.int.spec.ts` (6), `scenario.int.spec.ts` (14) and
+  `scenario-startup.int.spec.ts` (3) pass. The first of them compares a run on fresh containers with the committed digest.
+- `e2e-web`, against the whole Docker stack, which seeded itself at start from `baseline:v1:42`:
+
+```
+scenario baseline v1 seed 42: users=16 user_roles=16 tenants=3 config_versions=11 organizations=1
+digest 8be99f2d4f98777e81225db00ec32ef10ed655c8db867a50238266e6561bb394
+the digest equals the committed one
+```
+
+The digest was produced on Windows and reproduced on Linux, in a fresh database each time: the run does not depend on the
+machine, the operating system, or what the audit trail held before.
+
+## A fresh clone seeds itself
+
+Nobody can sign in to ask for a scenario run while the database has no demo users. The api therefore seeds an empty
+database at start from `SEED_ON_EMPTY` (Compose sets `baseline:v1:42`), attributed to `system:startup`, and never resets a
+database that already has tenants. The first CI attempt failed here (`scenario: no scenario baseline is registered`, the
+script's first call was refused); `scenario-startup.int.spec.ts` covers the fix.
