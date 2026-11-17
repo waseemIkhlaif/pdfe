@@ -304,7 +304,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - add an `egress` job (path-filtered to `infra/**`, `apps/api/**`, `apps/worker/**`, `apps/mock-hub/**`, and nightly) that starts the stack, runs `pnpm egress:probe` and uploads `egress-report.txt`;
   - add a `startup-guard` step inside `integration`;
   - add both to the `needs` of `ci`
-- [ ] T077 [US2] Run `quickstart.md` §3 locally. Commit the probe output as `docs/evidence/phase-2/egress-report.txt` and the startup-guard output as `docs/evidence/phase-2/startup-guard.md`. Add a "Safety boundary" section to `docs/runbooks/local-setup.md` saying that `pnpm dev` has only the code-level guard
+- [x] T077 [US2] Run `quickstart.md` §3 locally. Commit the probe output as `docs/evidence/phase-2/egress-report.txt` and the startup-guard output as `docs/evidence/phase-2/startup-guard.md`. Add a "Safety boundary" section to `docs/runbooks/local-setup.md` saying that `pnpm dev` has only the code-level guard
 
 **Checkpoint**: SC-003 and SC-004 are met. US2 acceptance 5 (safety-locked settings cannot be edited through configuration) is completed in US7 (T152), because the configuration API does not exist yet. The environment-level lock (T066) is in place now.
 

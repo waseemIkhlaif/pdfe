@@ -1,0 +1,14 @@
+SIMULATION — NOT REAL MONEY / محاكاة — ليست أموالاً حقيقية
+Egress probe report: every probe must be blocked.
+
+blocked  api       HTTPS fetch of a public site
+blocked  api       raw TCP connect to a public IP address on port 443 (3 s timeout)
+blocked  api       DNS resolution of a public name
+blocked  worker    HTTPS fetch of a public site
+blocked  worker    raw TCP connect to a public IP address on port 443 (3 s timeout)
+blocked  worker    DNS resolution of a public name
+blocked  mock-hub  HTTPS fetch of a public site
+blocked  mock-hub  raw TCP connect to a public IP address on port 443 (3 s timeout)
+blocked  mock-hub  DNS resolution of a public name
+
+RESULT: PASS (nothing reached the internet)
