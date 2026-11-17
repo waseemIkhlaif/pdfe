@@ -727,7 +727,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 9 ⚠️ (write first, must fail)
 
-- [ ] T174 [P] [US9] Write `packages/i18n/test/generate.test.ts`:
+- [x] T174 [P] [US9] Write `packages/i18n/test/generate.test.ts`:
   - only `approved` rows of `docs/design/copy-decks/phase-02.md` are emitted;
   - every key exists in both `ar` and `en`;
   - the ICU syntax parses;
@@ -753,7 +753,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation for User Story 9
 
-- [ ] T179 [US9] Implement `packages/i18n` (`@pdfe/i18n`):
+- [x] T179 [US9] Implement `packages/i18n` (`@pdfe/i18n`):
   - `scripts/generate.mjs` turns the approved rows of `docs/design/copy-decks/phase-02.md` into `src/catalogs/{ar,en}.json` and typed keys in `src/keys.ts`;
   - `src/next.ts` (`next-intl` setup) and `src/native.ts` (i18next setup);
   - it runs in `pnpm bootstrap` and `turbo build`.
