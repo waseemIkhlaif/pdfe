@@ -60,7 +60,7 @@ async function auditActions(request: APIRequestContext, id: string): Promise<str
 test('[web-consumer] the error screen shows a correlation ID that Grafana finds in logs, traces and the audit trail', async ({
   browser,
   request,
-}) => {
+}, testInfo) => {
   const context = await signedInContext(browser, consumer, 'individual', 'en');
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
     origin: baseUrl(consumer),
@@ -94,6 +94,20 @@ test('[web-consumer] the error screen shows a correlation ID that Grafana finds 
     await expect
       .poll(() => auditActions(request, id), eventually)
       .toContain('demo.error_simulated');
+
+    // Evidence for docs/evidence/phase-2/correlation.md: the screen the user saw, and the dashboard for the same ID.
+    await page.screenshot({ path: testInfo.outputPath('error-screen.png') });
+    const dashboard = await context.newPage();
+    try {
+      await dashboard.setViewportSize({ width: 1400, height: 1100 });
+      await dashboard.goto(
+        `${GRAFANA}/d/pdfe-correlation?orgId=1&var-correlation_id=${encodeURIComponent(id)}&kiosk`,
+      );
+      await dashboard.waitForTimeout(8_000); // the panels run their queries
+      await dashboard.screenshot({ path: testInfo.outputPath('dashboard.png'), fullPage: true });
+    } finally {
+      await dashboard.close();
+    }
   } finally {
     await page.close();
   }
