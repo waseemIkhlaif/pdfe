@@ -15,9 +15,14 @@ const source = readFileSync(
 const EN = /SIM_LABEL_EN = '([^']+)'/.exec(source)[1];
 const AR = /SIM_LABEL_AR = '([^']+)'/.exec(source)[1];
 const TABS = ['home', 'pay', 'send', 'markets', 'profile'];
-// Prettier writes YAML strings with single quotes; the quote style does not matter here.
-const read = (f) =>
-  readFileSync(join(flows, f), 'utf8').replace(/\r\n/g, '\n').replaceAll("'", '"');
+
+// The flows write the label with backslash-u escapes (see the ASCII test below); decode them to compare with the source.
+const raw = (f) => readFileSync(join(flows, f), 'utf8').replace(/\r\n/g, '\n');
+const decode = (s) =>
+  s.replace(/\\u([0-9A-Fa-f]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+// Prettier may write YAML strings with either quote; the quote style does not matter here.
+const read = (f) => decode(raw(f)).replaceAll("'", '"');
+const isAscii = (s) => [...s].every((c) => c.charCodeAt(0) < 128);
 
 test('there is one label flow per tab and language, and nothing else in the folder', () => {
   const want = TABS.flatMap((t) => ['ar', 'en'].map((l) => `label-${t}-${l}.yaml`)).sort();
@@ -46,6 +51,28 @@ for (const tab of TABS) {
     });
   }
 }
+
+test("the flows are plain ASCII, so Maestro reads them the same whatever the machine's character set is", () => {
+  // A run on CI read the flows in a non-UTF-8 character set and turned every non-ASCII character into garbage,
+  // which made the Arabic assertions meaningless. Escapes in the YAML cannot be misread.
+  for (const f of readdirSync(flows)) {
+    assert.ok(isAscii(raw(f)), `${f} must contain only ASCII characters`);
+  }
+});
+
+test('each flow waits for the app to start before it opens the language link', () => {
+  // A link that reaches the app while it is still starting is dropped (React Native logs it and ignores it).
+  for (const f of readdirSync(flows)) {
+    const lines = raw(f).split('\n');
+    const launch = lines.indexOf('- launchApp:');
+    const wait = lines.indexOf('    id: simulation-banner');
+    const open = lines.findIndex((l) => l.startsWith('- openLink:'));
+    assert.ok(
+      launch >= 0 && wait > launch && open > wait,
+      `${f}: launchApp, then wait for the banner, then openLink`,
+    );
+  }
+});
 
 test('the app link scheme and package match the flows', () => {
   const app = JSON.parse(readFileSync(join(here, '..', 'app.json'), 'utf8')).expo;
