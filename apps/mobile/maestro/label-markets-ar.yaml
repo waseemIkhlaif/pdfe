@@ -1,0 +1,14 @@
+# Label flow: the simulation banner is on the markets tab, in Arabic (FR-022, SC-011).
+# The text is the label of the language and nothing else; the other language's label is not shown.
+appId: org.pdfe.demo
+name: label-markets-ar
+---
+- launchApp:
+    clearState: true
+- openLink: pdfe://?lang=ar
+- tapOn:
+    id: tab-markets
+- assertVisible:
+    id: simulation-banner
+- assertVisible: 'محاكاة — ليست أموالاً حقيقية'
+- assertNotVisible: 'SIMULATION — NOT REAL MONEY'

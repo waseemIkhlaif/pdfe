@@ -208,7 +208,7 @@ describe('the login pages show the simulation banner', () => {
     const start = await createAuthRoutes(config).signIn(
       new Request(`${config.appBaseUrl}/api/auth/sign-in`),
     );
-    return `${start.headers.get('location')}${lang ? `&kc_locale=${lang}` : ''}`;
+    return `${start.headers.get('location')}${lang ? `&ui_locales=${lang}` : ''}`;
   };
 
   it.each(['en', 'ar'])('the password page, in %s', async (lang) => {
@@ -222,7 +222,10 @@ describe('the login pages show the simulation banner', () => {
     }
     pages.push(await r.text());
     bannerIn(pages[0]!);
-    expect(pages[0]).toContain(lang === 'ar' ? 'dir="rtl"' : 'dir="ltr"');
+    // The language of the page itself (the banner has its own dir attributes, so look at the <html> tag).
+    const htmlTag = /<html[^>]*>/.exec(pages[0]!)![0];
+    expect(htmlTag).toContain(`lang="${lang}"`);
+    expect(htmlTag).toContain(lang === 'ar' ? 'dir="rtl"' : 'dir="ltr"');
   });
 
   it('the one-time-password page of a console role', async () => {

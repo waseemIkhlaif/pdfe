@@ -1,0 +1,14 @@
+# Label flow: the simulation banner is on the pay tab, in English (FR-022, SC-011).
+# The text is the label of the language and nothing else; the other language's label is not shown.
+appId: org.pdfe.demo
+name: label-pay-en
+---
+- launchApp:
+    clearState: true
+- openLink: pdfe://?lang=en
+- tapOn:
+    id: tab-pay
+- assertVisible:
+    id: simulation-banner
+- assertVisible: 'SIMULATION — NOT REAL MONEY'
+- assertNotVisible: 'محاكاة — ليست أموالاً حقيقية'

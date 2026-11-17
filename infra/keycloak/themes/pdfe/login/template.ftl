@@ -1,5 +1,5 @@
 <#--
-  Based on theme/keycloak.v2/login/template.ftl of Keycloak 26.8.2 (Apache License 2.0, https://www.apache.org/licenses/LICENSE-2.0).
+  Based on theme/keycloak.v2/login/template.ftl of Keycloak 26.8.2 (Apache License 2.0).
   The only change is the simulation banner at the top of <body>. When Keycloak is upgraded, copy the new template.ftl and
   re-apply that one change. Token styling arrives with the navigable-shells story.
 -->
@@ -148,7 +148,7 @@
         </script>
     </#if>
     <script>
-      // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1404468
+      // Workaround for Mozilla bug 1404468
       const isFirefox = true;
     </script>
 </head>
