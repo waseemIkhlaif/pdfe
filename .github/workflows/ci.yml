@@ -267,6 +267,8 @@ jobs:
       - name: Seed the development data (until the scenario engine replaces it)
         run: |
           docker compose --env-file .env -f infra/docker-compose.yml run --rm --no-deps             -v "$PWD/infra/keycloak:/realm:ro" -e REALM_GENERATOR=/realm/generate-realm.mjs             api node dist/demo/dev-seed.js
+      - name: Build the packages the tests import
+        run: pnpm turbo run build --filter='@pdfe/e2e-web^...'
       - name: Install Chromium for Playwright
         run: pnpm --filter @pdfe/e2e-web exec playwright install --with-deps chromium
       - name: Label checks (every route, Arabic and English) and the negative fixtures
