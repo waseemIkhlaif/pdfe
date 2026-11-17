@@ -71,6 +71,8 @@ jobs:
         run: pnpm format:check
       - name: Type check
         run: pnpm typecheck
+      - name: Route manifests (every page is listed, so the label crawl reaches it)
+        run: node scripts/ci/check-route-manifests.mjs
       - name: OpenAPI contract (regenerate from the routes, lint with Spectral, fail on any difference)
         run: |
           pnpm --filter @pdfe/contracts generate
