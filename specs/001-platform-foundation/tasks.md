@@ -496,28 +496,28 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 4 ⚠️ (write first, must fail)
 
-- [ ] T117 [P] [US4] Write `apps/api/test/audit.tamper.int.spec.ts` on a disposable database. Each change is made by a superuser connection after disabling the trigger, and the verify result is checked:
+- [x] T117 [P] [US4] Write `apps/api/test/audit.tamper.int.spec.ts` on a disposable database. Each change is made by a superuser connection after disabling the trigger, and the verify result is checked:
   - an altered field gives `{ result: broken, seq, reason: hash_mismatch }` at that `seq`;
   - a deleted event gives `seq_gap`;
   - two swapped events give `prev_link_mismatch`;
   - an altered anchor gives `anchor_mismatch`, reported separately;
   - an untouched store gives `ok`
-- [ ] T118 [P] [US4] Write `apps/api/test/audit.concurrency.int.spec.ts`: 50 concurrent privileged actions produce 50 events with consecutive `seq`, and verification gives `ok`
-- [ ] T119 [P] [US4] Write `apps/api/test/audit.search-export.int.spec.ts`:
+- [x] T118 [P] [US4] Write `apps/api/test/audit.concurrency.int.spec.ts`: 50 concurrent privileged actions produce 50 events with consecutive `seq`, and verification gives `ok`
+- [x] T119 [P] [US4] Write `apps/api/test/audit.search-export.int.spec.ts`:
   - filters for actor, action, tenant, `from`/`to` and `correlation_id` return exactly the matching events;
   - the cursor pagination limit is at most 100;
   - the CSV export's first line is `# ` + `SIM_LABEL`, and JSON has `meta.label`;
   - the export itself is audited (`audit.exported`), and so is verification (`audit.verified`);
   - users without `audit.read`, `audit.export` or `audit.verify` get 403
-- [ ] T120 [P] [US4] Write `apps/api/test/audit.coverage.int.spec.ts`. For every audit action in `contracts/events-and-config.md` §Audit actions that is implemented so far, it triggers the action once and asserts exactly one event with every required field. A table in the spec lists actions not yet implemented; later stories remove entries from it
+- [x] T120 [P] [US4] Write `apps/api/test/audit.coverage.int.spec.ts`. For every audit action in `contracts/events-and-config.md` §Audit actions that is implemented so far, it triggers the action once and asserts exactly one event with every required field. A table in the spec lists actions not yet implemented; later stories remove entries from it
 
 ### Implementation for User Story 4
 
-- [ ] T121 [US4] Write `db/migrations/0007_audit_anchors.sql`: `audit.anchors` (`id`, `up_to_seq`, `hash`, `kind` ∈ {periodic, epoch_start}, `epoch_label`, `created_at`), append-only like `audit_events`, with the same grants. Record the `kind` and `epoch_label` delta in `data-model.md`
-- [ ] T122 [US4] Implement `apps/api/src/audit/audit.chain.ts`: `serializeForHash(row)` (canonical JSON of the row without `seq` and `hash`) and `chainHash(prevHash, row)`, shared by the writer and the verifier. Refactor `audit.writer.ts` into the final `AuditService.record()` on top of it
-- [ ] T123 [US4] Implement `apps/api/src/audit/audit.verifier.ts`. It streams the events in `seq` order over a range, or from an epoch anchor, and checks the hash, the previous link, `seq` gaps and anchors, returning the first failure with its reason. Make T117 and T118 pass
-- [ ] T124 [US4] Implement `apps/worker/src/audit-anchor/anchor.job.ts`: an anchor every 100 events or every hour, whichever comes first, with the injected `ClockService`
-- [ ] T125 [US4] Implement `apps/api/src/audit/audit.controller.ts`: `GET /v1/audit/events`, `POST /v1/audit/verify` and `GET /v1/audit/export?format=csv|json` (streamed, labelled through `sim-label`, and audited). Add the matrix entries. Make T119 and T120 pass
+- [x] T121 [US4] Write `db/migrations/0007_audit_anchors.sql`: `audit.anchors` (`id`, `up_to_seq`, `hash`, `kind` ∈ {periodic, epoch_start}, `epoch_label`, `created_at`), append-only like `audit_events`, with the same grants. Record the `kind` and `epoch_label` delta in `data-model.md`
+- [x] T122 [US4] Implement `apps/api/src/audit/audit.chain.ts`: `serializeForHash(row)` (canonical JSON of the row without `seq` and `hash`) and `chainHash(prevHash, row)`, shared by the writer and the verifier. Refactor `audit.writer.ts` into the final `AuditService.record()` on top of it
+- [x] T123 [US4] Implement `apps/api/src/audit/audit.verifier.ts`. It streams the events in `seq` order over a range, or from an epoch anchor, and checks the hash, the previous link, `seq` gaps and anchors, returning the first failure with its reason. Make T117 and T118 pass
+- [x] T124 [US4] Implement `apps/worker/src/audit-anchor/anchor.job.ts`: an anchor every 100 events or every hour, whichever comes first, with the injected `ClockService`
+- [x] T125 [US4] Implement `apps/api/src/audit/audit.controller.ts`: `GET /v1/audit/events`, `POST /v1/audit/verify` and `GET /v1/audit/export?format=csv|json` (streamed, labelled through `sim-label`, and audited). Add the matrix entries. Make T119 and T120 pass
 
 **Checkpoint**: SC-008 is met.
 

@@ -10,7 +10,7 @@ import {
   sha256Hex,
   type ClockService,
 } from '@pdfe/platform-core';
-import { AuditWriter } from '../audit/audit.writer';
+import { AuditService } from '../audit/audit.service';
 import { parseInput } from '../common/validate';
 import { CLOCK, CONFIG_READER } from '../core/tokens';
 import type { Principal } from '../identity/principal';
@@ -99,7 +99,7 @@ export class ApprovalsService {
     @Inject(CLOCK) private readonly clock: ClockService,
     @Inject(CONFIG_READER) private readonly config: ConfigReader,
     private readonly ids: IdGenerator,
-    private readonly audit: AuditWriter,
+    private readonly audit: AuditService,
     private readonly outbox: OutboxWriter,
     private readonly handlers: ApprovalHandlerRegistry,
   ) {}
@@ -214,7 +214,7 @@ export class ApprovalsService {
 
     // Last chance to refuse before anything is audited or applied.
     if (status === 'approved')
-      await this.handlers.get(req.action_type)?.validate?.(tx, this.asApproved(req, p.userId));
+      await this.handlers.get(req.action_type)?.validate?.(tx, this.asApproved(req, p));
 
     await this.audit.record(tx, {
       tenantId: req.tenant_id,
@@ -247,7 +247,7 @@ export class ApprovalsService {
         },
       });
     }
-    if (status === 'approved') await this.execute(tx, req, p.userId);
+    if (status === 'approved') await this.execute(tx, req, p);
 
     return this.load(tx, id);
   }
@@ -351,7 +351,7 @@ export class ApprovalsService {
     };
   }
 
-  private asApproved(req: RequestRow, approvedBy: string): ApprovedRequest {
+  private asApproved(req: RequestRow, approver: Principal): ApprovedRequest {
     return {
       id: req.id,
       tenantId: req.tenant_id,
@@ -360,7 +360,8 @@ export class ApprovalsService {
       targetId: req.target_id,
       payload: req.payload,
       requestedBy: req.requested_by,
-      approvedBy,
+      approvedBy: approver.userId,
+      approverRole: approver.roles[0] ?? null,
       reason: req.reason,
       correlationId: getContext()?.correlationId ?? req.correlation_id,
       requestCorrelationId: req.correlation_id,
@@ -368,7 +369,7 @@ export class ApprovalsService {
   }
 
   /** Runs the registered handler once per approval ID: the inbox row is the once-only key. */
-  private async execute(tx: Tx, req: RequestRow, approvedBy: string): Promise<void> {
+  private async execute(tx: Tx, req: RequestRow, approver: Principal): Promise<void> {
     const handler = this.handlers.get(req.action_type);
     if (!handler) return;
     const first = await tx.client.query(
@@ -377,6 +378,6 @@ export class ApprovalsService {
       [`approval-handler:${req.action_type}`, req.id, this.clock.now().toISOString()],
     );
     if (!first.rowCount) return;
-    await handler.apply(tx, this.asApproved(req, approvedBy));
+    await handler.apply(tx, this.asApproved(req, approver));
   }
 }

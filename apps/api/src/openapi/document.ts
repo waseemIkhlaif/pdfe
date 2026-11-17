@@ -69,7 +69,7 @@ function operation(route: RouteInfo): Json {
     parameters.push({
       name: q.name,
       in: 'query',
-      required: false,
+      required: q.required === true,
       description: q.description,
       schema: { type: 'string' },
     });
@@ -80,9 +80,19 @@ function operation(route: RouteInfo): Json {
 
   const success = doc.status ?? route.httpCode ?? (route.method === 'POST' ? 201 : 200);
   const responses: Record<string, Json> = {};
-  responses[String(success)] = doc.response
-    ? { description: 'Success.', content: { 'application/json': { schema: ref(doc.response) } } }
-    : { description: 'Success. No body.' };
+  responses[String(success)] = doc.file
+    ? {
+        description: 'A file.',
+        content: Object.fromEntries(
+          Object.entries(doc.file).map(([type, d]) => [
+            type,
+            { schema: { type: 'string', description: d } },
+          ]),
+        ),
+      }
+    : doc.response
+      ? { description: 'Success.', content: { 'application/json': { schema: ref(doc.response) } } }
+      : { description: 'Success. No body.' };
   for (const s of doc.alsoStatus ?? []) {
     responses[String(s)] =
       s === 204
@@ -151,6 +161,7 @@ export function buildOpenApiDocument(version: string): Json {
       { name: 'identity', description: 'The caller, users and roles' },
       { name: 'approvals', description: 'Maker-checker' },
       { name: 'tenancy', description: 'Read-only tenant elevation' },
+      { name: 'audit', description: 'The tamper-evident audit trail' },
     ],
     paths,
     components: {

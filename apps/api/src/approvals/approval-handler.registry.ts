@@ -12,6 +12,8 @@ export interface ApprovedRequest {
   requestedBy: string;
   /** The user whose decision completed the approval. */
   approvedBy: string;
+  /** The role the approver acted in, for the audit event. */
+  approverRole: string | null;
   reason: string;
   /** Correlation ID of the request that completes the approval (the one being served now). */
   correlationId: string;

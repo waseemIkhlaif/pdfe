@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { ConfigReader } from '@pdfe/domain-types';
 import { AppError, IdGenerator, getContext, type ClockService } from '@pdfe/platform-core';
 import { withTx, type Pool } from '@pdfe/platform-core/db';
-import { AuditWriter } from '../audit/audit.writer';
+import { AuditService } from '../audit/audit.service';
 import { parseInput } from '../common/validate';
 import { CLOCK, CONFIG_READER, PG_POOL } from '../core/tokens';
 import type { Principal } from '../identity/principal';
@@ -49,7 +49,7 @@ export class ElevationService {
     @Inject(CLOCK) private readonly clock: ClockService,
     @Inject(CONFIG_READER) private readonly config: ConfigReader,
     private readonly ids: IdGenerator,
-    private readonly audit: AuditWriter,
+    private readonly audit: AuditService,
   ) {}
 
   async start(p: Principal, input: unknown): Promise<ElevationView> {

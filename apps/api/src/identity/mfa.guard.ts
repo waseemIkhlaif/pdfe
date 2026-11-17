@@ -3,7 +3,7 @@ import type { Request } from 'express';
 import { isPrivileged } from '@pdfe/domain-types';
 import { AppError, getContext } from '@pdfe/platform-core';
 import { withTx, type Pool } from '@pdfe/platform-core/db';
-import { AuditWriter } from '../audit/audit.writer';
+import { AuditService } from '../audit/audit.service';
 import { PG_POOL } from '../core/tokens';
 
 /** A privileged role without a second factor (`otp` in `amr`) is refused on every protected route, and the denial is audited. */
@@ -11,7 +11,7 @@ import { PG_POOL } from '../core/tokens';
 export class MfaGuard implements CanActivate {
   constructor(
     @Inject(PG_POOL) private readonly pool: Pool,
-    private readonly audit: AuditWriter,
+    private readonly audit: AuditService,
   ) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {

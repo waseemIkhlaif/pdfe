@@ -40,10 +40,12 @@ export class AuditRecorder {
     if (!e.correlationId?.trim()) throw new Error('audit: correlationId is required');
 
     await tx.client.query("SELECT pg_advisory_xact_lock(hashtext('audit'))");
-    const last = await tx.client.query<{ hash: string }>(
-      'SELECT hash FROM audit.audit_events ORDER BY seq DESC LIMIT 1',
+    const last = await tx.client.query<{ seq: string; hash: string }>(
+      'SELECT seq, hash FROM audit.audit_events ORDER BY seq DESC LIMIT 1',
     );
     const prevHash = last.rows[0]?.hash ?? GENESIS_HASH;
+    // Consecutive numbers, assigned under the lock: a rolled-back write leaves no hole (migration 0007).
+    const seq = Number(last.rows[0]?.seq ?? 0) + 1;
 
     const row: AuditHashRow = {
       id: this.ids.next(),
@@ -64,10 +66,11 @@ export class AuditRecorder {
     const hash = chainHash(prevHash, row);
     const r = await tx.client.query<{ seq: string }>(
       `INSERT INTO audit.audit_events
-         (id, tenant_id, actor_id, actor_role, action, target_type, target_id, reason, approval_request_id,
+         (seq, id, tenant_id, actor_id, actor_role, action, target_type, target_id, reason, approval_request_id,
           elevation_id, correlation_id, occurred_at, data, prev_hash, hash)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING seq`,
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING seq`,
       [
+        seq,
         row.id,
         row.tenant_id,
         row.actor_id,

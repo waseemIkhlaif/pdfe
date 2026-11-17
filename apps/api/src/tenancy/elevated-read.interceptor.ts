@@ -9,7 +9,7 @@ import type { Request } from 'express';
 import { from, mergeMap, type Observable } from 'rxjs';
 import { getContext } from '@pdfe/platform-core';
 import { withTx, type Pool } from '@pdfe/platform-core/db';
-import { AuditWriter } from '../audit/audit.writer';
+import { AuditService } from '../audit/audit.service';
 import { PG_POOL } from '../core/tokens';
 
 /**
@@ -21,7 +21,7 @@ import { PG_POOL } from '../core/tokens';
 export class ElevatedReadInterceptor implements NestInterceptor {
   constructor(
     @Inject(PG_POOL) private readonly pool: Pool,
-    private readonly audit: AuditWriter,
+    private readonly audit: AuditService,
   ) {}
 
   intercept(ctx: ExecutionContext, next: CallHandler): Observable<unknown> {
@@ -38,6 +38,7 @@ export class ElevatedReadInterceptor implements NestInterceptor {
             this.audit.record(tx, {
               tenantId: e.targetTenantId,
               actorId: p.userId,
+              actorRole: p.roles[0] ?? null,
               action: 'tenant.elevated_read',
               targetType: 'tenant',
               targetId: e.targetTenantId,

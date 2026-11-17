@@ -3,7 +3,7 @@ import type { JWTPayload } from 'jose';
 import { permissionsOf } from '@pdfe/domain-types';
 import { AppError, type ClockService } from '@pdfe/platform-core';
 import { withTx, type Pool } from '@pdfe/platform-core/db';
-import { AuditWriter } from '../audit/audit.writer';
+import { AuditService } from '../audit/audit.service';
 import { CLOCK, PG_POOL } from '../core/tokens';
 import type { ActiveElevation, Principal } from './principal';
 
@@ -22,7 +22,7 @@ export class PrincipalService {
   constructor(
     @Inject(PG_POOL) private readonly pool: Pool,
     @Inject(CLOCK) private readonly clock: ClockService,
-    private readonly audit: AuditWriter,
+    private readonly audit: AuditService,
   ) {}
 
   /**
@@ -130,6 +130,7 @@ export class PrincipalService {
       await this.audit.record(tx, {
         tenantId,
         actorId: userId,
+        actorRole: 'system:expiry',
         action: 'tenant.elevation_ended',
         targetType: 'tenant',
         targetId: e.target_tenant_id,

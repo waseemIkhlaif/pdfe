@@ -3,10 +3,11 @@ import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { IdGenerator, ScenarioClock, SystemRandom } from '@pdfe/platform-core';
 import { AuditRecorder } from '@pdfe/platform-core/audit';
-import { createPool, type Pool } from '@pdfe/platform-core/db';
+import { createPool, withTx, type Pool } from '@pdfe/platform-core/db';
 import { runMigrations } from '@pdfe/platform-core/migrate';
 import { BaseConsumer, type OutboxMessage } from '@pdfe/platform-core/queue';
 import { createDbRoles, startPostgres, type DbUrls, type PgHandle } from '@pdfe/test-kit';
+import { AnchorJob } from '../src/audit-anchor/anchor.job';
 import { ApprovalsExpiryJob } from '../src/approvals-expiry/expiry.job';
 import { ElevationExpiryJob } from '../src/elevation-expiry/expiry.job';
 import { OutboxRelay, type EventPublisher } from '../src/outbox-relay/outbox-relay.job';
@@ -216,6 +217,11 @@ describe('approvals expiry job', () => {
     );
     expect(ev.rows).toHaveLength(1);
     expect(ev.rows[0].approval_request_id).toBe(overdue);
+    expect(ev.rows[0].actor_role).toBe('system:worker');
+    expect(ev.rows[0].tenant_id).toBe(TENANT_A);
+    expect(ev.rows[0].target_type).toBe('approval_request');
+    expect(ev.rows[0].target_id).toBe(overdue);
+    expect(ev.rows[0].correlation_id).toMatch(/^COR-/);
     const ob = await admin.query(
       "SELECT payload FROM integration.outbox WHERE topic = 'approval.expired'",
     );
@@ -257,6 +263,9 @@ describe('elevation expiry job', () => {
     );
     expect(ev.rows).toHaveLength(1);
     expect(ev.rows[0].tenant_id).toBe(TENANT_B);
+    expect(ev.rows[0].actor_role).toBe('system:worker');
+    expect(ev.rows[0].actor_id).toBe(USER_A);
+    expect(ev.rows[0].target_type).toBe('tenant');
     expect(await job.runOnce()).toBe(0);
   });
 
@@ -265,5 +274,60 @@ describe('elevation expiry job', () => {
       .rows;
     expect(rows.length).toBeGreaterThanOrEqual(2);
     for (let i = 1; i < rows.length; i++) expect(rows[i].prev_hash).toBe(rows[i - 1].hash);
+  });
+});
+
+describe('audit anchor job', () => {
+  const countAnchors = async () =>
+    Number((await admin.query('SELECT count(*) n FROM audit.anchors')).rows[0].n);
+  const addEvents = async (n: number) => {
+    for (let i = 0; i < n; i++) {
+      await withTx(pool, {}, (tx) =>
+        audit.record(tx, {
+          action: 'test.anchor',
+          actorRole: 'test',
+          correlationId: 'COR-anchor01',
+        }),
+      );
+    }
+  };
+
+  it('anchors after 100 new events, once, at the head with that event hash', async () => {
+    const job = new AnchorJob(pool, clock, ids);
+    // Start clean: whatever earlier tests wrote is anchored by now.
+    clock.advance(2 * 3_600_000);
+    await job.runOnce();
+    expect(await job.runOnce()).toBeNull(); // nothing new
+    const start = await countAnchors();
+
+    await addEvents(99);
+    expect(await job.runOnce()).toBeNull(); // 99 new events, and the hour has not passed
+    await addEvents(1);
+    const head = (
+      await admin.query('SELECT seq, hash FROM audit.audit_events ORDER BY seq DESC LIMIT 1')
+    ).rows[0];
+    expect(await job.runOnce()).toBe(Number(head.seq));
+    expect(await countAnchors()).toBe(start + 1);
+
+    const a = (await admin.query('SELECT * FROM audit.anchors ORDER BY up_to_seq DESC LIMIT 1'))
+      .rows[0];
+    expect(Number(a.up_to_seq)).toBe(Number(head.seq));
+    expect(a.hash).toBe(head.hash);
+    expect(a.kind).toBe('periodic');
+    expect(a.epoch_label).toBeNull();
+    expect(await job.runOnce()).toBeNull(); // already anchored
+  });
+
+  it('anchors after an hour when there is at least one new event, and not without one', async () => {
+    const job = new AnchorJob(pool, clock, ids);
+    const before = await countAnchors();
+    await addEvents(3);
+    clock.advance(59 * 60_000);
+    expect(await job.runOnce()).toBeNull(); // 3 events, 59 minutes
+    clock.advance(2 * 60_000);
+    expect(await job.runOnce()).not.toBeNull(); // past the hour
+    expect(await countAnchors()).toBe(before + 1);
+    clock.advance(5 * 3_600_000);
+    expect(await job.runOnce()).toBeNull(); // hours pass, but nothing is new
   });
 });
