@@ -616,7 +616,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 - [x] T147 [US6] Add `POST /v1/demo/simulate-error` (`me.read`, DEMO only). It records audit `demo.error_simulated`, then returns a 500 envelope. Add the matrix entry, and add the route and audit action to `contracts/http-api.md` and `contracts/events-and-config.md`
 - [x] T148 [US6] Add `packages/ui-web/src/ErrorView.tsx` (the message from `message_key`, the correlation ID inside `<bdi>`, and `CopyButton`). Add the `/[locale]/error` route in all six web apps; in DEMO it calls the simulate endpoint when `simulate=500` is set. `apiFetch` forwards the `correlation_id` to the error page. Update the route manifests
 - [x] T149 [US6] Add `lgtm` (`grafana/otel-lgtm`) to `infra/docker-compose.yml` on the `app` network, and Grafana `localhost:3000` to `infra/Caddyfile`. Add the provisioning files `infra/grafana/provisioning/{datasources,dashboards}/*.yaml` (Loki, Tempo, Prometheus, and Postgres as `readonly_role`) and the dashboard `infra/grafana/dashboards/correlation.json` (variable `correlation_id`; panels for logs, trace search, audit rows and job logs). Make T143 pass
-- [ ] T150 [US6] Write `docs/evidence/phase-2/correlation.md` with the `quickstart.md` §9 walkthrough: the ID, screenshots of the dashboard, and the redaction check
+- [x] T150 [US6] Write `docs/evidence/phase-2/correlation.md` with the `quickstart.md` §9 walkthrough: the ID, screenshots of the dashboard, and the redaction check
 
 **Checkpoint**: SC-012 is met.
 
