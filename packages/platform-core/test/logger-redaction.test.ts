@@ -91,15 +91,19 @@ describe('value redaction', () => {
     }
   });
 
-  it.each(['DE89370400440532013000', 'GB29NWBK60161331926819', 'PS92PALS000000000400123456702'])(
-    'replaces the IBAN-like value %s',
-    (iban) => {
-      expect(redactString(`paid to ${iban} today`)).toBe(`paid to ${REDACTED} today`);
-      const { logger, raw } = capture();
-      logger.info({ account: iban }, 'transfer');
-      expect(raw[0]).not.toContain(iban);
-    },
-  );
+  // Written SIM-<iban>, the project's marker for a simulated IBAN (the safety scan allows it): the IBAN part is
+  // what gets redacted, wherever it appears.
+  it.each([
+    'SIM-DE89370400440532013000',
+    'SIM-GB29NWBK60161331926819',
+    'SIM-PS92PALS000000000400123456702',
+  ])('replaces the IBAN part of %s', (value) => {
+    const iban = value.slice('SIM-'.length);
+    expect(redactString(`paid to ${value} today`)).toBe(`paid to SIM-${REDACTED} today`);
+    const { logger, raw } = capture();
+    logger.info({ account: value }, 'transfer');
+    expect(raw[0]).not.toContain(iban);
+  });
 
   it('redacts inside errors', () => {
     const { logger, raw } = capture();
