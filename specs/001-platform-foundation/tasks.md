@@ -630,7 +630,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 7 ⚠️ (write first, must fail)
 
-- [ ] T151 [P] [US7] Write `apps/api/test/config.int.spec.ts`:
+- [x] T151 [P] [US7] Write `apps/api/test/config.int.spec.ts`:
   - a proposal leaves the active value unchanged;
   - self-approval is refused, and approval by admin B activates the value;
   - a future `effective_from` makes the version `scheduled`, and the worker activates it, with the previous one `superseded`;
@@ -641,27 +641,27 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - a write to `app.mode`, `adapters.allowlist` or `egress.internal_hosts` gets 409 `CONFIG_SAFETY_LOCKED` and audit `config.refused_locked`;
   - `diff` returns the JSON Patch;
   - every step is audited
-- [ ] T152 [P] [US7] Write `apps/api/test/config-safety-env.spec.ts`. The api exits 1 at start when `APP_MODE`, `INTERNAL_HOSTS` or the adapter allowlist differ from the safety-locked rows (US2 acceptance 5 and FR-010)
-- [ ] T153 [P] [US7] Write `packages/platform-core/test/json-patch.test.ts`: `diff(a, b)` gives an RFC 6902 patch that, applied to `a`, gives `b` (fast-check over JSON values)
+- [x] T152 [P] [US7] Write `apps/api/test/config-safety-env.spec.ts`. The api exits 1 at start when `APP_MODE`, `INTERNAL_HOSTS` or the adapter allowlist differ from the safety-locked rows (US2 acceptance 5 and FR-010)
+- [x] T153 [P] [US7] Write `packages/platform-core/test/json-patch.test.ts`: `diff(a, b)` gives an RFC 6902 patch that, applied to `a`, gives `b` (fast-check over JSON values)
 
 ### Implementation for User Story 7
 
-- [ ] T154 [US7] Write `db/migrations/0008_config.sql`:
+- [x] T154 [US7] Write `db/migrations/0008_config.sql`:
   - `config.config_items`;
   - `config.config_versions`, with statuses draft, pending_approval, scheduled, active, superseded, rejected and stale; UNIQUE (`key`, `version`) and a partial unique index on `active`;
   - grants
-- [ ] T155 [US7] Extend `packages/platform-core/src/migrate/reference-data.ts`. It upserts `config.config_items` from `config-registry.ts` (JSON Schema exported from Zod), and for any key with no version it creates version 1 `active` with the default, attributed to `system:bootstrap`
-- [ ] T156 [P] [US7] Implement `packages/platform-core/src/json-patch.ts`. Make T153 pass
-- [ ] T157 [US7] Implement `apps/api/src/config/config.service.ts`:
+- [x] T155 [US7] Extend `packages/platform-core/src/migrate/reference-data.ts`. It upserts `config.config_items` from `config-registry.ts` (JSON Schema exported from Zod), and for any key with no version it creates version 1 `active` with the default, attributed to `system:bootstrap`
+- [x] T156 [P] [US7] Implement `packages/platform-core/src/json-patch.ts`. Make T153 pass
+- [x] T157 [US7] Implement `apps/api/src/config/config.service.ts`:
   - `propose`: Zod validation, safety-lock refusal, an approval `config.change`, audit `config.proposed`;
   - `rollback`: re-validation against the current schema, an approval `config.rollback`;
   - approval handlers: activate now or schedule, supersede the previous version, mark other pending versions `stale`, audit `config.activated` or `config.rolled_back`, outbox `config.activated`;
   - `diff`.
 
   Add `DbConfigReader`, which replaces `DefaultsConfigReader`, with a cache invalidated on `config.activated`
-- [ ] T158 [US7] Implement `apps/api/src/config/config.controller.ts` with the five routes from `contracts/http-api.md` (safety-locked items marked `editable: false`). Add the matrix entries. Make T151 pass
-- [ ] T159 [US7] Implement `apps/worker/src/config-activation/activation.job.ts`. Every minute, using the injected `ClockService`, it activates due `scheduled` versions, supersedes the previous ones, and records audit and the outbox event
-- [ ] T160 [US7] Extend the startup guard (`packages/platform-core/src/startup-guard.ts`, used by the api) to compare the env values with the safety-locked rows once the database is reachable, and to record `system.start_refused` in audit when it refuses. Make T152 pass
+- [x] T158 [US7] Implement `apps/api/src/config/config.controller.ts` with the five routes from `contracts/http-api.md` (safety-locked items marked `editable: false`). Add the matrix entries. Make T151 pass
+- [x] T159 [US7] Implement `apps/worker/src/config-activation/activation.job.ts`. Every minute, using the injected `ClockService`, it activates due `scheduled` versions, supersedes the previous ones, and records audit and the outbox event
+- [x] T160 [US7] Extend the startup guard (`packages/platform-core/src/startup-guard.ts`, used by the api) to compare the env values with the safety-locked rows once the database is reachable, and to record `system.start_refused` in audit when it refuses. Make T152 pass
 
 **Checkpoint**: SC-009 is met, and so is US2 acceptance 5.
 

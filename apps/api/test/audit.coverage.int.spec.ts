@@ -50,6 +50,11 @@ const REQUIRED: Record<string, string[]> = {
   'audit.exported': [...ACTOR, 'target_type'],
   'audit.verified': [...ACTOR, 'target_type'],
   'demo.error_simulated': [...ACTOR, ...TARGET],
+  'config.proposed': [...ACTOR, ...TARGET, 'reason', 'approval_request_id'],
+  'config.scheduled': [...ACTOR, ...TARGET, 'reason', 'approval_request_id'],
+  'config.activated': [...ACTOR, ...TARGET, 'reason', 'approval_request_id'],
+  'config.rolled_back': [...ACTOR, ...TARGET, 'reason', 'approval_request_id'],
+  'config.refused_locked': [...ACTOR, ...TARGET, 'reason'],
 };
 /** Triggered by the worker; its own test checks the same fields (see the last describe block). */
 const BY_WORKER = new Set(['approval.expired']);
@@ -145,6 +150,50 @@ const TRIGGERS: Record<string, () => Promise<string>> = {
     expect(res.status).toBe(500);
     expect(res.body.error.code).toBe('INTERNAL');
     expect(res.body.error.correlation_id).toBe(cid(res));
+    return cid(res);
+  },
+  'config.proposed': async () =>
+    cid(
+      await w.as(w.admin1).post('/v1/config/fees.default_minor/versions', {
+        value: 10,
+        reason: 'coverage check of the proposal',
+      }),
+    ),
+  'config.scheduled': async () => {
+    const later = new Date(w.t.clock.now().getTime() + 86_400_000).toISOString();
+    const r = await w.as(w.admin1).post('/v1/config/limits.transfer_max_minor/versions', {
+      value: 600000,
+      effective_from: later,
+      reason: 'coverage check of a scheduled change',
+    });
+    return cid(await w.decide(r.body.id, w.admin2));
+  },
+  'config.activated': async () => {
+    const r = await w.as(w.admin1).post('/v1/config/fx.spread_bps/versions', {
+      value: 5,
+      reason: 'coverage check of an activation',
+    });
+    return cid(await w.decide(r.body.id, w.admin2));
+  },
+  'config.rolled_back': async () => {
+    const r = await w.as(w.admin1).post('/v1/config/idempotency.ttl_hours/versions', {
+      value: 48,
+      reason: 'a change to roll back',
+    });
+    await w.decide(r.body.id, w.admin2);
+    const back = await w.as(w.admin1).post('/v1/config/idempotency.ttl_hours/rollback', {
+      to_version: 1,
+      reason: 'coverage check of a rollback',
+    });
+    expect(back.status).toBe(201);
+    return cid(await w.decide(back.body.id, w.admin2));
+  },
+  'config.refused_locked': async () => {
+    const res = await w.as(w.admin1).post('/v1/config/app.mode/versions', {
+      value: 'DEMO',
+      reason: 'coverage check of the lock',
+    });
+    expect(res.status).toBe(409);
     return cid(res);
   },
 };

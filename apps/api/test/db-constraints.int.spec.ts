@@ -186,7 +186,7 @@ describe('demo_reset_role', () => {
     try {
       await app.query('SET LOCAL ROLE demo_reset_role');
       await app.query(
-        `TRUNCATE integration.outbox, integration.idempotency_keys, iam.tenant_elevations, iam.approval_decisions,
+        `TRUNCATE integration.outbox, integration.idempotency_keys, iam.tenant_elevations, iam.approval_decisions, config.config_versions,
            iam.approval_requests, iam.user_roles, iam.users, platform.organizations, platform.legal_entities, platform.tenants`,
       );
     } finally {

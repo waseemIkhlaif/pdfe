@@ -25,6 +25,12 @@ export const MATRIX: Record<string, Entry> = {
   'POST /v1/approvals/:id/decisions': { kind: 'authenticated', foreign: 404 },
   'POST /v1/approvals/:id/cancel': { kind: 'authenticated', foreign: 404 },
 
+  'GET /v1/config': { kind: 'permission', permission: 'config.read' },
+  'GET /v1/config/:key/versions': { kind: 'permission', permission: 'config.read' },
+  'GET /v1/config/:key/diff': { kind: 'permission', permission: 'config.read' },
+  'POST /v1/config/:key/versions': { kind: 'permission', permission: 'config.request' },
+  'POST /v1/config/:key/rollback': { kind: 'permission', permission: 'config.request' },
+
   'GET /v1/iam/users': { kind: 'permission', permission: 'iam.read' },
   'GET /v1/iam/roles': { kind: 'permission', permission: 'iam.read' },
   'POST /v1/iam/users/:id/role-grants': {

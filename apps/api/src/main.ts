@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { configRegistry } from '@pdfe/domain-types';
 import { guardStartup, installEgressGuard, refuseStart } from '@pdfe/platform-core';
 import { PinoNestLogger, createLogger } from '@pdfe/platform-core/logger';
+import { assertSafetyAgainstDatabase } from '@pdfe/platform-core/config';
 import { AppModule } from './app.module';
 import { loadAdapterConfig } from './integration/adapter-config.loader';
 import { configureApp } from './app';
@@ -11,10 +12,23 @@ import { configureApp } from './app';
 async function bootstrap(): Promise<void> {
   // Safety first: refuse to start unless this is DEMO with mock adapters only, then close the network.
   guardStartup();
+  let adapterTypes: string[] = [];
   try {
-    loadAdapterConfig(process.env.ADAPTERS_CONFIG);
+    adapterTypes = Object.values(loadAdapterConfig(process.env.ADAPTERS_CONFIG));
   } catch (err) {
     refuseStart(err);
+  }
+  // Once the database can be reached, the same values are compared with the safety-locked rows (FR-010).
+  if (process.env.DATABASE_URL) {
+    try {
+      await assertSafetyAgainstDatabase({
+        url: process.env.DATABASE_URL,
+        env: process.env,
+        adapterTypes,
+      });
+    } catch (err) {
+      refuseStart(err);
+    }
   }
   installEgressGuard(
     process.env.INTERNAL_HOSTS?.split(',').map((h) => h.trim()) ??

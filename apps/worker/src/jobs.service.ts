@@ -5,13 +5,14 @@ import { IdGenerator, SystemClock, SystemRandom } from '@pdfe/platform-core';
 import { AuditRecorder } from '@pdfe/platform-core/audit';
 import { createPool, type Pool } from '@pdfe/platform-core/db';
 import { AnchorJob } from './audit-anchor/anchor.job';
+import { ConfigActivationJob } from './config-activation/activation.job';
 import { ApprovalsExpiryJob } from './approvals-expiry/expiry.job';
 import { ElevationExpiryJob } from './elevation-expiry/expiry.job';
 import { ApprovalNotificationConsumer } from './notifications/approval-notification.consumer';
 import { BullPublisher } from './outbox-relay/bull.publisher';
 import { OutboxRelay } from './outbox-relay/outbox-relay.job';
 
-/** Starts the recurring jobs: the outbox relay every second, the two expiry jobs every 30 seconds. */
+/** Starts the recurring jobs: the outbox relay every second, the expiry jobs every 30 seconds, configuration activation every minute. */
 @Injectable()
 export class JobsService implements OnModuleInit, OnModuleDestroy {
   private readonly log = new Logger('jobs');
@@ -41,6 +42,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     const approvals = new ApprovalsExpiryJob(this.pool, clock, ids, audit);
     const elevations = new ElevationExpiryJob(this.pool, clock, ids, audit);
     const anchors = new AnchorJob(this.pool, clock, ids);
+    const configs = new ConfigActivationJob(this.pool, clock, ids, audit);
     // Consumers of the queues the relay fills. Each event is processed once (inbox), though delivery is at least once.
     const notify = new ApprovalNotificationConsumer(this.pool, clock, (line) => this.log.log(line));
     this.workers.push(
@@ -56,6 +58,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     this.every('audit-anchor', 30_000, () => anchors.runOnce());
     this.every('approvals-expiry', 30_000, () => approvals.runOnce());
     this.every('elevation-expiry', 30_000, () => elevations.runOnce());
+    this.every('config-activation', 60_000, () => configs.runOnce());
   }
 
   /** Runs a job on an interval, never overlapping itself, and logs a failure instead of crashing the worker. */

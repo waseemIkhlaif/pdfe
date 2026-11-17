@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { cancelSchema, decisionSchema } from '../approvals/approvals.service';
 import { verifySchema } from '../audit/audit.service';
+import { proposeSchema, rollbackSchema } from '../config/config.service';
 import { roleChangeSchema } from '../identity/iam.service';
 import { startElevationSchema } from '../tenancy/elevation.service';
 
@@ -130,7 +131,44 @@ export const VerifyResult = z.union([
   }),
 ]);
 
+const ConfigVersion = z.object({
+  version: z.number().int(),
+  value: z.unknown(),
+  status: z.enum(['pending_approval', 'scheduled', 'active', 'superseded', 'rejected', 'stale']),
+  effective_from: iso,
+  rollback_of_version: z.number().int().nullable(),
+  reason: z.string().nullable(),
+  approval_request_id: uuid.nullable(),
+  created_by: z.string(),
+  created_at: iso,
+});
+export const ConfigItem = z.object({
+  key: z.string(),
+  description: z.string(),
+  schema: z.record(z.string(), z.unknown()),
+  safety_locked: z.boolean(),
+  editable: z.boolean(),
+  active: ConfigVersion.nullable(),
+  pending_versions: z.number().int(),
+});
+export const ConfigItemList = z.object({ items: z.array(ConfigItem) });
+export const ConfigVersionList = z.object({ key: z.string(), items: z.array(ConfigVersion) });
+export const ConfigDiff = z.object({
+  key: z.string(),
+  from: z.number().int(),
+  to: z.number().int(),
+  patch: z.array(
+    z.object({
+      op: z.enum(['add', 'remove', 'replace']),
+      path: z.string(),
+      value: z.unknown().optional(),
+    }),
+  ),
+});
+
 export const StartElevationRequest = startElevationSchema;
+export const ConfigProposalRequest = proposeSchema;
+export const ConfigRollbackRequest = rollbackSchema;
 export const ApprovalDecisionRequest = decisionSchema;
 export const ApprovalCancelRequest = cancelSchema;
 export const RoleChangeRequest = roleChangeSchema;
@@ -155,6 +193,12 @@ export const NAMED = {
   ApprovalDecisionRequest,
   ApprovalCancelRequest,
   RoleChangeRequest,
+  ConfigItem,
+  ConfigItemList,
+  ConfigVersionList,
+  ConfigDiff,
+  ConfigProposalRequest,
+  ConfigRollbackRequest,
   AuditEvent,
   AuditEventList,
   VerifyResult,

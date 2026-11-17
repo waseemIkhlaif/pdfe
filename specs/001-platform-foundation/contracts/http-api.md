@@ -44,6 +44,7 @@ The service base is `http://api:4000` inside Docker and `http://localhost:4000` 
 | GET `/v1/config/{key}/diff?from=&to=` | `config.read` | JSON Patch between two versions | |
 | POST `/v1/config/{key}/versions` | `config.request` | `{ value, effective_from?, reason }` creates the approval `config.change` | 422 `CONFIG_INVALID` with details; 409 `CONFIG_SAFETY_LOCKED` |
 | POST `/v1/config/{key}/rollback` | `config.request` | `{ to_version, reason }` creates the approval `config.rollback` | 422 if the old value fails the current schema |
+| POST `/v1/config/{key}/versions` and `/rollback`, further notes | | A setting still waiting for approval shows as `rejected` when its request was rejected, cancelled or expired. Approving one version makes every other waiting one `stale`; approving a stale one is 409 `CONFIG_STALE`. A rollback target must have been in force (`active` or `superseded`), else 422 | |
 | GET `/v1/demo/scenarios` | `demo.scenario.run` | Registered scenarios, versions, checksums | |
 | POST `/v1/demo/scenarios/{code}/runs` | `demo.scenario.run` | `{ version, seed }` resets, seeds and returns the run | 409 `MANIFEST_CHECKSUM_MISMATCH`, `RUN_IN_PROGRESS` |
 | GET `/v1/demo/runs/{id}` | `demo.scenario.run` | Status, digest, report | |

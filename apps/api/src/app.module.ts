@@ -2,6 +2,7 @@ import { Module, type MiddlewareConsumer, type NestModule } from '@nestjs/common
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ApprovalsModule } from './approvals/approvals.module';
 import { AuditModule } from './audit/audit.module';
+import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
 import { RequestContextMiddleware } from './core/request-context.middleware';
 import { DbModule } from './db/db.module';
@@ -27,6 +28,7 @@ import { TenantContextInterceptor } from './tenancy/tenant-context.interceptor';
     AuditModule,
     DemoModule,
     ApprovalsModule,
+    ConfigModule,
     IntegrationModule,
     IdentityModule,
     TenancyModule,
