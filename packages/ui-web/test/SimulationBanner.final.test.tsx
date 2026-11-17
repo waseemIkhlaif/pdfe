@@ -14,16 +14,37 @@ describe('SimulationBanner (final)', () => {
     SimulationBanner({ hidden: true });
   });
 
-  it('is a full-width sticky status region marked data-sim, with the exact text', () => {
+  it('is a full-width sticky status region marked data-sim, with both exact strings in the markup', () => {
     const doc = parse(renderToStaticMarkup(<SimulationBanner />));
     const el = doc.querySelector('[data-sim="1"]') as HTMLElement;
     expect(el.getAttribute('role')).toBe('status');
     expect(el.style.position).toBe('sticky');
     expect(el.style.inlineSize).toBe('100%');
-    expect(el.textContent).toContain(SIM_LABEL_EN);
-    expect(el.textContent).toContain(SIM_LABEL_AR);
     expect(el.querySelector('bdi[lang="en"]')?.textContent).toBe(SIM_LABEL_EN);
     expect(el.querySelector('bdi[lang="ar"]')?.textContent).toBe(SIM_LABEL_AR);
+  });
+
+  it.each([
+    ['en', SIM_LABEL_EN, SIM_LABEL_AR],
+    ['ar', SIM_LABEL_AR, SIM_LABEL_EN],
+  ])('shows only the %s label when the page language is %s', (lang, shown, hidden) => {
+    const doc = parse(
+      renderToStaticMarkup(
+        <SimShell locale={lang as 'en' | 'ar'}>
+          <main />
+        </SimShell>,
+      ),
+    );
+    document.documentElement.setAttribute('lang', lang);
+    document.body.innerHTML = doc.body.innerHTML;
+    const visibleText = (cls: string) =>
+      getComputedStyle(document.querySelector(`.${cls}`) as HTMLElement).display !== 'none'
+        ? (document.querySelector(`.${cls}`) as HTMLElement).textContent
+        : null;
+    const en = visibleText('pdfe-sim-en');
+    const ar = visibleText('pdfe-sim-ar');
+    expect([en, ar].filter(Boolean)).toEqual([shown]);
+    expect([en, ar]).not.toContain(hidden);
   });
 });
 

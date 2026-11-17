@@ -22,19 +22,25 @@ const style: CSSProperties = {
   textAlign: 'center',
 };
 
+/** Shows the label in the page language only. The page language is the `lang` of the root element. */
+export const HIDE_OTHER_LANGUAGE =
+  'html[lang="ar"] .pdfe-sim-en,html[lang="en"] .pdfe-sim-ar{display:none}';
+
 /**
- * The simulation banner (constitution Article VIII, FR-022): sticky, full width, a status region, and the same
- * bilingual text on every screen in either language. It takes no props, so a page cannot hide, shorten or restyle it.
- * Pages never render it themselves: SimShell does, in the root layout.
+ * The simulation banner (constitution Article VIII, FR-022): sticky, full width, a status region, on every screen.
+ * Its visible text is the label in the language of the page (`<html lang>`): `SIMULATION — NOT REAL MONEY` or
+ * `محاكاة — ليست أموالاً حقيقية` (contracts/ui-shell.md). Both strings are in the markup and a rule hides the one that
+ * does not match, so the label is present in either language even before styles load. It takes no props, so a page
+ * cannot hide, shorten or restyle it. Pages never render it themselves: SimShell does, in the root layout.
  */
 export function SimulationBanner() {
   return (
     <div role="status" data-sim="1" style={style}>
-      <bdi lang="en" dir="ltr">
+      <style>{HIDE_OTHER_LANGUAGE}</style>
+      <bdi className="pdfe-sim-en" lang="en" dir="ltr">
         {SIM_LABEL_EN}
       </bdi>
-      <span aria-hidden="true">{' / '}</span>
-      <bdi lang="ar" dir="rtl">
+      <bdi className="pdfe-sim-ar" lang="ar" dir="rtl">
         {SIM_LABEL_AR}
       </bdi>
     </div>
