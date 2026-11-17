@@ -1,6 +1,6 @@
 import { Queue } from 'bullmq';
 import type { Redis } from 'ioredis';
-import type { OutboxMessage } from '@pdfe/platform-core/queue';
+import { withCorrelation, type OutboxMessage } from '@pdfe/platform-core/queue';
 import type { EventPublisher } from './outbox-relay.job';
 
 /**
@@ -19,7 +19,8 @@ export class BullPublisher implements EventPublisher {
       q = new Queue(`pdfe-${family}`, { connection: this.connection });
       this.queues.set(family, q);
     }
-    await q.add(message.topic, message, {
+    // `correlation_id` is on the job data, next to the message, for consumers and tools that read it from there.
+    await q.add(message.topic, withCorrelation(message, message.correlationId), {
       jobId: message.id,
       removeOnComplete: 1000,
       removeOnFail: 1000,

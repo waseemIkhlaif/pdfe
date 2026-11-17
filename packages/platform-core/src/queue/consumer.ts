@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg';
 import type { ClockService } from '../clock';
+import { runWithContext } from '../correlation';
 import { withTx, type Pool } from '../db';
 
 /** An event as the relay publishes it and a consumer receives it. */
@@ -27,8 +28,21 @@ export abstract class BaseConsumer {
   /** The work, run at most once per event ID, inside the inbox transaction. */
   protected abstract handle(tx: { client: PoolClient }, message: OutboxMessage): Promise<void>;
 
-  /** Returns true if the event was processed now, false if it had been processed before. */
+  /**
+   * Returns true if the event was processed now, false if it had been processed before. The work runs in the correlation
+   * context of the event, so everything it logs, audits or sends carries the ID of the request that caused it.
+   */
   async consume(message: OutboxMessage): Promise<boolean> {
+    return runWithContext(
+      {
+        correlationId: message.correlationId,
+        ...(message.tenantId ? { tenantId: message.tenantId } : {}),
+      },
+      () => this.consumeInContext(message),
+    );
+  }
+
+  private consumeInContext(message: OutboxMessage): Promise<boolean> {
     return withTx(
       this.pool,
       {

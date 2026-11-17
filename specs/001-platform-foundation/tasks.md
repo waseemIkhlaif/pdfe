@@ -593,10 +593,10 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 6 ⚠️ (write first, must fail)
 
-- [ ] T141 [P] [US6] Write `packages/platform-core/test/logger-redaction.test.ts`:
+- [x] T141 [P] [US6] Write `packages/platform-core/test/logger-redaction.test.ts`:
   - `display_name`, `full_name`, `name`, `Authorization`, `cookie`, `password`, `secret`, `token`, `totp`, document-number-like values (9 or more digits) and IBAN-like values become `[REDACTED]`;
   - `correlation_id` and `trace_id` are present on every line
-- [ ] T142 [P] [US6] Write `apps/api/test/correlation.int.spec.ts`:
+- [x] T142 [P] [US6] Write `apps/api/test/correlation.int.spec.ts`:
   - a header that is too long or has invalid characters is replaced, and the raw value never appears in the captured logs;
   - the ID reaches the BullMQ job data, the worker's logs, the `X-Correlation-Id` header of the mock adapter call, the mock-hub log, the audit event and the error envelope
 - [ ] T143 [P] [US6] Write `tests/e2e-web/specs/correlation.spec.ts`:
@@ -605,9 +605,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation for User Story 6
 
-- [ ] T144 [US6] Implement `packages/platform-core/src/telemetry.ts`, an OpenTelemetry NodeSDK (HTTP, pg, ioredis and undici instrumentations; OTLP to `OTEL_EXPORTER_OTLP_ENDPOINT`; `correlation_id` as a span attribute and metric exemplar). Start it before Nest in the api, worker and mock-hub mains
-- [ ] T145 [US6] Implement `packages/platform-core/src/logger.ts`: Pino with redact paths and a pattern redactor, and a mixin adding `correlation_id`, `trace_id` and `span_id`. Replace the Nest logger in all three services. Make T141 pass
-- [ ] T146 [US6] Complete propagation:
+- [x] T144 [US6] Implement `packages/platform-core/src/telemetry.ts`, an OpenTelemetry NodeSDK (HTTP, pg, ioredis and undici instrumentations; OTLP to `OTEL_EXPORTER_OTLP_ENDPOINT`; `correlation_id` as a span attribute and metric exemplar). Start it before Nest in the api, worker and mock-hub mains
+- [x] T145 [US6] Implement `packages/platform-core/src/logger.ts`: Pino with redact paths and a pattern redactor, and a mixin adding `correlation_id`, `trace_id` and `span_id`. Replace the Nest logger in all three services. Make T141 pass
+- [x] T146 [US6] Complete propagation:
   - `packages/platform-core/src/queue/producer.ts`, which puts `correlation_id` into job data, and the consumer base, which restores the context;
   - mock adapters send `X-Correlation-Id`;
   - `apps/mock-hub/src/core/correlation.middleware.ts`.

@@ -16,11 +16,24 @@
   },
   "dependencies": {
     "@fontsource/noto-naskh-arabic": "^5.3.0",
+    "@opentelemetry/api": "^1.10.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.301.2",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.301.2",
+    "@opentelemetry/instrumentation-http": "^0.301.2",
+    "@opentelemetry/instrumentation-ioredis": "^0.73.0",
+    "@opentelemetry/instrumentation-pg": "^0.78.0",
+    "@opentelemetry/instrumentation-undici": "^0.35.1",
+    "@opentelemetry/resources": "^3.1.1",
+    "@opentelemetry/sdk-metrics": "^3.1.1",
+    "@opentelemetry/sdk-node": "^0.301.2",
+    "@opentelemetry/sdk-trace-base": "^2.12.0",
+    "@opentelemetry/semantic-conventions": "^1.45.0",
     "@pdf-lib/fontkit": "^1.1.1",
     "@pdfe/domain-types": "workspace:*",
     "drizzle-orm": "^0.45.4",
     "pdf-lib": "^1.17.1",
     "pg": "^8.23.1",
+    "pino": "^10.4.0",
     "pure-rand": "^8.4.2"
   },
   "devDependencies": {
@@ -60,6 +73,14 @@
     "./sim-label-pdf": {
       "types": "./dist/sim-label-pdf.d.ts",
       "default": "./dist/sim-label-pdf.js"
+    },
+    "./logger": {
+      "types": "./dist/logger.d.ts",
+      "default": "./dist/logger.js"
+    },
+    "./telemetry": {
+      "types": "./dist/telemetry.d.ts",
+      "default": "./dist/telemetry.js"
     }
   },
   "files": [

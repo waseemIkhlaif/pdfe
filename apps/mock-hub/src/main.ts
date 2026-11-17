@@ -1,7 +1,9 @@
+import './telemetry-start';
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { configRegistry } from '@pdfe/domain-types';
 import { guardStartup, installEgressGuard } from '@pdfe/platform-core';
+import { PinoNestLogger, createLogger } from '@pdfe/platform-core/logger';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -12,11 +14,13 @@ async function bootstrap(): Promise<void> {
       configRegistry['egress.internal_hosts'].default,
   );
 
-  const app = await NestFactory.create(AppModule);
+  const logger = createLogger({ service: 'mock-hub' });
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(new PinoNestLogger(logger));
   app.enableShutdownHooks();
   const port = Number(process.env.PORT ?? 4100);
   await app.listen(port, '0.0.0.0');
-  console.log(JSON.stringify({ msg: 'mock-hub listening', port }));
+  logger.info({ port }, 'mock-hub listening');
 }
 
 bootstrap().catch((err: unknown) => {

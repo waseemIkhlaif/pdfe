@@ -35,12 +35,14 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     this.redis = new Redis(redisUrl, { maxRetriesPerRequest: null });
     this.publisher = new BullPublisher(this.redis);
 
-    const relay = new OutboxRelay(this.pool, clock, this.publisher);
+    const relay = new OutboxRelay(this.pool, clock, this.publisher, (line) =>
+      this.log.error(JSON.stringify(line)),
+    );
     const approvals = new ApprovalsExpiryJob(this.pool, clock, ids, audit);
     const elevations = new ElevationExpiryJob(this.pool, clock, ids, audit);
     const anchors = new AnchorJob(this.pool, clock, ids);
     // Consumers of the queues the relay fills. Each event is processed once (inbox), though delivery is at least once.
-    const notify = new ApprovalNotificationConsumer(this.pool, clock);
+    const notify = new ApprovalNotificationConsumer(this.pool, clock, (line) => this.log.log(line));
     this.workers.push(
       new Worker(
         'pdfe-approval',
