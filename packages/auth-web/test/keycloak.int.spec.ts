@@ -130,6 +130,9 @@ describe('sign-in through the real realm', () => {
     const routes = createAuthRoutes(config);
     const start = await routes.signIn(new Request(`${config.appBaseUrl}/api/auth/sign-in`));
     const callbackUrl = await login(start.headers.get('location')!, 'demo.auditor');
+    // The token is issued some seconds after the one-time password was checked. Keycloak lists a method in `amr`
+    // only while its reference is younger than the configured max age, so a slow exchange must still show otp.
+    await new Promise((r) => setTimeout(r, 3000));
     const done = await routes.callback(
       new Request(callbackUrl, { headers: { cookie: cookieFrom(start)! } }),
     );

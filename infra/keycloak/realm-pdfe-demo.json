@@ -262,25 +262,29 @@
     {
       "alias": "amr-pwd",
       "config": {
-        "default.reference.value": "pwd"
+        "default.reference.value": "pwd",
+        "default.reference.maxAge": "86400"
       }
     },
     {
       "alias": "amr-pwd-dg",
       "config": {
-        "default.reference.value": "pwd"
+        "default.reference.value": "pwd",
+        "default.reference.maxAge": "86400"
       }
     },
     {
       "alias": "amr-otp",
       "config": {
-        "default.reference.value": "otp"
+        "default.reference.value": "otp",
+        "default.reference.maxAge": "86400"
       }
     },
     {
       "alias": "amr-otp-dg",
       "config": {
-        "default.reference.value": "otp"
+        "default.reference.value": "otp",
+        "default.reference.maxAge": "86400"
       }
     }
   ],
@@ -298,14 +302,20 @@
       "serviceAccountsEnabled": false,
       "rootUrl": "http://localhost:3001",
       "baseUrl": "/",
-      "redirectUris": ["http://localhost:3001/*"],
-      "webOrigins": ["http://localhost:3001"],
+      "redirectUris": [
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3001"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "http://localhost:3001/*"
       },
       "authenticationFlowBindingOverrides": {},
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "web-merchant",
@@ -320,14 +330,20 @@
       "serviceAccountsEnabled": false,
       "rootUrl": "http://localhost:3002",
       "baseUrl": "/",
-      "redirectUris": ["http://localhost:3002/*"],
-      "webOrigins": ["http://localhost:3002"],
+      "redirectUris": [
+        "http://localhost:3002/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3002"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "http://localhost:3002/*"
       },
       "authenticationFlowBindingOverrides": {},
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "web-business",
@@ -342,14 +358,20 @@
       "serviceAccountsEnabled": false,
       "rootUrl": "http://localhost:3003",
       "baseUrl": "/",
-      "redirectUris": ["http://localhost:3003/*"],
-      "webOrigins": ["http://localhost:3003"],
+      "redirectUris": [
+        "http://localhost:3003/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3003"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "http://localhost:3003/*"
       },
       "authenticationFlowBindingOverrides": {},
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "web-console",
@@ -364,14 +386,20 @@
       "serviceAccountsEnabled": false,
       "rootUrl": "http://localhost:3004",
       "baseUrl": "/",
-      "redirectUris": ["http://localhost:3004/*"],
-      "webOrigins": ["http://localhost:3004"],
+      "redirectUris": [
+        "http://localhost:3004/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3004"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "http://localhost:3004/*"
       },
       "authenticationFlowBindingOverrides": {},
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "web-investor",
@@ -386,14 +414,20 @@
       "serviceAccountsEnabled": false,
       "rootUrl": "http://localhost:3005",
       "baseUrl": "/",
-      "redirectUris": ["http://localhost:3005/*"],
-      "webOrigins": ["http://localhost:3005"],
+      "redirectUris": [
+        "http://localhost:3005/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3005"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "http://localhost:3005/*"
       },
       "authenticationFlowBindingOverrides": {},
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "web-devportal",
@@ -408,14 +442,20 @@
       "serviceAccountsEnabled": false,
       "rootUrl": "http://localhost:3006",
       "baseUrl": "/",
-      "redirectUris": ["http://localhost:3006/*"],
-      "webOrigins": ["http://localhost:3006"],
+      "redirectUris": [
+        "http://localhost:3006/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3006"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "http://localhost:3006/*"
       },
       "authenticationFlowBindingOverrides": {},
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "mobile",
@@ -425,11 +465,15 @@
       "publicClient": true,
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
-      "redirectUris": ["pdfe://auth"],
+      "redirectUris": [
+        "pdfe://auth"
+      ],
       "attributes": {
         "pkce.code.challenge.method": "S256"
       },
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     },
     {
       "clientId": "pdfe-tests",
@@ -440,7 +484,9 @@
       "publicClient": true,
       "standardFlowEnabled": false,
       "directAccessGrantsEnabled": true,
-      "defaultClientScopes": ["pdfe"]
+      "defaultClientScopes": [
+        "pdfe"
+      ]
     }
   ],
   "users": [
@@ -453,7 +499,9 @@
       "firstName": "Demo Admin A",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -468,8 +516,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -481,7 +533,9 @@
       "firstName": "Demo Admin B",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -496,8 +550,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -509,7 +567,9 @@
       "firstName": "Demo Individual",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000002"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000002"
+        ]
       },
       "credentials": [
         {
@@ -531,7 +591,9 @@
       "firstName": "Demo Merchant Owner",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000003"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000003"
+        ]
       },
       "credentials": [
         {
@@ -553,7 +615,9 @@
       "firstName": "Demo Merchant Cashier",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000003"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000003"
+        ]
       },
       "credentials": [
         {
@@ -575,7 +639,9 @@
       "firstName": "Demo Business Preparer",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000003"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000003"
+        ]
       },
       "credentials": [
         {
@@ -597,7 +663,9 @@
       "firstName": "Demo Business Approver",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000003"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000003"
+        ]
       },
       "credentials": [
         {
@@ -619,7 +687,9 @@
       "firstName": "Demo Operations Analyst",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -634,8 +704,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -647,7 +721,9 @@
       "firstName": "Demo Compliance Analyst",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -662,8 +738,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -675,7 +755,9 @@
       "firstName": "Demo Compliance Approver",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -690,8 +772,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -703,7 +789,9 @@
       "firstName": "Demo Finance Analyst",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -718,8 +806,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -731,7 +823,9 @@
       "firstName": "Demo Finance Approver",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -746,8 +840,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -759,7 +857,9 @@
       "firstName": "Demo Issuer Operator",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -774,8 +874,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -787,7 +891,9 @@
       "firstName": "Demo Stable-Value Approver",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -802,8 +908,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -815,7 +925,9 @@
       "firstName": "Demo Auditor",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {
@@ -830,8 +942,12 @@
           "credentialData": "{\"subType\":\"totp\",\"digits\":6,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
         }
       ],
-      "realmRoles": ["privileged"],
-      "groups": ["/privileged"],
+      "realmRoles": [
+        "privileged"
+      ],
+      "groups": [
+        "/privileged"
+      ],
       "requiredActions": []
     },
     {
@@ -843,7 +959,9 @@
       "firstName": "Demo Viewer",
       "lastName": "Synthetic",
       "attributes": {
-        "tenant_id": ["22222222-0000-7000-8000-000000000001"]
+        "tenant_id": [
+          "22222222-0000-7000-8000-000000000001"
+        ]
       },
       "credentials": [
         {

@@ -259,7 +259,12 @@ const authenticatorConfig = [
     ['amr-pwd-dg', 'pwd'],
     ['amr-otp', 'otp'],
     ['amr-otp-dg', 'otp'],
-  ].map(([alias, value]) => ({ alias, config: { 'default.reference.value': value } })),
+  ].map(([alias, value]) => ({
+    alias,
+    // Without a max age Keycloak drops the reference as soon as the second changes after the factor was checked,
+    // so a token issued a moment later would show no `otp`. A day outlasts any session of this realm.
+    config: { 'default.reference.value': value, 'default.reference.maxAge': '86400' },
+  })),
 ];
 
 const bffClient = ([clientId, port]) => ({
