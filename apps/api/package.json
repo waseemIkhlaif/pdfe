@@ -10,7 +10,9 @@
     "start": "node dist/main.js",
     "start:once": "node dist/main.js --once",
     "test:unit": "vitest run",
-    "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests"
+    "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests",
+    "seed:dev": "node dist/demo/dev-seed.js",
+    "openapi": "node dist/openapi/generate.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.5.0",
@@ -20,6 +22,7 @@
     "@pdfe/platform-core": "workspace:*",
     "drizzle-orm": "^0.45.4",
     "ioredis": "^6.0.0",
+    "jose": "^6.2.17",
     "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",

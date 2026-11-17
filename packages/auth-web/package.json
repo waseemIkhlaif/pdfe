@@ -1,0 +1,43 @@
+{
+  "name": "@pdfe/auth-web",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Sign-in for the web apps: OIDC Authorization Code with PKCE as a backend-for-frontend, an encrypted session cookie, and a server-side API client.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "vitest run",
+    "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests"
+  },
+  "dependencies": {
+    "@pdfe/platform-core": "workspace:*",
+    "iron-session": "^9.1.0",
+    "openid-client": "^6.9.0",
+    "server-only": "^0.0.1"
+  },
+  "peerDependencies": {
+    "next": "^16.0.0"
+  },
+  "devDependencies": {
+    "@pdfe/config": "workspace:*",
+    "@pdfe/test-kit": "workspace:*",
+    "@types/node": "^22.0.0",
+    "next": "^16.4.6",
+    "vitest": "^5.1.0"
+  }
+}

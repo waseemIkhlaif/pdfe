@@ -326,19 +326,19 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 3 ⚠️ (write first, must fail)
 
-- [ ] T078 [P] [US3] Write `packages/domain-types/test/rbac.test.ts`:
+- [x] T078 [P] [US3] Write `packages/domain-types/test/rbac.test.ts`:
   - every permission in `data-model.md` §RBAC exists and has its holders;
   - the privileged set is exactly the 9 console roles;
   - every SoD pair is stored in both orders;
   - `auditor` conflicts with every role holding a write permission;
   - no single role's permissions span the three triple-rule groups;
   - every `action_type` has an approve permission
-- [ ] T079 [P] [US3] Write `apps/api/test/rls.int.spec.ts`. For every table with `tenant_id`:
+- [x] T079 [P] [US3] Write `apps/api/test/rls.int.spec.ts`. For every table with `tenant_id`:
   - a transaction with `app.tenant_id = A` reads 0 rows of tenant B;
   - an insert with `tenant_id = B` fails the `WITH CHECK`;
   - a missing `app.tenant_id` reads 0 rows;
   - `app_role` has `rolbypassrls = false`
-- [ ] T080 [P] [US3] Write `apps/api/test/approvals.int.spec.ts`:
+- [x] T080 [P] [US3] Write `apps/api/test/approvals.int.spec.ts`:
   - self-approval is refused by the service (409 `SELF_APPROVAL`), and a direct SQL insert into `iam.approval_decisions` with `decided_by = requested_by` is refused by the trigger;
   - a decider without the approve permission gets 403;
   - a changed payload gives 409 `PAYLOAD_CHANGED`, an expired request 409 `EXPIRED`, and a cancelled or decided one 409 `NOT_PENDING`;
@@ -346,15 +346,15 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - with `required_approvals = 2`, a cancel after the first approval leaves the request cancelled;
   - if an approver loses the permission while a request is pending, their decision is refused;
   - every step records exactly one audit event
-- [ ] T081 [P] [US3] Write `apps/api/test/sod.int.spec.ts`:
+- [x] T081 [P] [US3] Write `apps/api/test/sod.int.spec.ts`:
   - granting a role that conflicts with a held role is refused by the service (409 `SOD_CONFLICT`, listing both roles) and by the `trg_user_roles_sod` trigger on a direct insert;
   - the triple rule is refused;
   - the refusal is audited (`iam.role.grant_refused_sod`)
-- [ ] T082 [P] [US3] Write `apps/api/test/mfa.int.spec.ts`, using Testcontainers Keycloak with the realm import:
+- [x] T082 [P] [US3] Write `apps/api/test/mfa.int.spec.ts`, using Testcontainers Keycloak with the realm import:
   - a privileged user's token without `otp` in `amr` gets 401 `MFA_REQUIRED` on every protected route, and the denial is audited (`auth.signin_denied_mfa`);
   - with a TOTP from the fixed secret, access works;
   - a non-privileged user works without a second factor
-- [ ] T083 [P] [US3] Write `apps/api/test/elevation.int.spec.ts`:
+- [x] T083 [P] [US3] Write `apps/api/test/elevation.int.spec.ts`:
   - starting needs `tenant.elevate` and a reason of at least 10 characters;
   - a second active elevation gives 409 `ELEVATION_ACTIVE`;
   - reads return the target tenant's rows;
@@ -362,27 +362,27 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - after the expiry passes mid-session, the next read returns 403 and no data;
   - ending works;
   - audit records `tenant.elevation_started`, one `tenant.elevated_read` per read, and `tenant.elevation_ended`
-- [ ] T084 [P] [US3] Write `apps/api/test/idempotency.int.spec.ts`:
+- [x] T084 [P] [US3] Write `apps/api/test/idempotency.int.spec.ts`:
   - a POST without `Idempotency-Key` gets 400 `IDEMPOTENCY_KEY_REQUIRED`;
   - the same key and body replay the original status and body;
   - the same key with a different body gets 422 `IDEMPOTENCY_KEY_REUSED`;
   - a concurrent duplicate gets 409 `IDEMPOTENCY_IN_PROGRESS`;
   - after the TTL, the key can be reused
-- [ ] T085 [P] [US3] Write `apps/api/test/outbox.int.spec.ts`:
+- [x] T085 [P] [US3] Write `apps/api/test/outbox.int.spec.ts`:
   - an event is written in the same transaction as its cause, and a rollback leaves no event;
   - two concurrent relays publish each event once (`SKIP LOCKED`);
   - a consumer receiving the same event twice processes it once
-- [ ] T086 [P] [US3] Write `apps/api/test/rate-limit.int.spec.ts`: going over `api.rate_limit.per_user_per_minute` returns 429 `RATE_LIMITED` with `Retry-After`, the event is logged, and the per-IP limit applies to unauthenticated routes
-- [ ] T087 [P] [US3] Write `apps/api/test/audit-minimal.int.spec.ts`:
+- [x] T086 [P] [US3] Write `apps/api/test/rate-limit.int.spec.ts`: going over `api.rate_limit.per_user_per_minute` returns 429 `RATE_LIMITED` with `Retry-After`, the event is logged, and the per-IP limit applies to unauthenticated routes
+- [x] T087 [P] [US3] Write `apps/api/test/audit-minimal.int.spec.ts`:
   - an approved role grant produces exactly one `iam.role.granted` event with actor, role, tenant, action, target, reason, time, correlation ID and approval reference;
   - a forced audit insert failure rolls the grant back;
   - `UPDATE` and `DELETE` on `audit.audit_events` as `app_role` fail
-- [ ] T088 [P] [US3] Write `packages/auth-web/test/session.test.ts`: the session cookie is `HttpOnly` and `SameSite=Lax` and encrypted; the access token never appears in any server-component prop or response body sent to the browser; sign-out clears the session
-- [ ] T089 [US3] Write `apps/api/test/authz.matrix.spec.ts`. It discovers every route through Nest `DiscoveryService` and every role from `rbac.ts`, and asserts the expected status for each route × role × {with second factor, without} × {own tenant, other tenant}. A route with no matrix entry fails the suite. It covers only the routes that exist; later stories extend it in the same task that adds a route
+- [x] T088 [P] [US3] Write `packages/auth-web/test/session.test.ts`: the session cookie is `HttpOnly` and `SameSite=Lax` and encrypted; the access token never appears in any server-component prop or response body sent to the browser; sign-out clears the session
+- [x] T089 [US3] Write `apps/api/test/authz.matrix.spec.ts`. It discovers every route through Nest `DiscoveryService` and every role from `rbac.ts`, and asserts the expected status for each route × role × {with second factor, without} × {own tenant, other tenant}. A route with no matrix entry fails the suite. It covers only the routes that exist; later stories extend it in the same task that adds a route
 
 ### Implementation for User Story 3
 
-- [ ] T090 [US3] Implement `packages/domain-types/src/rbac.ts`:
+- [x] T090 [US3] Implement `packages/domain-types/src/rbac.ts`:
   - the 15 roles from spec Story 3, each with `privileged`;
   - the permissions from `data-model.md` §RBAC plus the §J.3 starter permissions, each with `high_risk`;
   - `rolePermissions`;
@@ -391,43 +391,43 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `approvePermissionFor` (`iam.role.grant` and `iam.role.revoke` → `iam.role.grant.approve`; `config.change` and `config.rollback` → `config.approve`).
 
   Make T078 pass
-- [ ] T091 [US3] Write `db/migrations/0003_iam.sql`:
+- [x] T091 [US3] Write `db/migrations/0003_iam.sql`:
   - `iam.users`, `roles`, `permissions`, `role_permissions`, `user_roles`, `sod_conflicts`, `approval_requests`, `approval_decisions` and `tenant_elevations`, as in `data-model.md`, including the partial unique index for one active elevation per user;
   - trigger `trg_no_self_approval`;
   - trigger `trg_user_roles_sod`, covering the conflicts and the triple rule, with an error that names the roles;
   - SECURITY DEFINER function `iam.list_users_all()`, which returns non-PII directory columns and is executable only by `app_role`; the service calls it only for `platform_admin`
-- [ ] T092 [US3] Write `db/migrations/0004_idempotency_outbox.sql`: `integration.idempotency_keys` (with `response_status`), `integration.outbox` (partial index `WHERE published_at IS NULL`) and `integration.inbox` (`consumer`, `event_id`, PK on both, for consumer de-duplication)
-- [ ] T093 [US3] Write `db/migrations/0005_audit.sql`:
+- [x] T092 [US3] Write `db/migrations/0004_idempotency_outbox.sql`: `integration.idempotency_keys` (with `response_status`), `integration.outbox` (partial index `WHERE published_at IS NULL`) and `integration.inbox` (`consumer`, `event_id`, PK on both, for consumer de-duplication)
+- [x] T093 [US3] Write `db/migrations/0005_audit.sql`:
   - `audit.audit_events` as in `data-model.md`, including `elevation_id` and the indexes;
   - a BEFORE UPDATE OR DELETE trigger that raises `audit is append-only`;
   - grants: `app_role` INSERT and SELECT only, `readonly_role` SELECT
-- [ ] T094 [US3] Write `db/migrations/0006_rls_grants.sql`:
+- [x] T094 [US3] Write `db/migrations/0006_rls_grants.sql`:
   - `ENABLE` and `FORCE ROW LEVEL SECURITY`, with the policy from `data-model.md` §RLS, on `platform.legal_entities`, `platform.organizations`, `iam.users`, `iam.approval_requests` and `integration.idempotency_keys`;
   - table grants for `app_role` and `readonly_role`;
   - `TRUNCATE` on the demo-resettable tables for `demo_reset_role`, and `GRANT demo_reset_role TO app_role`.
 
   Make T079 pass
-- [ ] T095 [US3] Implement `packages/platform-core/src/migrate/reference-data.ts`, run by the migration CLI after the migrations. Using the migrator connection, it idempotently upserts `iam.roles`, `iam.permissions`, `iam.role_permissions` and `iam.sod_conflicts` from `rbac.ts`
-- [ ] T096 [US3] Add Drizzle schemas `apps/api/src/db/schema/{iam,integration,audit}.ts`
-- [ ] T097 [US3] Create `infra/keycloak/realm-pdfe-demo.json` for realm `pdfe-demo`:
+- [x] T095 [US3] Implement `packages/platform-core/src/migrate/reference-data.ts`, run by the migration CLI after the migrations. Using the migrator connection, it idempotently upserts `iam.roles`, `iam.permissions`, `iam.role_permissions` and `iam.sod_conflicts` from `rbac.ts`
+- [x] T096 [US3] Add Drizzle schemas `apps/api/src/db/schema/{iam,integration,audit}.ts`
+- [x] T097 [US3] Create `infra/keycloak/realm-pdfe-demo.json` for realm `pdfe-demo`:
   - confidential BFF clients `web-consumer` … `web-devportal`, with `localhost:300N` redirect URIs;
   - a public PKCE client `mobile`, with redirect `pdfe://auth`;
   - a `pdfe-tests` client with direct grant, used only by tests and scripts;
   - a user-attribute mapper `tenant_id`;
   - a `privileged` group with a conditional OTP browser flow, and `amr` in the token;
   - demo users with the fixed subjects from `contracts/scenario-manifest.md` (one per role, plus `demo.admin.a` and `demo.admin.b`), synthetic passwords, and fixed synthetic TOTP secrets for privileged users
-- [ ] T098 [P] [US3] Write `infra/keycloak/README.md` with the synthetic demo credential table, clearly marked synthetic. Implement `scripts/totp.mjs` (`pnpm totp <username>`), which prints the current code from the fixed secret
-- [ ] T099 [US3] Add `keycloak` to `infra/docker-compose.yml`:
+- [x] T098 [P] [US3] Write `infra/keycloak/README.md` with the synthetic demo credential table, clearly marked synthetic. Implement `scripts/totp.mjs` (`pnpm totp <username>`), which prints the current code from the fixed secret
+- [x] T099 [US3] Add `keycloak` to `infra/docker-compose.yml`:
   - `start-dev --import-realm` with the realm and themes mounted;
   - on the `app` and `edge` networks;
   - healthcheck.
 
   Add `localhost:8080` to `infra/Caddyfile`
-- [ ] T100 [US3] Create `packages/test-kit/src/{keycloak.ts,tokens.ts,app.ts}`:
+- [x] T100 [US3] Create `packages/test-kit/src/{keycloak.ts,tokens.ts,app.ts}`:
   - a Testcontainers Keycloak with the realm import;
   - `tokenFor(username, { otp })` through `pdfe-tests`;
   - `createTestApp()`, which boots the api against containers and runs migrations and reference data
-- [ ] T101 [US3] Implement `apps/api/src/identity/`:
+- [x] T101 [US3] Implement `apps/api/src/identity/`:
   - `jwt.verifier.ts`: JOSE remote JWKS from `OIDC_ISSUER`; it accepts the internal and the public issuer;
   - `auth.guard.ts`: builds the request principal (user, tenant, roles, permissions, `mfa`);
   - `mfa.guard.ts`: a privileged role without `otp` gets 401 `MFA_REQUIRED`, audited;
@@ -435,25 +435,25 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - an `auth.signin` audit event the first time each session ID is seen.
 
   Make T082 pass
-- [ ] T102 [US3] Implement `GET /v1/me` in `apps/api/src/identity/me.controller.ts`, returning user, tenant, roles, permissions, `mfa` and the active elevation. Add its matrix entries
-- [ ] T103 [US3] Implement `apps/api/src/tenancy/tenant-context.interceptor.ts`. It opens each request transaction through `withTx`, with the tenant from the token, or with the elevation target, `READ ONLY` and `app.elevation_id` when an elevation is active and not expired. Add `assertSameTenant()` as the second, code-level check
-- [ ] T104 [US3] Implement `apps/api/src/tenancy/elevation.{service,controller}.ts`:
+- [x] T102 [US3] Implement `GET /v1/me` in `apps/api/src/identity/me.controller.ts`, returning user, tenant, roles, permissions, `mfa` and the active elevation. Add its matrix entries
+- [x] T103 [US3] Implement `apps/api/src/tenancy/tenant-context.interceptor.ts`. It opens each request transaction through `withTx`, with the tenant from the token, or with the elevation target, `READ ONLY` and `app.elevation_id` when an elevation is active and not expired. Add `assertSameTenant()` as the second, code-level check
+- [x] T104 [US3] Implement `apps/api/src/tenancy/elevation.{service,controller}.ts`:
   - routes `POST /v1/elevations`, `GET /v1/elevations/current` and `POST /v1/elevations/{id}/end`;
   - the TTL comes from `ConfigReader` `security.elevation.ttl_minutes`;
   - `elevated-read.interceptor.ts` records one `tenant.elevated_read` per read;
   - a guard refuses mutating methods during an elevation.
 
   Add the matrix entries. Make T083 pass
-- [ ] T105 [US3] Implement `apps/api/src/audit/audit.writer.ts`, the minimal writer. `record(tx, event)` validates the required fields, takes `pg_advisory_xact_lock(hashtext('audit'))`, computes `prev_hash` and `hash` with `canonical-json` and `sha256Hex`, and inserts in the caller's transaction. US4 adds the shared chain module, verification, anchors and export. Make T087 pass
-- [ ] T106 [US3] Implement `apps/api/src/integration/idempotency.middleware.ts`, covering POST, PUT, PATCH and DELETE under `/v1`, with key validation, the request hash, replay, 422, 409 and TTL from `idempotency.ttl_hours`. Make T084 pass
-- [ ] T107 [US3] Implement the outbox:
+- [x] T105 [US3] Implement `apps/api/src/audit/audit.writer.ts`, the minimal writer. `record(tx, event)` validates the required fields, takes `pg_advisory_xact_lock(hashtext('audit'))`, computes `prev_hash` and `hash` with `canonical-json` and `sha256Hex`, and inserts in the caller's transaction. US4 adds the shared chain module, verification, anchors and export. Make T087 pass
+- [x] T106 [US3] Implement `apps/api/src/integration/idempotency.middleware.ts`, covering POST, PUT, PATCH and DELETE under `/v1`, with key validation, the request hash, replay, 422, 409 and TTL from `idempotency.ttl_hours`. Make T084 pass
+- [x] T107 [US3] Implement the outbox:
   - `apps/api/src/integration/outbox.writer.ts`, which writes in the caller's transaction;
   - `apps/worker/src/outbox-relay/outbox-relay.job.ts`, which uses `FOR UPDATE SKIP LOCKED` to send to BullMQ queues by topic and sets `published_at` and `attempts`, with backoff and an alert log after 10 failures;
   - `packages/platform-core/src/queue/consumer.ts`, a base consumer that de-duplicates through `integration.inbox`.
 
   Make T085 pass
-- [ ] T108 [US3] Add rate limiting: `@nestjs/throttler` with Redis storage, per user and per IP, values from `api.rate_limit`, the 429 envelope with `Retry-After`, and a log line. Make T086 pass
-- [ ] T109 [US3] Implement `apps/api/src/approvals/`:
+- [x] T108 [US3] Add rate limiting: `@nestjs/throttler` with Redis storage, per user and per IP, values from `api.rate_limit`, the 429 envelope with `Retry-After`, and a log line. Make T086 pass
+- [x] T109 [US3] Implement `apps/api/src/approvals/`:
   - `approvals.service.ts`:
     - create: `payload_hash` from RFC 8785, expiry from `approvals.default_expiry_hours`, audit `approval.created`, outbox `approval.requested`;
     - decide: `SELECT … FOR UPDATE` and every refusal rule from `data-model.md` §Lifecycles, audit `approval.decided`, outbox `approval.approved` or `approval.rejected`;
@@ -462,25 +462,25 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `approval-handler.registry.ts`, where owning modules register a handler per `action_type`; each handler runs once per `approval_id` through the inbox.
 
   Add the matrix entries. Make T080 pass
-- [ ] T110 [P] [US3] Implement `apps/worker/src/approvals-expiry/expiry.job.ts` (marks expired requests, audit `approval.expired`, outbox `approval.expired`) and `apps/worker/src/elevation-expiry/expiry.job.ts` (sets `ended_at` and `end_reason = expired`, audit `tenant.elevation_ended`), both using the injected `ClockService`
-- [ ] T111 [US3] Implement `apps/api/src/identity/iam.{service,controller}.ts`:
+- [x] T110 [P] [US3] Implement `apps/worker/src/approvals-expiry/expiry.job.ts` (marks expired requests, audit `approval.expired`, outbox `approval.expired`) and `apps/worker/src/elevation-expiry/expiry.job.ts` (sets `ended_at` and `end_reason = expired`, audit `tenant.elevation_ended`), both using the injected `ClockService`
+- [x] T111 [US3] Implement `apps/api/src/identity/iam.{service,controller}.ts`:
   - `GET /v1/iam/users`: own tenant, or `iam.list_users_all()` for `platform_admin`;
   - `GET /v1/iam/roles`;
   - `POST /v1/iam/users/{id}/role-grants` and `role-revocations`: an SoD pre-check returns 409 `SOD_CONFLICT`, otherwise an approval request is created;
   - handlers for `iam.role.grant` and `iam.role.revoke` re-check SoD and apply the change, with the trigger as backstop, auditing `iam.role.granted`, `iam.role.revoked` or `iam.role.grant_refused_sod`.
 
   Add the matrix entries. Make T081 pass
-- [ ] T112 [US3] Implement a provisional development seed in `apps/api/src/demo/dev-seed.ts` (`pnpm --filter @pdfe/api seed:dev`, DEMO only). Through the services, it creates the three tenants, the demo organization, and one user per realm demo user with their role grants, using the `system:seed` path. US8 replaces it (T171)
-- [ ] T113 [US3] Implement `packages/auth-web` (`@pdfe/auth-web`):
+- [x] T112 [US3] Implement a provisional development seed in `apps/api/src/demo/dev-seed.ts` (`pnpm --filter @pdfe/api seed:dev`, DEMO only). Through the services, it creates the three tenants, the demo organization, and one user per realm demo user with their role grants, using the `system:seed` path. US8 replaces it (T171)
+- [x] T113 [US3] Implement `packages/auth-web` (`@pdfe/auth-web`):
   - route-handler factories for `/api/auth/sign-in`, `/api/auth/callback` and `/api/auth/sign-out` (`openid-client`, Authorization Code + PKCE);
   - an `iron-session` session;
   - `getSession()`;
   - `apiFetch()`, which runs server-side only and adds the bearer token, `X-Correlation-Id` and a generated `Idempotency-Key` on mutations.
 
   Wire it into `app/api/auth/*` and `app/[locale]/sign-in/page.tsx` of all six web apps (unthemed; US9 styles it). Make T088 pass
-- [ ] T114 [US3] Generate the OpenAPI document: `apps/api/scripts/openapi.ts` writes `packages/contracts/openapi.json` (`nestjs-zod`, OpenAPI 3.1). Add `packages/contracts/orval.config.ts`, which generates typed clients into `packages/contracts/src/clients/`, and `.spectral.yaml`. In `.github/workflows/ci.yml` `static`, add Spectral lint plus a drift check (regenerate and `git diff --exit-code`)
-- [ ] T115 [US3] Add Keycloak to the `integration` job in `.github/workflows/ci.yml`, through Testcontainers with the realm import from `infra/keycloak/realm-pdfe-demo.json`. Make T089 pass across every current route
-- [ ] T116 [US3] Record the design deltas found while implementing this story:
+- [x] T114 [US3] Generate the OpenAPI document: `apps/api/scripts/openapi.ts` writes `packages/contracts/openapi.json` (`nestjs-zod`, OpenAPI 3.1). Add `packages/contracts/orval.config.ts`, which generates typed clients into `packages/contracts/src/clients/`, and `.spectral.yaml`. In `.github/workflows/ci.yml` `static`, add Spectral lint plus a drift check (regenerate and `git diff --exit-code`)
+- [x] T115 [US3] Add Keycloak to the `integration` job in `.github/workflows/ci.yml`, through Testcontainers with the realm import from `infra/keycloak/realm-pdfe-demo.json`. Make T089 pass across every current route
+- [x] T116 [US3] Record the design deltas found while implementing this story:
   - `contracts/http-api.md`: `IDEMPOTENCY_KEY_REQUIRED`, `ELEVATION_READ_ONLY`, and the platform-admin user directory;
   - `data-model.md`: `integration.inbox`, `iam.list_users_all()`
 

@@ -71,6 +71,12 @@ jobs:
         run: pnpm format:check
       - name: Type check
         run: pnpm typecheck
+      - name: OpenAPI contract (regenerate from the routes, lint with Spectral, fail on any difference)
+        run: |
+          pnpm --filter @pdfe/contracts generate
+          pnpm --filter @pdfe/contracts lint:spec
+          git diff --exit-code -- packages/contracts
+          test -z "$(git status --porcelain -- packages/contracts)"
 
   unit:
     runs-on: ubuntu-latest
@@ -150,7 +156,7 @@ jobs:
           corepack enable
           corepack prepare pnpm@11.0.9 --activate
       - run: pnpm install --frozen-lockfile
-      - name: Integration tests (Testcontainers with Postgres and Redis)
+      - name: Integration tests (Testcontainers with Postgres, Redis and Keycloak with the realm import)
         run: pnpm test:int
       - name: Startup guard (LIVE mode, non-mock adapter, unknown adapter and missing kind must all refuse to start)
         run: |

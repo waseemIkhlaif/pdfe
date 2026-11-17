@@ -8,7 +8,7 @@ export interface ErrorEnvelope {
 }
 
 /** Codes whose responses may carry per-field details. */
-const WITH_DETAILS = new Set(['VALIDATION_FAILED', 'CONFIG_INVALID']);
+const WITH_DETAILS = new Set(['VALIDATION_FAILED', 'CONFIG_INVALID', 'SOD_CONFLICT']);
 
 /** A failure that is safe to show to a client: a stable code, an HTTP status and optional field details. */
 export class AppError extends Error {

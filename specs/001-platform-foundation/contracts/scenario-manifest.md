@@ -11,7 +11,7 @@ title: { en: "Baseline platform", ar: "المنصة الأساسية" }
 clock:
   base: "2026-01-15T08:00:00Z"   # scenario time zero (UTC)
   step_ms: 1000                  # each created entity advances the clock by this amount
-tenants:
+tenants:                           # each has a fixed ID (the realm carries it in `tenant_id`); see infra/keycloak/README.md
   - { code: platform, kind: platform, name: "PDFE Platform (demo)" }
   - { code: consumers, kind: consumer_pool, name: "Consumer pool (demo)" }
   - { code: demo-merchant, kind: merchant, name: "Demo Merchant" }

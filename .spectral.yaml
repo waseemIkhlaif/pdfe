@@ -1,0 +1,42 @@
+# Lint for packages/contracts/openapi.json (`pnpm --filter @pdfe/contracts lint:spec`, run in the CI `static` job).
+extends: ['spectral:oas']
+rules:
+  # Every protected operation says which permission it needs, so the document and the authorization matrix agree.
+  pdfe-protected-operation-has-permission:
+    description: An operation with a bearer security requirement must declare x-permission.
+    severity: error
+    given: '$.paths[*][get,post,put,patch,delete][?(@.security && @.security.length > 0)]'
+    then:
+      field: x-permission
+      function: truthy
+  # Every error response uses the one envelope.
+  pdfe-errors-use-envelope:
+    description: 4xx and 5xx responses must reference ErrorEnvelope.
+    severity: error
+    given: "$.paths[*][*].responses[?(@property >= '400' && @property != '503')].content['application/json'].schema"
+    then:
+      field: $ref
+      function: pattern
+      functionOptions:
+        match: '#/components/schemas/ErrorEnvelope$'
+  # A change needs an idempotency key (contracts/http-api.md).
+  pdfe-mutations-need-idempotency-key:
+    description: POST, PUT, PATCH and DELETE operations must take the Idempotency-Key header.
+    severity: error
+    given: '$.paths[*][post,put,patch,delete]'
+    then:
+      field: parameters
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          contains:
+            type: object
+            properties:
+              name: { const: Idempotency-Key }
+              in: { const: header }
+              required: { const: true }
+            required: [name, in, required]
+  # Not needed for a simulation API, and the information is in the description.
+  info-contact: off
+  oas3-api-servers: warn

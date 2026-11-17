@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { resolve } from 'node:path';
+import { seedReferenceData } from './reference-data';
 import { runMigrations } from './runner';
 
 async function main(): Promise<void> {
@@ -14,7 +15,11 @@ async function main(): Promise<void> {
       checkOnly,
     }),
   );
-  if (checkOnly && r.pending.length > 0) process.exitCode = 1;
+  if (checkOnly) {
+    if (r.pending.length > 0) process.exitCode = 1;
+    return;
+  }
+  console.log(JSON.stringify({ referenceData: await seedReferenceData(url) }));
 }
 
 main().catch((err: unknown) => {

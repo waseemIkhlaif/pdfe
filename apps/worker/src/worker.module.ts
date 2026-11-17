@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HeartbeatService } from './heartbeat.service';
+import { JobsService } from './jobs.service';
 
-/** Jobs are added by later stories: outbox relay, approval and elevation expiry, audit anchors, config activation. */
-@Module({ providers: [HeartbeatService] })
+/** Recurring jobs. Later stories add audit anchors and configuration activation. */
+@Module({ providers: [HeartbeatService, JobsService] })
 export class WorkerModule {}

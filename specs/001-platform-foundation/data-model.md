@@ -28,11 +28,12 @@
 | `roles` | `code` PK, `description`, `privileged` | Seeded from `rbac.ts`. `privileged = true` ⇒ second factor required (FR-012) |
 | `permissions` | `code` PK, `description`, `high_risk` | Seeded |
 | `role_permissions` | (`role_code`, `permission_code`) PK | Seeded |
-| `user_roles` | (`user_id`, `role_code`, `organization_id`) PK, `granted_by`, `granted_at`, `approval_request_id` **Δ** | Trigger `trg_user_roles_sod` refuses grants that create a separation-of-duties conflict or the triple-rule violation (R-6) |
+| `user_roles` | UNIQUE NULLS NOT DISTINCT (`user_id`, `role_code`, `organization_id`) **Δ** (the organization may be empty, so this replaces the primary key), `granted_by`, `granted_at`, `approval_request_id` **Δ** | Trigger `trg_user_roles_sod` refuses grants that create a separation-of-duties conflict or the triple-rule violation (R-6) |
 | `sod_conflicts` | (`role_a`, `role_b`) PK, `reason` | Stored symmetric (both orders inserted) |
 | `approval_requests` | `id`, `tenant_id`, `action_type`, `target_type`, `target_id`?, `payload` JSONB, `payload_hash`, `requested_by`, `reason`, `required_approvals` ≥1, `status`, `expires_at`, `created_at`, `correlation_id`, `version` | RLS. `payload_hash` = sha256(RFC 8785 JSON of `payload`) |
 | `approval_decisions` | `id`, `approval_request_id`, `decided_by`, `decision` ∈ {approve, reject}, `reason`, `decided_at` | UNIQUE (`approval_request_id`, `decided_by`). Trigger `trg_no_self_approval`: `decided_by <> requests.requested_by` (FR-016) |
 | `tenant_elevations` **Δ** | `id`, `user_id`, `home_tenant_id`, `target_tenant_id`, `reason` (≥10 chars), `started_at`, `expires_at`, `ended_at`?, `end_reason` ∈ {user, expired, revoked}?, `correlation_id` | At most one active row per user (partial unique index `WHERE ended_at IS NULL`). Platform scope (not RLS). Only `tenant.elevate` holders can insert |
+| `list_users_all()` **Δ** | function | SECURITY DEFINER, executable by `app_role` only. Returns non-PII directory columns of the users of every tenant. `iam.users` has forced row-level security and there is no bypass flag, so the function visits each tenant in turn, setting `app.tenant_id` for the step and restoring the caller's value at the end. The service calls it only for `platform_admin` |
 
 ### `audit`
 | Table | Key fields | Constraints / notes |
@@ -60,17 +61,19 @@ RLS for audit: auditors and platform roles read across tenants through their rol
 | `partner_adapters` | `code` PK, `kind` ∈ {bank, psp, chain, kyc, sanctions, fx, price, notification}, `adapter_type` CHECK LIKE 'mock:%', `enabled` | The startup guard also checks the configuration file (R-9) |
 | `idempotency_keys` | (`tenant_id`, `scope`, `key`) PK, `request_hash`, `status` ∈ {in_progress, completed, failed}, `response` JSONB?, `response_status` **Δ**, `created_at`, `expires_at` | RLS |
 | `outbox` | `id`, `tenant_id`?, `topic`, `payload` JSONB, `correlation_id`, `created_at`, `published_at`?, `attempts` | Relay with `FOR UPDATE SKIP LOCKED`; index on `published_at IS NULL` |
+| `inbox` **Δ** | (`consumer`, `event_id`) PK, `processed_at` | Consumer de-duplication: a consumer records the event in the same transaction as its work, so a repeated delivery does nothing. Approval handlers use it too, keyed `approval-handler:<action_type>` and the approval ID |
 
 ## RLS
 
 Applies to every table with `tenant_id NOT NULL` except platform-scoped ones:
 
 ```text
-USING      tenant_id = current_setting('app.tenant_id')::uuid
-WITH CHECK tenant_id = current_setting('app.tenant_id')::uuid
+USING      tenant_id = nullif(current_setting('app.tenant_id', true), '')::uuid
+WITH CHECK tenant_id = nullif(current_setting('app.tenant_id', true), '')::uuid
 ```
 
 - The API sets `SET LOCAL app.tenant_id` in every transaction from the validated token, or from the active elevation's target tenant, in which case the transaction is `READ ONLY`.
+- A missing or empty `app.tenant_id` matches no row (`nullif` and the `missing_ok` form of `current_setting`), which also covers a pooled connection that carries an empty value from an earlier transaction **Δ**.
 - There is **no** `cross_tenant` bypass flag **Δ**.
 - `app_role` has no BYPASSRLS. Platform-scoped tables are protected by permission guards and grants instead.
 

@@ -5,6 +5,7 @@ import { PG_POOL } from '../core/tokens';
 import { loadAdapterConfig } from './adapter-config.loader';
 import { AdapterRegistry } from './adapter-registry';
 import { createMockAdapter } from './adapters/mock/mock-adapter';
+import { OutboxWriter } from './outbox.writer';
 
 const MOCK_HUB_URL = process.env.MOCK_HUB_URL ?? 'http://mock-hub:4100';
 
@@ -25,8 +26,9 @@ const MOCK_HUB_URL = process.env.MOCK_HUB_URL ?? 'http://mock-hub:4100';
         return registry;
       },
     },
+    OutboxWriter,
   ],
-  exports: [AdapterRegistry],
+  exports: [AdapterRegistry, OutboxWriter],
 })
 export class IntegrationModule implements OnApplicationBootstrap {
   private readonly log = new Logger('integration');
