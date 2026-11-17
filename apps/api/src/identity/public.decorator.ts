@@ -16,6 +16,13 @@ export const AUTHENTICATED_ONLY = 'pdfe:authenticated-only';
  */
 export const AuthenticatedOnly = () => SetMetadata(AUTHENTICATED_ONLY, true);
 
+export const NO_REQUEST_TX = 'pdfe:no-request-tx';
+/**
+ * The route runs no request transaction: it does its own work on its own connections. A scenario run truncates tables, which
+ * a transaction held open by the request itself would block.
+ */
+export const NoRequestTransaction = () => SetMetadata(NO_REQUEST_TX, true);
+
 export const ELEVATION_CONTROL = 'pdfe:elevation-control';
 /**
  * The route manages elevations. It is allowed while an elevation is active, and it does not run inside

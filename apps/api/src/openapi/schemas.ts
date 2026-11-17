@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { cancelSchema, decisionSchema } from '../approvals/approvals.service';
 import { verifySchema } from '../audit/audit.service';
 import { proposeSchema, rollbackSchema } from '../config/config.service';
+import { runRequestSchema } from '../demo/scenario.controller';
 import { roleChangeSchema } from '../identity/iam.service';
 import { startElevationSchema } from '../tenancy/elevation.service';
 
@@ -166,6 +167,42 @@ export const ConfigDiff = z.object({
   ),
 });
 
+export const ScenarioList = z.object({
+  items: z.array(
+    z.object({
+      code: z.string(),
+      version: z.string(),
+      title: z.object({ en: z.string(), ar: z.string() }),
+      manifest_sha256: z.string().regex(/^[0-9a-f]{64}$/),
+    }),
+  ),
+});
+export const ScenarioRun = z.object({
+  id: uuid,
+  scenario_code: z.string(),
+  manifest_version: z.string(),
+  seed: z.number().int(),
+  status: z.enum(['running', 'succeeded', 'failed']),
+  started_at: iso,
+  finished_at: iso.nullable(),
+  result_digest: z
+    .string()
+    .regex(/^[0-9a-f]{64}$/)
+    .nullable(),
+  error_code: z.string().nullable(),
+  report: z
+    .object({
+      tables: z.record(z.string(), z.object({ count: z.number().int(), ids: z.array(z.string()) })),
+      audit_events: z.number().int(),
+      epoch_anchor: z.object({ id: uuid, up_to_seq: z.number().int() }),
+      mock_hub: z.enum(['configured', 'skipped']),
+    })
+    .nullable(),
+  requested_by: z.string(),
+  correlation_id: z.string(),
+});
+export const ScenarioRunRequest = runRequestSchema;
+
 export const StartElevationRequest = startElevationSchema;
 export const ConfigProposalRequest = proposeSchema;
 export const ConfigRollbackRequest = rollbackSchema;
@@ -199,6 +236,9 @@ export const NAMED = {
   ConfigDiff,
   ConfigProposalRequest,
   ConfigRollbackRequest,
+  ScenarioList,
+  ScenarioRun,
+  ScenarioRunRequest,
   AuditEvent,
   AuditEventList,
   VerifyResult,

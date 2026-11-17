@@ -8,6 +8,9 @@ x-app-env: &app-env
   REDIS_URL: redis://redis:6379
   # Traces, metrics and logs of api, worker and mock-hub go to the collector in the lgtm container.
   OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+  # Shared by the api (which sends it) and the mock hub (which checks it). A development .env written before this existed
+  # has none: the fallback is a fixed synthetic value, harmless on the internal network (the control endpoint is not published).
+  SCENARIO_TOKEN: ${SCENARIO_TOKEN:-local-demo-scenario-token}
 
 services:
   postgres:
@@ -131,6 +134,7 @@ services:
       <<: *app-env
       PORT: '4000'
       ADAPTERS_CONFIG: /app/infra/adapters.demo.json
+      MOCK_HUB_URL: http://mock-hub:4100
       OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
       OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
       DATABASE_URL: postgres://app_role:${APP_ROLE_PASSWORD}@postgres:5432/pdfe

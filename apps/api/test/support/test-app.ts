@@ -69,6 +69,8 @@ export async function createTestApp(
     redis?: boolean;
     /** Rate limits per minute; the defaults (600 and 1200) are out of reach of ordinary tests. */
     limits?: { perUser: number; perIp: number };
+    /** Replace providers (for example the scenario hooks, the mock hub client or the manifest folder). */
+    overrides?: { provide: unknown; useValue: unknown }[];
     /** Verify tokens from a real identity provider instead of the local issuer. */
     oidc?: { issuers: string[]; keys: JWTVerifyGetKey };
   } = {},
@@ -108,6 +110,8 @@ export async function createTestApp(
     .useValue(configReader)
     .overrideProvider(HEALTH_CHECKS)
     .useValue([]);
+  for (const o of opts.overrides ?? [])
+    builder = builder.overrideProvider(o.provide).useValue(o.useValue);
   if (redis) builder = builder.overrideProvider(REDIS).useValue(redis);
   else builder = builder.overrideProvider(RATE_LIMIT_STORE).useValue(new MemoryRateLimitStore());
   const mod = await builder.compile();

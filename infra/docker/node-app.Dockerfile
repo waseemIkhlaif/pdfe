@@ -29,6 +29,8 @@ ARG APP
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=deployed /out/ /app/
+# The scenario manifests and their checksum list (the api registers them at start).
+COPY db/seeds /app/db/seeds
 USER node
 CMD ["node", "dist/main.js"]
 

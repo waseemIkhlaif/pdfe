@@ -17,7 +17,8 @@
     "@pdfe/config": "workspace:*",
     "@pdfe/test-kit": "workspace:*",
     "@types/node": "^22.0.0",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "yaml": "^2.9.1"
   },
   "files": [
     "dist"

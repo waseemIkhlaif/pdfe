@@ -11,3 +11,6 @@ Dockerfile* text eol=lf
 .env.example text eol=lf
 Caddyfile text eol=lf
 db/seeds/scenarios/**/*.yaml text eol=lf
+# Scenario manifests are checksummed: their bytes must be the same on every platform.
+db/seeds/scenarios/**/*.yaml text eol=lf
+db/seeds/scenarios/**/*.txt text eol=lf

@@ -2,3 +2,4 @@ export * from './config-registry';
 export * from './error-codes';
 export * from './adapters';
 export * from './rbac';
+export * from './scenario';

@@ -52,8 +52,8 @@ RLS for audit: auditors and platform roles read across tenants through their rol
 ### `demo`
 | Table | Key fields | Constraints / notes |
 |---|---|---|
-| `scenarios` | `code` PK, `title`, `manifest_version`, `manifest_sha256` | Registered from `db/seeds/scenarios/**` at start |
-| `scenario_runs` | `id`, `scenario_code`, `seed` BIGINT, `manifest_version`, `started_at`, `finished_at`?, `status` ∈ {running, succeeded, failed}, `result_digest`?, `report` JSONB?, `requested_by`, `correlation_id` **Δ** | Not reset by runs (it is the history) |
+| `scenarios` | `code`, `manifest_version` (together the PK), `title` JSONB (en, ar), `manifest_sha256` **Δ** | Registered from `db/seeds/scenarios/**` at start |
+| `scenario_runs` | `id`, `scenario_code`, `seed` BIGINT, `manifest_version`, `started_at`, `finished_at`?, `status` ∈ {running, succeeded, failed}, `result_digest`?, `error_code`? (set when failed), `report` JSONB?, `requested_by`, `correlation_id` **Δ** | A partial unique index allows one `running` row at a time.  Not reset by runs (it is the history) |
 
 ### `integration`
 | Table | Key fields | Constraints / notes |
@@ -140,7 +140,7 @@ Plus the triple rule (R-6).
 
 ## Demo-resettable tables (truncation order)
 
-`integration.outbox`, `integration.idempotency_keys`, `iam.tenant_elevations`, `iam.approval_decisions`, `config.config_versions`, `iam.approval_requests`, `iam.user_roles`, `iam.users`, `config.config_versions` (the seeded defaults are re-created by the run), `platform.organizations`, `platform.legal_entities`, `platform.tenants`.
+`integration.outbox`, `integration.idempotency_keys`, `iam.tenant_elevations`, `iam.approval_decisions`, `iam.approval_requests`, `iam.user_roles`, `iam.users`, `integration.inbox` (a reset forgets which events were processed: the next run produces the same event IDs), `platform.organizations`, `platform.legal_entities`, `platform.tenants`.
 
 Never reset: `platform.schema_migrations`, `iam.roles`, `iam.permissions`, `iam.role_permissions`, `iam.sod_conflicts`, `config.config_items`, `demo.*`.
 

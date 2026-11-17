@@ -675,9 +675,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 8 ⚠️ (write first, must fail)
 
-- [ ] T161 [P] [US8] Write `packages/domain-types/test/scenario.test.ts`: the schema accepts `db/seeds/scenarios/baseline/v1.yaml`, and rejects an unknown tenant reference, a user whose roles conflict (SoD), a duplicate subject and a non-integer money config value
-- [ ] T162 [P] [US8] Write `apps/api/test/determinism.int.spec.ts`. On fresh containers, `baseline v1` with seed 42 is run twice with a reset in between: the two digests are equal and equal `db/seeds/scenarios/baseline/v1.digest-seed42.txt`. Seed 43 gives a different digest
-- [ ] T163 [P] [US8] Write `apps/api/test/scenario.int.spec.ts`:
+- [x] T161 [P] [US8] Write `packages/domain-types/test/scenario.test.ts`: the schema accepts `db/seeds/scenarios/baseline/v1.yaml`, and rejects an unknown tenant reference, a user whose roles conflict (SoD), a duplicate subject and a non-integer money config value
+- [x] T162 [P] [US8] Write `apps/api/test/determinism.int.spec.ts`. On fresh containers, `baseline v1` with seed 42 is run twice with a reset in between: the two digests are equal and equal `db/seeds/scenarios/baseline/v1.digest-seed42.txt`. Seed 43 gives a different digest
+- [x] T163 [P] [US8] Write `apps/api/test/scenario.int.spec.ts`:
   - a changed manifest gets 409 `MANIFEST_CHECKSUM_MISMATCH`;
   - a concurrent run gets 409 `RUN_IN_PROGRESS`;
   - outside DEMO, the run is refused;
@@ -686,21 +686,21 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - the report lists the counts and IDs per table;
   - audit records `scenario.run_started` and `scenario.run_finished`, and the run starts an `epoch_start` anchor;
   - `audit/verify` from that anchor gives `ok`
-- [ ] T164 [P] [US8] Write `apps/api/test/determinism-bypass.int.spec.ts`. During a run, a tripwire around `Date.now`, `Math.random` and `crypto.randomUUID` (installed only inside the run's context) fails the run when any code path calls one of them directly
-- [ ] T165 [P] [US8] Write `apps/mock-hub/test/control.spec.ts`: `POST /mock/_control` sets `latency_ms`, `failure_rate` (seeded) and a `script[]` of outcomes per kind; ping follows the configured behaviour; the control endpoint is refused unless called with the internal scenario token
+- [x] T164 [P] [US8] Write `apps/api/test/determinism-bypass.int.spec.ts`. During a run, a tripwire around `Date.now`, `Math.random` and `crypto.randomUUID` (installed only inside the run's context) fails the run when any code path calls one of them directly
+- [x] T165 [P] [US8] Write `apps/mock-hub/test/control.spec.ts`: `POST /mock/_control` sets `latency_ms`, `failure_rate` (seeded) and a `script[]` of outcomes per kind; ping follows the configured behaviour; the control endpoint is refused unless called with the internal scenario token
 
 ### Implementation for User Story 8
 
-- [ ] T166 [US8] Write `db/migrations/0009_demo.sql`: `demo.scenarios` and `demo.scenario_runs` as in `data-model.md`, and grants (not resettable)
-- [ ] T167 [P] [US8] Implement `packages/domain-types/src/scenario.ts` (the Zod manifest schema and the SoD check against `rbac.ts`). Make T161 pass
-- [ ] T168 [P] [US8] Write `db/seeds/scenarios/baseline/v1.yaml` following `contracts/scenario-manifest.md`:
+- [x] T166 [US8] Write `db/migrations/0009_demo.sql`: `demo.scenarios` and `demo.scenario_runs` as in `data-model.md`, and grants (not resettable)
+- [x] T167 [P] [US8] Implement `packages/domain-types/src/scenario.ts` (the Zod manifest schema and the SoD check against `rbac.ts`). Make T161 pass
+- [x] T168 [P] [US8] Write `db/seeds/scenarios/baseline/v1.yaml` following `contracts/scenario-manifest.md`:
   - 3 tenants and the demo organization;
   - one user per role, with subjects equal to the realm users, plus admins A and B;
   - the configuration defaults and the mock-hub settings.
 
   Add `db/seeds/scenarios/SHA256SUMS` with LF line endings
-- [ ] T169 [US8] Implement `apps/api/src/demo/scenario-registry.ts`. At start, it registers each manifest in `demo.scenarios` and checks it against `SHA256SUMS`
-- [ ] T170 [US8] Implement `apps/api/src/demo/scenario-runner.ts`, following the run algorithm in `contracts/scenario-manifest.md`:
+- [x] T169 [US8] Implement `apps/api/src/demo/scenario-registry.ts`. At start, it registers each manifest in `demo.scenarios` and checks it against `SHA256SUMS`
+- [x] T170 [US8] Implement `apps/api/src/demo/scenario-runner.ts`, following the run algorithm in `contracts/scenario-manifest.md`:
   - the run context provides a `ScenarioClock`, a seeded `IdGenerator` and a `SeededRandom` through a context-scoped provider override, plus the tripwire from T164;
   - `TRUNCATE` in the listed order under `SET LOCAL ROLE demo_reset_role`;
   - the epoch anchor;
@@ -711,9 +711,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - outbox `scenario.run.finished`.
 
   Make T162–T164 pass
-- [ ] T171 [US8] Implement `apps/api/src/demo/scenario.controller.ts` with the three routes from `contracts/http-api.md` and their matrix entries. Implement `scripts/scenario.mjs` (`pnpm scenario <code> --seed <n> [--version <v>]`), which gets a token for `demo.admin.a` with TOTP, runs the scenario and prints the digest. Delete `apps/api/src/demo/dev-seed.ts` (T112); `scripts/dev-all.mjs` and the CI `e2e-web` job now run `pnpm scenario baseline --seed 42`
-- [ ] T172 [P] [US8] Implement `apps/mock-hub/src/control/control.controller.ts` and the behaviour middleware for each kind (latency, seeded failure, scripted outcomes). Make T165 pass
-- [ ] T173 [US8] On the workstation, produce `db/seeds/scenarios/baseline/v1.digest-seed42.txt` with `pnpm scenario baseline --version v1 --seed 42`. Make sure the CI `integration` job compares the digest (T162). Write `docs/evidence/phase-2/determinism.md` with both digests and the CI run link
+- [x] T171 [US8] Implement `apps/api/src/demo/scenario.controller.ts` with the three routes from `contracts/http-api.md` and their matrix entries. Implement `scripts/scenario.mjs` (`pnpm scenario <code> --seed <n> [--version <v>]`), which gets a token for `demo.admin.a` with TOTP, runs the scenario and prints the digest. Delete `apps/api/src/demo/dev-seed.ts` (T112); `scripts/dev-all.mjs` and the CI `e2e-web` job now run `pnpm scenario baseline --seed 42`
+- [x] T172 [P] [US8] Implement `apps/mock-hub/src/control/control.controller.ts` and the behaviour middleware for each kind (latency, seeded failure, scripted outcomes). Make T165 pass
+- [x] T173 [US8] On the workstation, produce `db/seeds/scenarios/baseline/v1.digest-seed42.txt` with `pnpm scenario baseline --version v1 --seed 42`. Make sure the CI `integration` job compares the digest (T162). Write `docs/evidence/phase-2/determinism.md` with both digests and the CI run link
 
 **Checkpoint**: SC-010 is met.
 
