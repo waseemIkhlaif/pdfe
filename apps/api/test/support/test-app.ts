@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { resolve } from 'node:path';
 import type { INestApplication, Type } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import type { JWTVerifyGetKey } from 'jose';
 import pg from 'pg';
 import { ScenarioClock } from '@pdfe/platform-core';
 import { createPool, type Pool } from '@pdfe/platform-core/db';
@@ -42,9 +43,14 @@ export interface TestApp {
   pool: Pool;
   /** Superuser connection for fixtures and for checks that must see everything. */
   admin: pg.Client;
-  createTenant(code: string): Promise<string>;
+  createTenant(code: string, id?: string): Promise<string>;
   /** Inserts a user and grants the roles through the database (the SoD trigger still applies). */
-  createUser(name: string, tenantId: string, roles?: string[]): Promise<TestUser>;
+  createUser(
+    name: string,
+    tenantId: string,
+    roles?: string[],
+    ids?: { id?: string; sub?: string },
+  ): Promise<TestUser>;
   token(user: TestUser, opts?: { otp?: boolean; sessionId?: string }): Promise<string>;
   close(): Promise<void>;
 }
@@ -63,6 +69,8 @@ export async function createTestApp(
     redis?: boolean;
     /** Rate limits per minute; the defaults (600 and 1200) are out of reach of ordinary tests. */
     limits?: { perUser: number; perIp: number };
+    /** Verify tokens from a real identity provider instead of the local issuer. */
+    oidc?: { issuers: string[]; keys: JWTVerifyGetKey };
   } = {},
 ): Promise<TestApp> {
   const pgh: PgHandle = await startPostgres();
@@ -95,7 +103,7 @@ export async function createTestApp(
     .overrideProvider(CLOCK)
     .useValue(clock)
     .overrideProvider(OIDC_OPTIONS)
-    .useValue({ issuers: [issuer.issuer], keys: issuer.keys })
+    .useValue(opts.oidc ?? { issuers: [issuer.issuer], keys: issuer.keys })
     .overrideProvider(CONFIG_READER)
     .useValue(configReader)
     .overrideProvider(HEALTH_CHECKS)
@@ -114,17 +122,17 @@ export async function createTestApp(
     issuer,
     pool,
     admin,
-    async createTenant(code) {
-      const id = uuid(1);
+    async createTenant(code, fixedId) {
+      const id = fixedId ?? uuid(1);
       await admin.query(
         "INSERT INTO platform.tenants (id, code, name, kind, created_at) VALUES ($1,$2,$2,'merchant',$3)",
         [id, code, BASE_TIME],
       );
       return id;
     },
-    async createUser(name, tenantId, roles = []) {
-      const id = uuid(2);
-      const sub = `sub-${name}`;
+    async createUser(name, tenantId, roles = [], ids = {}) {
+      const id = ids.id ?? uuid(2);
+      const sub = ids.sub ?? `sub-${name}`;
       await admin.query(
         'INSERT INTO iam.users (id, tenant_id, external_subject, display_name, created_at) VALUES ($1,$2,$3,$4,$5)',
         [id, tenantId, sub, name, BASE_TIME],

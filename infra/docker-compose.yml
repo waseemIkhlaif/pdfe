@@ -48,6 +48,37 @@ services:
       postgres: { condition: service_healthy }
     restart: 'no'
 
+  # Identity provider for the demo realm `pdfe-demo` (ADR-010). The realm is code: infra/keycloak/realm-pdfe-demo.json.
+  # KC_HOSTNAME fixes the issuer to the public address, so tokens carry the same `iss` for browsers and for the
+  # API, which reaches Keycloak by its service name on the internal network.
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.2
+    networks: [app]
+    command: ['start-dev', '--import-realm']
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-demo-admin-synthetic}
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: 'true'
+      KC_HTTP_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
+    volumes:
+      - ./keycloak/realm-pdfe-demo.json:/opt/keycloak/data/import/realm-pdfe-demo.json:ro
+      - ./keycloak/themes/pdfe:/opt/keycloak/themes/pdfe:ro
+    healthcheck:
+      # The image has no curl: speak HTTP to the management port with bash.
+      test:
+        - CMD-SHELL
+        - 'exec 3<>/dev/tcp/127.0.0.1/9000 && printf "GET /health/ready HTTP/1.1
+Host: localhost
+Connection: close
+
+" >&3 && grep -q "UP" <&3'
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 30s
+
   mock-hub:
     networks: [app]
     build:
@@ -81,6 +112,8 @@ services:
       <<: *app-env
       PORT: '4000'
       ADAPTERS_CONFIG: /app/infra/adapters.demo.json
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
       DATABASE_URL: postgres://app_role:${APP_ROLE_PASSWORD}@postgres:5432/pdfe
     volumes:
       - ./adapters.demo.json:/app/infra/adapters.demo.json:ro
@@ -89,6 +122,7 @@ services:
       redis: { condition: service_healthy }
       migrate: { condition: service_completed_successfully }
       mock-hub: { condition: service_healthy }
+      keycloak: { condition: service_healthy }
     healthcheck:
       test:
         [
@@ -279,10 +313,12 @@ services:
       - '127.0.0.1:3005:3005'
       - '127.0.0.1:3006:3006'
       - '127.0.0.1:4000:4000'
+      - '127.0.0.1:8080:8080'
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
     depends_on:
       api: { condition: service_healthy }
+      keycloak: { condition: service_healthy }
       web-consumer: { condition: service_healthy }
       web-merchant: { condition: service_healthy }
       web-business: { condition: service_healthy }

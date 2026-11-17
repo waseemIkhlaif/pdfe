@@ -6,3 +6,5 @@ export const fcRuns = (full = 100): number =>
   process.env.CI_REDUCED === '1' ? Math.max(10, Math.floor(full / 5)) : full;
 export { LocalIssuer } from './tokens';
 export type { TokenClaims } from './tokens';
+export { startKeycloak, totp } from './keycloak';
+export type { KeycloakHandle, DemoUser } from './keycloak';

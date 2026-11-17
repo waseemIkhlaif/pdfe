@@ -350,7 +350,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - granting a role that conflicts with a held role is refused by the service (409 `SOD_CONFLICT`, listing both roles) and by the `trg_user_roles_sod` trigger on a direct insert;
   - the triple rule is refused;
   - the refusal is audited (`iam.role.grant_refused_sod`)
-- [ ] T082 [P] [US3] Write `apps/api/test/mfa.int.spec.ts`, using Testcontainers Keycloak with the realm import:
+- [x] T082 [P] [US3] Write `apps/api/test/mfa.int.spec.ts`, using Testcontainers Keycloak with the realm import:
   - a privileged user's token without `otp` in `amr` gets 401 `MFA_REQUIRED` on every protected route, and the denial is audited (`auth.signin_denied_mfa`);
   - with a TOTP from the fixed secret, access works;
   - a non-privileged user works without a second factor
@@ -409,21 +409,21 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   Make T079 pass
 - [x] T095 [US3] Implement `packages/platform-core/src/migrate/reference-data.ts`, run by the migration CLI after the migrations. Using the migrator connection, it idempotently upserts `iam.roles`, `iam.permissions`, `iam.role_permissions` and `iam.sod_conflicts` from `rbac.ts`
 - [ ] T096 [US3] Add Drizzle schemas `apps/api/src/db/schema/{iam,integration,audit}.ts`
-- [ ] T097 [US3] Create `infra/keycloak/realm-pdfe-demo.json` for realm `pdfe-demo`:
+- [x] T097 [US3] Create `infra/keycloak/realm-pdfe-demo.json` for realm `pdfe-demo`:
   - confidential BFF clients `web-consumer` … `web-devportal`, with `localhost:300N` redirect URIs;
   - a public PKCE client `mobile`, with redirect `pdfe://auth`;
   - a `pdfe-tests` client with direct grant, used only by tests and scripts;
   - a user-attribute mapper `tenant_id`;
   - a `privileged` group with a conditional OTP browser flow, and `amr` in the token;
   - demo users with the fixed subjects from `contracts/scenario-manifest.md` (one per role, plus `demo.admin.a` and `demo.admin.b`), synthetic passwords, and fixed synthetic TOTP secrets for privileged users
-- [ ] T098 [P] [US3] Write `infra/keycloak/README.md` with the synthetic demo credential table, clearly marked synthetic. Implement `scripts/totp.mjs` (`pnpm totp <username>`), which prints the current code from the fixed secret
-- [ ] T099 [US3] Add `keycloak` to `infra/docker-compose.yml`:
+- [x] T098 [P] [US3] Write `infra/keycloak/README.md` with the synthetic demo credential table, clearly marked synthetic. Implement `scripts/totp.mjs` (`pnpm totp <username>`), which prints the current code from the fixed secret
+- [x] T099 [US3] Add `keycloak` to `infra/docker-compose.yml`:
   - `start-dev --import-realm` with the realm and themes mounted;
   - on the `app` and `edge` networks;
   - healthcheck.
 
   Add `localhost:8080` to `infra/Caddyfile`
-- [ ] T100 [US3] Create `packages/test-kit/src/{keycloak.ts,tokens.ts,app.ts}`:
+- [x] T100 [US3] Create `packages/test-kit/src/{keycloak.ts,tokens.ts,app.ts}`:
   - a Testcontainers Keycloak with the realm import;
   - `tokenFor(username, { otp })` through `pdfe-tests`;
   - `createTestApp()`, which boots the api against containers and runs migrations and reference data

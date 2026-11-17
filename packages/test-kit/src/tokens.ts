@@ -1,4 +1,11 @@
-import { exportJWK, generateKeyPair, importJWK, SignJWT, type JWK, type JWTVerifyGetKey } from 'jose';
+import {
+  exportJWK,
+  generateKeyPair,
+  importJWK,
+  SignJWT,
+  type JWK,
+  type JWTVerifyGetKey,
+} from 'jose';
 
 export interface TokenClaims {
   /** Keycloak `sub`: iam.users.external_subject. */
