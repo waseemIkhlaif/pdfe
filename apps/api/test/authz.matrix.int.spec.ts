@@ -68,7 +68,7 @@ afterAll(async () => {
 /** Fills `:id` with a record of the caller's tenant, of the other tenant, or one that does not exist. */
 function pathFor(route: string, target: 'own' | 'other'): { method: string; url: string } {
   const [method, template] = route.split(' ') as [string, string];
-  const url = template.replace(':id', () => {
+  const url = template.replace(':key', 'fees.default_minor').replace(':id', () => {
     if (template.includes('/approvals/'))
       return target === 'own' ? ownApprovalId : foreignApprovalId;
     if (template.includes('/iam/users/')) return target === 'own' ? ownUserId : foreignUserId;

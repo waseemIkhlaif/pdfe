@@ -168,6 +168,7 @@ export function buildOpenApiDocument(version: string): Json {
       { name: 'approvals', description: 'Maker-checker' },
       { name: 'tenancy', description: 'Read-only tenant elevation' },
       { name: 'audit', description: 'The tamper-evident audit trail' },
+      { name: 'config', description: 'Versioned, approved, reversible settings' },
       { name: 'demo', description: 'Demonstrations for the DEMO mode only' },
     ],
     paths,

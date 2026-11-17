@@ -47,7 +47,7 @@ Every action records an event with these fields: actor, role, tenant, action, ta
 | `approval.created` / `approval.decided` / `approval.cancelled` / `approval.expired` | Maker-checker steps |
 | `iam.role.granted` / `iam.role.revoked` / `iam.role.grant_refused_sod` | Role changes and refusals |
 | `tenant.elevation_started` / `tenant.elevated_read` / `tenant.elevation_ended` | Elevation (every read is recorded) |
-| `config.proposed` / `config.activated` / `config.rolled_back` / `config.refused_locked` | Configuration |
+| `config.proposed` / `config.scheduled` / `config.activated` / `config.rolled_back` / `config.refused_locked` | A version is proposed; an approved version waits for its effective time; a version becomes active (by approval, or by the worker when it falls due); a rollback becomes active; a write to a safety-locked setting is refused |
 | `scenario.run_started` / `scenario.run_finished` | Scenario engine |
 | `audit.exported` / `audit.verified` | Auditor actions |
 | `demo.error_simulated` | A signed-in user asks the DEMO-only endpoint `POST /v1/demo/simulate-error` for a failure to look at (the error page's demonstration) |
@@ -59,6 +59,5 @@ Every action records an event with these fields: actor, role, tenant, action, ta
 
 | Action | Implemented by |
 |---|---|
-| `config.proposed`, `config.activated`, `config.rolled_back`, `config.refused_locked` | T157 (US7) |
 | `scenario.run_started`, `scenario.run_finished` | T170 (US8) |
-| `system.start_refused` | T160 (US7): until then it is only written to stderr |
+| `system.start_refused` | T160 (US7). Not an API action: the process does not start, so `apps/api/test/config-safety-env.spec.ts` (T152) checks it instead of this test |

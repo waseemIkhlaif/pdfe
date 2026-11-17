@@ -47,7 +47,7 @@ RLS for audit: auditors and platform roles read across tenants through their rol
 | Table | Key fields | Constraints / notes |
 |---|---|---|
 | `config_items` | `key` PK, `schema` JSONB (JSON Schema exported from Zod), `safety_locked`, `description` **Δ** | Seeded from `config-registry.ts`. A `safety_locked` key cannot get versions through the API (409 `CONFIG_SAFETY_LOCKED`) |
-| `config_versions` | `id`, `key`, `version`, `value` JSONB, `effective_from`, `status`, `approval_request_id`?, `rollback_of_version`? **Δ**, `created_by`, `created_at` | UNIQUE (`key`, `version`). Partial unique index: one `active` per key. Platform scope (configuration is global in Phase 2) |
+| `config_versions` | `id`, `key`, `version`, `value` JSONB, `effective_from`, `status`, `approval_request_id`?, `rollback_of_version`? **Δ**, `tenant_id`? (the proposer's tenant, where its audit events go; null for the bootstrap defaults) **Δ**, `created_by`, `created_at` | UNIQUE (`key`, `version`). Partial unique index: one `active` per key. Platform scope (configuration is global in Phase 2) |
 
 ### `demo`
 | Table | Key fields | Constraints / notes |
@@ -140,7 +140,7 @@ Plus the triple rule (R-6).
 
 ## Demo-resettable tables (truncation order)
 
-`integration.outbox`, `integration.idempotency_keys`, `iam.tenant_elevations`, `iam.approval_decisions`, `iam.approval_requests`, `iam.user_roles`, `iam.users`, `config.config_versions` (the seeded defaults are re-created by the run), `platform.organizations`, `platform.legal_entities`, `platform.tenants`.
+`integration.outbox`, `integration.idempotency_keys`, `iam.tenant_elevations`, `iam.approval_decisions`, `config.config_versions`, `iam.approval_requests`, `iam.user_roles`, `iam.users`, `config.config_versions` (the seeded defaults are re-created by the run), `platform.organizations`, `platform.legal_entities`, `platform.tenants`.
 
 Never reset: `platform.schema_migrations`, `iam.roles`, `iam.permissions`, `iam.role_permissions`, `iam.sod_conflicts`, `config.config_items`, `demo.*`.
 

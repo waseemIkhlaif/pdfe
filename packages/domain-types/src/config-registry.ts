@@ -105,6 +105,16 @@ export type ConfigKey = keyof typeof configRegistry;
 export type ConfigValue<K extends ConfigKey> = z.infer<(typeof configRegistry)[K]['schema']>;
 
 export const configKeys = Object.keys(configRegistry) as ConfigKey[];
+
+/** The JSON Schema of a setting, exported from its Zod schema; stored in `config.config_items` and shown to the admin screens. */
+export function configJsonSchema(key: ConfigKey): Record<string, unknown> {
+  const { $schema: _drop, ...schema } = z.toJSONSchema(configRegistry[key].schema) as Record<
+    string,
+    unknown
+  >;
+  void _drop;
+  return schema;
+}
 export const safetyLockedKeys: ConfigKey[] = configKeys.filter(
   (k) => configRegistry[k].safetyLocked,
 );

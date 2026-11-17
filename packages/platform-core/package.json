@@ -81,6 +81,14 @@
       "types": "./dist/logger.d.ts",
       "default": "./dist/logger.js"
     },
+    "./json-patch": {
+      "types": "./dist/json-patch.d.ts",
+      "default": "./dist/json-patch.js"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "default": "./dist/config/index.js"
+    },
     "./telemetry": {
       "types": "./dist/telemetry.d.ts",
       "default": "./dist/telemetry.js"

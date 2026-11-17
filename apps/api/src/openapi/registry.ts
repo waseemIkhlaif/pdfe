@@ -8,7 +8,7 @@ import type { SchemaName } from './schemas';
  */
 export interface RouteDoc {
   summary: string;
-  tag: 'platform' | 'identity' | 'approvals' | 'tenancy' | 'audit' | 'demo';
+  tag: 'platform' | 'identity' | 'approvals' | 'tenancy' | 'audit' | 'config' | 'demo';
   request?: SchemaName;
   /** Query parameters. */
   query?: { name: string; description: string; required?: boolean }[];
@@ -99,6 +99,45 @@ export const REGISTRY: Record<string, RouteDoc> = {
     request: 'RoleChangeRequest',
     response: 'Approval',
     errors: [404, 422],
+  },
+
+  'GET /v1/config': {
+    summary:
+      'Every setting with its active version. Safety-locked settings are marked `editable: false`.',
+    tag: 'config',
+    response: 'ConfigItemList',
+  },
+  'GET /v1/config/:key/versions': {
+    summary: 'The version history of one setting, newest first.',
+    tag: 'config',
+    response: 'ConfigVersionList',
+    errors: [404],
+  },
+  'GET /v1/config/:key/diff': {
+    summary: 'The JSON Patch (RFC 6902) that turns one version of a setting into another.',
+    tag: 'config',
+    query: [
+      { name: 'from', description: 'Version number', required: true },
+      { name: 'to', description: 'Version number', required: true },
+    ],
+    response: 'ConfigDiff',
+    errors: [404, 422],
+  },
+  'POST /v1/config/:key/versions': {
+    summary:
+      'Propose a new value, now or from a later time. Creates the approval request config.change; nothing changes until it is approved.',
+    tag: 'config',
+    request: 'ConfigProposalRequest',
+    response: 'Approval',
+    errors: [404, 409, 422],
+  },
+  'POST /v1/config/:key/rollback': {
+    summary:
+      'Propose going back to an earlier version. Creates the approval request config.rollback; the old value must still be valid.',
+    tag: 'config',
+    request: 'ConfigRollbackRequest',
+    response: 'Approval',
+    errors: [404, 409, 422],
   },
 
   'POST /v1/elevations': {
