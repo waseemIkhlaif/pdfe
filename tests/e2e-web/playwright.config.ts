@@ -10,6 +10,8 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1, // sign-ins use one-time codes; one worker keeps their timing simple
   retries: process.env.CI ? 1 : 0,
+  // Keep the files a passing test wrote too: the correlation spec saves screenshots that are evidence (SC-012).
+  preserveOutput: 'always',
   timeout: 90_000,
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   use: { ...devices['Desktop Chrome'], trace: 'retain-on-failure' },
