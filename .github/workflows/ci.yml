@@ -336,13 +336,15 @@ jobs:
           target: google_apis
           script: |
             adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
-            maestro test apps/mobile/maestro/ --format junit --output maestro-report.xml
+            maestro test apps/mobile/maestro/ --format junit --output maestro-report.xml --debug-output maestro-debug --flatten-debug-output
       - name: Upload the Maestro report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: maestro-report
-          path: maestro-report.xml
+          path: |
+            maestro-report.xml
+            maestro-debug
           if-no-files-found: ignore
 
   # The single required check. Skipped path-filtered jobs do not fail it.
