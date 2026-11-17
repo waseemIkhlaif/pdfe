@@ -171,12 +171,12 @@ jobs:
           corepack enable
           corepack prepare pnpm@11.0.9 --activate
       - run: pnpm install --frozen-lockfile
+      - name: Build the api (the start-up tests run its compiled entry point)
+        run: pnpm turbo run build --filter @pdfe/api
       - name: Integration tests (Testcontainers with Postgres, Redis and Keycloak with the realm import)
         run: pnpm test:int
       - name: Startup guard (LIVE mode, non-mock adapter, unknown adapter and missing kind must all refuse to start)
-        run: |
-          pnpm turbo run build --filter @pdfe/api
-          pnpm --filter @pdfe/api exec vitest run test/startup-guard.spec.ts
+        run: pnpm --filter @pdfe/api exec vitest run test/startup-guard.spec.ts
 
   fresh-clone:
     needs: changes

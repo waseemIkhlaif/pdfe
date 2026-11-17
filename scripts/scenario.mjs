@@ -86,7 +86,13 @@ async function main() {
 
   let version = opts.version;
   if (!version) {
-    const list = await json(await fetch(`${api}/v1/demo/scenarios`, { headers: auth }));
+    const listed = await fetch(`${api}/v1/demo/scenarios`, { headers: auth });
+    const list = await json(listed);
+    if (!listed.ok) {
+      throw new Error(
+        `could not list the scenarios (${listed.status}): ${list.error?.code ?? list.raw ?? 'unknown'}`,
+      );
+    }
     const versions = (list.items ?? []).filter((s) => s.code === opts.code).map((s) => s.version);
     if (versions.length === 0) throw new Error(`no scenario ${opts.code} is registered`);
     version = versions.sort((a, b) => Number(a.slice(1)) - Number(b.slice(1))).at(-1);

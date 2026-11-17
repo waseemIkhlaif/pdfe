@@ -4,6 +4,7 @@ import { ScenarioController } from './scenario.controller';
 import { ScenarioHooks, ScenarioRunner } from './scenario-runner';
 import { SCENARIOS_DIR, ScenarioRegistry, defaultScenariosDir } from './scenario-registry';
 import { SimulateErrorController } from './simulate-error.controller';
+import { StartupSeeder } from './startup-seeder';
 
 @Module({
   controllers: [SimulateErrorController, ScenarioController],
@@ -12,6 +13,7 @@ import { SimulateErrorController } from './simulate-error.controller';
     ScenarioRegistry,
     ScenarioRunner,
     ScenarioHooks,
+    StartupSeeder,
     MockHubControl,
   ],
 })

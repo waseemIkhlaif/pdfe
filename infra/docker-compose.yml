@@ -135,6 +135,8 @@ services:
       PORT: '4000'
       ADAPTERS_CONFIG: /app/infra/adapters.demo.json
       MOCK_HUB_URL: http://mock-hub:4100
+      # An empty database is seeded from this scenario at start (the demo users must exist before anyone can sign in).
+      SEED_ON_EMPTY: baseline:v1:42
       OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
       OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
       DATABASE_URL: postgres://app_role:${APP_ROLE_PASSWORD}@postgres:5432/pdfe
