@@ -18,3 +18,4 @@ scripts/safety/
 docs/
 packages/contracts/src/clients/
 packages/contracts/openapi.json
+infra/keycloak/realm-pdfe-demo.json
