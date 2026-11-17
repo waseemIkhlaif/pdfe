@@ -7,6 +7,8 @@ import { createPool, withTx, type Pool } from '@pdfe/platform-core/db';
 import { runMigrations } from '@pdfe/platform-core/migrate';
 import { BaseConsumer, type OutboxMessage } from '@pdfe/platform-core/queue';
 import { createDbRoles, startPostgres, type DbUrls, type PgHandle } from '@pdfe/test-kit';
+import { ApprovalNotificationConsumer } from '../src/notifications/approval-notification.consumer';
+import { SIM_LABEL } from '@pdfe/platform-core/sim-label';
 import { AnchorJob } from '../src/audit-anchor/anchor.job';
 import { ApprovalsExpiryJob } from '../src/approvals-expiry/expiry.job';
 import { ElevationExpiryJob } from '../src/elevation-expiry/expiry.job';
@@ -329,5 +331,27 @@ describe('audit anchor job', () => {
     expect(await countAnchors()).toBe(before + 1);
     clock.advance(5 * 3_600_000);
     expect(await job.runOnce()).toBeNull(); // hours pass, but nothing is new
+  });
+});
+
+describe('approval notification (log only)', () => {
+  it('logs one labelled notification per approval, even when the event is delivered twice', async () => {
+    const lines: string[] = [];
+    const c = new ApprovalNotificationConsumer(pool, clock, (l) => lines.push(l));
+    const message: OutboxMessage = {
+      id: uuid(),
+      topic: 'approval.requested',
+      tenantId: TENANT_A,
+      correlationId: 'COR-notify001',
+      payload: { approval_id: 'approval-1', action_type: 'iam.role.grant' },
+    };
+    expect(await c.consume(message)).toBe(true);
+    expect(await c.consume(message)).toBe(false);
+    expect(lines).toHaveLength(1);
+    const n = JSON.parse(lines[0]!);
+    expect(n.subject.startsWith(`[${SIM_LABEL}]`)).toBe(true);
+    expect(n.body.startsWith(SIM_LABEL)).toBe(true);
+    expect(n.body).toContain('approval-1');
+    expect(n.channel).toBe('log');
   });
 });

@@ -1,4 +1,5 @@
 import { Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
+import { Worker } from 'bullmq';
 import { Redis } from 'ioredis';
 import { IdGenerator, SystemClock, SystemRandom } from '@pdfe/platform-core';
 import { AuditRecorder } from '@pdfe/platform-core/audit';
@@ -6,6 +7,7 @@ import { createPool, type Pool } from '@pdfe/platform-core/db';
 import { AnchorJob } from './audit-anchor/anchor.job';
 import { ApprovalsExpiryJob } from './approvals-expiry/expiry.job';
 import { ElevationExpiryJob } from './elevation-expiry/expiry.job';
+import { ApprovalNotificationConsumer } from './notifications/approval-notification.consumer';
 import { BullPublisher } from './outbox-relay/bull.publisher';
 import { OutboxRelay } from './outbox-relay/outbox-relay.job';
 
@@ -17,6 +19,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
   private pool?: Pool;
   private redis?: Redis;
   private publisher?: BullPublisher;
+  private readonly workers: Worker[] = [];
 
   onModuleInit(): void {
     const url = process.env.DATABASE_URL;
@@ -36,6 +39,17 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     const approvals = new ApprovalsExpiryJob(this.pool, clock, ids, audit);
     const elevations = new ElevationExpiryJob(this.pool, clock, ids, audit);
     const anchors = new AnchorJob(this.pool, clock, ids);
+    // Consumers of the queues the relay fills. Each event is processed once (inbox), though delivery is at least once.
+    const notify = new ApprovalNotificationConsumer(this.pool, clock);
+    this.workers.push(
+      new Worker(
+        'pdfe-approval',
+        async (job) => {
+          if (job.name === 'approval.requested') await notify.consume(job.data);
+        },
+        { connection: this.redis },
+      ),
+    );
     this.every('outbox-relay', 1_000, () => relay.runOnce());
     this.every('audit-anchor', 30_000, () => anchors.runOnce());
     this.every('approvals-expiry', 30_000, () => approvals.runOnce());
@@ -60,6 +74,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy(): Promise<void> {
     for (const t of this.timers) clearInterval(t);
+    await Promise.all(this.workers.map((w) => w.close().catch(() => undefined)));
     await this.publisher?.close().catch(() => undefined);
     this.redis?.disconnect();
     await this.pool?.end().catch(() => undefined);

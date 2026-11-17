@@ -539,7 +539,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 - [ ] T127 [P] [US5] Write `tests/e2e-web/specs/label.spec.ts`. For each route in each manifest, × {ar, en}, signed in as the route's role, it runs `banner-check`, and a failure names the app and route. It also signs in through Keycloak and checks the banner on the Keycloak login and OTP pages
 - [ ] T128 [P] [US5] Write `tests/e2e-web/specs/label-negative.spec.ts` with fixtures `tests/e2e-web/fixtures/{no-banner,covered-banner,altered-text}.html`. `banner-check` must fail on each one, which proves that removing or covering the label fails the build
 - [ ] T129 [P] [US5] Write `scripts/ci/check-route-manifests.test.mjs` (`node:test`, with a temporary app fixture): a `page.tsx` on disk with no manifest entry fails, and so does a manifest entry with no page
-- [ ] T130 [P] [US5] Write `packages/platform-core/test/sim-label-exports.test.ts`:
+- [x] T130 [P] [US5] Write `packages/platform-core/test/sim-label-exports.test.ts`:
   - `csvWithLabel` puts `# SIM_LABEL` on line 1;
   - `jsonWithLabel` puts `meta.label`;
   - `pdfWithWatermark` produces a PDF whose extracted text contains both label strings on every page;
@@ -559,7 +559,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Switch all six root layouts to `SimShell`. Make T131 pass
 - [ ] T134 [P] [US5] Finalize `packages/ui-native/src/SimulationBanner.tsx` and `apps/mobile/app/_layout.tsx` (above the navigator and every modal stack, with an accessibility label equal to the text)
-- [ ] T135 [US5] Add the export helpers to `packages/platform-core/src/sim-label.ts`: `csvWithLabel`, `jsonWithLabel`, `pdfWithWatermark` (using `pdf-lib`; note the dependency in the ADR-002 implementation notes) and `notificationWithLabel`. Use them in the audit export and in the log-only notification consumer of `approval.requested`. Make T130 pass
+- [x] T135 [US5] Add the export helpers to `packages/platform-core/src/sim-label.ts`: `csvWithLabel`, `jsonWithLabel`, `pdfWithWatermark` (using `pdf-lib`; note the dependency in the ADR-002 implementation notes) and `notificationWithLabel`. Use them in the audit export and in the log-only notification consumer of `approval.requested`. Make T130 pass
 - [ ] T136 [US5] Create the Keycloak theme `infra/keycloak/themes/pdfe/login/`: `theme.properties`, a `template.ftl` override that renders the bilingual banner above every login page, and `messages_{ar,en}.properties`. Set `loginTheme: pdfe` in the realm. Full token styling comes in US9
 - [ ] T137 [P] [US5] Create `src/routes.manifest.ts` in all six web apps, with the routes from `contracts/ui-shell.md` §Routes as they exist now. Each entry has `path`, `roles`, `states` and `baseline` where a Phase 2 screen ID exists
 - [ ] T138 [US5] Implement `scripts/ci/check-route-manifests.mjs`, which scans `apps/web-*/app/**/page.tsx` against each manifest, and add it to the `static` job in `.github/workflows/ci.yml`. Make T129 pass
