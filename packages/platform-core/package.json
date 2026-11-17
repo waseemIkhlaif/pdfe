@@ -15,10 +15,11 @@
     "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests"
   },
   "dependencies": {
-    "pg": "^8.23.1",
-    "pure-rand": "^8.4.2",
+    "@pdfe/domain-types": "workspace:*",
     "drizzle-orm": "^0.45.4",
-    "@pdfe/domain-types": "workspace:*"
+    "lodash": "4.17.20",
+    "pg": "^8.23.1",
+    "pure-rand": "^8.4.2"
   },
   "devDependencies": {
     "@pdfe/config": "workspace:*",
