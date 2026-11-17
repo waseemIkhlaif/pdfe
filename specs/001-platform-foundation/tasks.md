@@ -237,9 +237,9 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - troubleshooting: CRLF, Docker memory, port conflicts.
 
   Link it from `README.md`
-- [ ] T056 [US1] Run `quickstart.md` §1 and §2 on the workstation. Write `docs/evidence/phase-2/fresh-clone.md` with the commands, the timings, the CI `fresh-clone` run link (filled in after the first green run) and an empty "Self-attestation" line for the owner
+- [x] T056 [US1] Run `quickstart.md` §1 and §2 on the workstation. Write `docs/evidence/phase-2/fresh-clone.md` with the commands, the timings, the CI `fresh-clone` run link (filled in after the first green run) and an empty "Self-attestation" line for the owner
 - [ ] T057 [US1] (human) After the first green `ci` run on `main`, add the `ci` check to the ruleset `main-protection-solo`. Save the exported ruleset as `docs/evidence/phase-2/ruleset.json`, and sign the self-attestation line in `docs/evidence/phase-2/fresh-clone.md`
-- [ ] T058 [US1] (human) Following `quickstart.md` §10, open six scratch pull requests: a style error, a type error, a failing unit test, a fake AWS key, a non-allowlisted URL, and a pinned vulnerable dependency. Record each PR number and the check that blocked it in `docs/evidence/phase-2/blocked-prs.md`, then close the PRs
+- [x] T058 [US1] (human) Following `quickstart.md` §10, open six scratch pull requests: a style error, a type error, a failing unit test, a fake AWS key, a non-allowlisted URL, and a pinned vulnerable dependency. Record each PR number and the check that blocked it in `docs/evidence/phase-2/blocked-prs.md`, then close the PRs
 
 **Checkpoint**: SC-001 and SC-002 are met. PR 1 merges, and `main` is green with `ci` required.
 
