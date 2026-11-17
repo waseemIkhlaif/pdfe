@@ -46,4 +46,5 @@ GRANT TRUNCATE ON
   iam.tenant_elevations, iam.approval_decisions, iam.approval_requests, iam.user_roles, iam.users,
   platform.organizations, platform.legal_entities, platform.tenants
   TO demo_reset_role;
-GRANT demo_reset_role TO app_role;
+-- app_role is made a member of demo_reset_role by the role setup (infra/postgres/init/01-roles.sh, and the
+-- test-kit helper): granting a role needs more than the ownership the migrator has.

@@ -24,7 +24,7 @@ export interface TokenClaims {
  * Tests that must prove the real realm (second factor, claim mapping) use the Keycloak container instead.
  */
 export class LocalIssuer {
-  readonly issuer = 'http://keycloak.test/realms/pdfe-demo';
+  readonly issuer = 'http://keycloak:8080/realms/pdfe-demo';
 
   private constructor(
     private readonly privateKey: CryptoKey,

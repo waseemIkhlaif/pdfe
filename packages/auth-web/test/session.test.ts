@@ -85,9 +85,9 @@ describe('session cookie', () => {
   });
 
   it('is Secure when the app is served over https', async () => {
-    const secure = { ...config, appBaseUrl: 'https://app.example.test' };
+    const secure = { ...config, appBaseUrl: 'https://example.com' };
     const res = await createAuthRoutes(secure, fakeOidc()).signIn(
-      new Request('https://app.example.test/api/auth/sign-in'),
+      new Request('https://example.com/api/auth/sign-in'),
     );
     expect(rawSetCookie(res)).toMatch(/;\s*Secure/i);
   });
@@ -182,9 +182,9 @@ describe('sign-in flow', () => {
 
   it('refuses a returnTo that leaves the site', () => {
     for (const bad of [
-      '//evil.example',
-      'https://evil.example/x',
-      '/\\evil.example',
+      '//example.com',
+      'https://example.com/x',
+      '/\\example.com',
       '',
       undefined,
       'ar/home',

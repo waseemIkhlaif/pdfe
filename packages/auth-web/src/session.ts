@@ -34,7 +34,7 @@ export function sessionOptions(config: AuthConfig): SessionOptions {
     cookieOptions: {
       httpOnly: true,
       sameSite: 'lax',
-      // Secure on https; the local demo runs on http://localhost.
+      // Secure on https; the local demo runs on plain http.
       secure: config.appBaseUrl.startsWith('https:'),
       path: '/',
     },

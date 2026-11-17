@@ -6,7 +6,7 @@ import { sessionOptions, type SessionData } from './session';
 
 const clock = new SystemClock();
 
-/** A local path only: `/ar/home` is fine, `//evil.example` and `https://evil.example` are not. */
+/** A local path only: `/ar/home` is fine, a protocol-relative or absolute address is not. */
 export function safeReturnTo(value: string | null | undefined, fallback: string): string {
   if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) {
     return fallback;
