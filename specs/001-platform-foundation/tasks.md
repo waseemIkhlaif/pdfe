@@ -338,7 +338,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - an insert with `tenant_id = B` fails the `WITH CHECK`;
   - a missing `app.tenant_id` reads 0 rows;
   - `app_role` has `rolbypassrls = false`
-- [ ] T080 [P] [US3] Write `apps/api/test/approvals.int.spec.ts`:
+- [x] T080 [P] [US3] Write `apps/api/test/approvals.int.spec.ts`:
   - self-approval is refused by the service (409 `SELF_APPROVAL`), and a direct SQL insert into `iam.approval_decisions` with `decided_by = requested_by` is refused by the trigger;
   - a decider without the approve permission gets 403;
   - a changed payload gives 409 `PAYLOAD_CHANGED`, an expired request 409 `EXPIRED`, and a cancelled or decided one 409 `NOT_PENDING`;
@@ -346,7 +346,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - with `required_approvals = 2`, a cancel after the first approval leaves the request cancelled;
   - if an approver loses the permission while a request is pending, their decision is refused;
   - every step records exactly one audit event
-- [ ] T081 [P] [US3] Write `apps/api/test/sod.int.spec.ts`:
+- [x] T081 [P] [US3] Write `apps/api/test/sod.int.spec.ts`:
   - granting a role that conflicts with a held role is refused by the service (409 `SOD_CONFLICT`, listing both roles) and by the `trg_user_roles_sod` trigger on a direct insert;
   - the triple rule is refused;
   - the refusal is audited (`iam.role.grant_refused_sod`)
@@ -373,12 +373,12 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - two concurrent relays publish each event once (`SKIP LOCKED`);
   - a consumer receiving the same event twice processes it once
 - [ ] T086 [P] [US3] Write `apps/api/test/rate-limit.int.spec.ts`: going over `api.rate_limit.per_user_per_minute` returns 429 `RATE_LIMITED` with `Retry-After`, the event is logged, and the per-IP limit applies to unauthenticated routes
-- [ ] T087 [P] [US3] Write `apps/api/test/audit-minimal.int.spec.ts`:
+- [x] T087 [P] [US3] Write `apps/api/test/audit-minimal.int.spec.ts`:
   - an approved role grant produces exactly one `iam.role.granted` event with actor, role, tenant, action, target, reason, time, correlation ID and approval reference;
   - a forced audit insert failure rolls the grant back;
   - `UPDATE` and `DELETE` on `audit.audit_events` as `app_role` fail
 - [ ] T088 [P] [US3] Write `packages/auth-web/test/session.test.ts`: the session cookie is `HttpOnly` and `SameSite=Lax` and encrypted; the access token never appears in any server-component prop or response body sent to the browser; sign-out clears the session
-- [ ] T089 [US3] Write `apps/api/test/authz.matrix.spec.ts`. It discovers every route through Nest `DiscoveryService` and every role from `rbac.ts`, and asserts the expected status for each route × role × {with second factor, without} × {own tenant, other tenant}. A route with no matrix entry fails the suite. It covers only the routes that exist; later stories extend it in the same task that adds a route
+- [x] T089 [US3] Write `apps/api/test/authz.matrix.spec.ts`. It discovers every route through Nest `DiscoveryService` and every role from `rbac.ts`, and asserts the expected status for each route × role × {with second factor, without} × {own tenant, other tenant}. A route with no matrix entry fails the suite. It covers only the routes that exist; later stories extend it in the same task that adds a route
 
 ### Implementation for User Story 3
 
@@ -435,7 +435,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - an `auth.signin` audit event the first time each session ID is seen.
 
   Make T082 pass
-- [ ] T102 [US3] Implement `GET /v1/me` in `apps/api/src/identity/me.controller.ts`, returning user, tenant, roles, permissions, `mfa` and the active elevation. Add its matrix entries
+- [x] T102 [US3] Implement `GET /v1/me` in `apps/api/src/identity/me.controller.ts`, returning user, tenant, roles, permissions, `mfa` and the active elevation. Add its matrix entries
 - [x] T103 [US3] Implement `apps/api/src/tenancy/tenant-context.interceptor.ts`. It opens each request transaction through `withTx`, with the tenant from the token, or with the elevation target, `READ ONLY` and `app.elevation_id` when an elevation is active and not expired. Add `assertSameTenant()` as the second, code-level check
 - [x] T104 [US3] Implement `apps/api/src/tenancy/elevation.{service,controller}.ts`:
   - routes `POST /v1/elevations`, `GET /v1/elevations/current` and `POST /v1/elevations/{id}/end`;
@@ -453,7 +453,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Make T085 pass
 - [ ] T108 [US3] Add rate limiting: `@nestjs/throttler` with Redis storage, per user and per IP, values from `api.rate_limit`, the 429 envelope with `Retry-After`, and a log line. Make T086 pass
-- [ ] T109 [US3] Implement `apps/api/src/approvals/`:
+- [x] T109 [US3] Implement `apps/api/src/approvals/`:
   - `approvals.service.ts`:
     - create: `payload_hash` from RFC 8785, expiry from `approvals.default_expiry_hours`, audit `approval.created`, outbox `approval.requested`;
     - decide: `SELECT … FOR UPDATE` and every refusal rule from `data-model.md` §Lifecycles, audit `approval.decided`, outbox `approval.approved` or `approval.rejected`;
@@ -463,7 +463,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Add the matrix entries. Make T080 pass
 - [ ] T110 [P] [US3] Implement `apps/worker/src/approvals-expiry/expiry.job.ts` (marks expired requests, audit `approval.expired`, outbox `approval.expired`) and `apps/worker/src/elevation-expiry/expiry.job.ts` (sets `ended_at` and `end_reason = expired`, audit `tenant.elevation_ended`), both using the injected `ClockService`
-- [ ] T111 [US3] Implement `apps/api/src/identity/iam.{service,controller}.ts`:
+- [x] T111 [US3] Implement `apps/api/src/identity/iam.{service,controller}.ts`:
   - `GET /v1/iam/users`: own tenant, or `iam.list_users_all()` for `platform_admin`;
   - `GET /v1/iam/roles`;
   - `POST /v1/iam/users/{id}/role-grants` and `role-revocations`: an SoD pre-check returns 409 `SOD_CONFLICT`, otherwise an approval request is created;

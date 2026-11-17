@@ -1,6 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { OIDC_OPTIONS } from '../core/tokens';
 import { AuthGuard } from './auth.guard';
+import { IamController } from './iam.controller';
+import { IamService } from './iam.service';
 import { JwtVerifier, oidcOptionsFromEnv } from './jwt.verifier';
 import { MeController } from './me.controller';
 import { MfaGuard } from './mfa.guard';
@@ -9,11 +11,12 @@ import { PrincipalService } from './principal.service';
 
 @Global()
 @Module({
-  controllers: [MeController],
+  controllers: [MeController, IamController],
   providers: [
     { provide: OIDC_OPTIONS, useFactory: () => oidcOptionsFromEnv() },
     JwtVerifier,
     PrincipalService,
+    IamService,
     AuthGuard,
     MfaGuard,
     PermissionsGuard,
