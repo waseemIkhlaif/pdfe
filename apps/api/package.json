@@ -10,7 +10,8 @@
     "start": "node dist/main.js",
     "start:once": "node dist/main.js --once",
     "test:unit": "vitest run",
-    "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests"
+    "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests",
+    "seed:dev": "node dist/demo/dev-seed.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.5.0",

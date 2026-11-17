@@ -470,7 +470,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - handlers for `iam.role.grant` and `iam.role.revoke` re-check SoD and apply the change, with the trigger as backstop, auditing `iam.role.granted`, `iam.role.revoked` or `iam.role.grant_refused_sod`.
 
   Add the matrix entries. Make T081 pass
-- [ ] T112 [US3] Implement a provisional development seed in `apps/api/src/demo/dev-seed.ts` (`pnpm --filter @pdfe/api seed:dev`, DEMO only). Through the services, it creates the three tenants, the demo organization, and one user per realm demo user with their role grants, using the `system:seed` path. US8 replaces it (T171)
+- [x] T112 [US3] Implement a provisional development seed in `apps/api/src/demo/dev-seed.ts` (`pnpm --filter @pdfe/api seed:dev`, DEMO only). Through the services, it creates the three tenants, the demo organization, and one user per realm demo user with their role grants, using the `system:seed` path. US8 replaces it (T171)
 - [ ] T113 [US3] Implement `packages/auth-web` (`@pdfe/auth-web`):
   - route-handler factories for `/api/auth/sign-in`, `/api/auth/callback` and `/api/auth/sign-out` (`openid-client`, Authorization Code + PKCE);
   - an `iron-session` session;
