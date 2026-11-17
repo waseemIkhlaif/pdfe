@@ -49,12 +49,12 @@ jobs:
           else
             echo "fresh_clone=false" >> "$GITHUB_OUTPUT"
           fi
-          if echo "$files" | grep -Eq '^(infra/|apps/api/|apps/worker/|apps/mock-hub/|packages/platform-core/|packages/domain-types/|\.github/workflows/ci\.yml)'; then
+          if echo "$files" | grep -Eq '^(infra/|db/|apps/api/|apps/worker/|apps/mock-hub/|packages/platform-core/|packages/domain-types/|\.github/workflows/ci\.yml)'; then
             echo "egress=true" >> "$GITHUB_OUTPUT"
           else
             echo "egress=false" >> "$GITHUB_OUTPUT"
           fi
-          if echo "$files" | grep -Eq '^(apps/web-|packages/ui-web/|packages/auth-web/|packages/i18n/|packages/design-tokens/|packages/platform-core/src/sim-label|infra/|tests/e2e-web/|\.github/workflows/ci\.yml)'; then
+          if echo "$files" | grep -Eq '^(apps/web-|packages/ui-web/|packages/auth-web/|packages/i18n/|packages/design-tokens/|packages/platform-core/src/sim-label|infra/|db/|scripts/scenario|apps/api/|apps/worker/|apps/mock-hub/|tests/e2e-web/|\.github/workflows/ci\.yml)'; then
             echo "web=true" >> "$GITHUB_OUTPUT"
           else
             echo "web=false" >> "$GITHUB_OUTPUT"
@@ -171,12 +171,12 @@ jobs:
           corepack enable
           corepack prepare pnpm@11.0.9 --activate
       - run: pnpm install --frozen-lockfile
+      - name: Build the api (the start-up tests run its compiled entry point)
+        run: pnpm turbo run build --filter @pdfe/api
       - name: Integration tests (Testcontainers with Postgres, Redis and Keycloak with the realm import)
         run: pnpm test:int
       - name: Startup guard (LIVE mode, non-mock adapter, unknown adapter and missing kind must all refuse to start)
-        run: |
-          pnpm turbo run build --filter @pdfe/api
-          pnpm --filter @pdfe/api exec vitest run test/startup-guard.spec.ts
+        run: pnpm --filter @pdfe/api exec vitest run test/startup-guard.spec.ts
 
   fresh-clone:
     needs: changes
@@ -264,9 +264,8 @@ jobs:
         run: |
           node -e "import('./scripts/bootstrap.mjs').then((m) => m.ensureEnv())"
           docker compose --env-file .env -f infra/docker-compose.yml up -d --build --wait
-      - name: Seed the development data (until the scenario engine replaces it)
-        run: |
-          docker compose --env-file .env -f infra/docker-compose.yml run --rm --no-deps             -v "$PWD/infra/keycloak:/realm:ro" -e REALM_GENERATOR=/realm/generate-realm.mjs             api node dist/demo/dev-seed.js
+      - name: Seed the demo data from the baseline scenario, and check its digest against the committed one
+        run: node scripts/scenario.mjs baseline --seed 42
       - name: Build the packages the tests import
         run: pnpm turbo run build --filter='@pdfe/e2e-web^...'
       - name: Install Chromium for Playwright

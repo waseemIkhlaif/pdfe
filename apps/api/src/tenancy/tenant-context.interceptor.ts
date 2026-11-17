@@ -12,7 +12,7 @@ import { from, lastValueFrom, type Observable } from 'rxjs';
 import { AppError, getContext } from '@pdfe/platform-core';
 import { withTx, type Pool, type Tx } from '@pdfe/platform-core/db';
 import { PG_POOL } from '../core/tokens';
-import { ELEVATION_CONTROL } from '../identity/public.decorator';
+import { ELEVATION_CONTROL, NO_REQUEST_TX } from '../identity/public.decorator';
 
 /** The request transaction, with `app.tenant_id` already set. Handlers use this instead of the pool. */
 export const CurrentTx = createParamDecorator((_data: unknown, ctx: ExecutionContext): Tx => {
@@ -41,7 +41,8 @@ export class TenantContextInterceptor implements NestInterceptor {
       this.reflector.getAllAndOverride<boolean>(ELEVATION_CONTROL, [
         ctx.getHandler(),
         ctx.getClass(),
-      ])
+      ]) ||
+      this.reflector.getAllAndOverride<boolean>(NO_REQUEST_TX, [ctx.getHandler(), ctx.getClass()])
     )
       return next.handle();
     return from(

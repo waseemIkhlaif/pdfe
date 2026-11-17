@@ -1,0 +1,42 @@
+# Baseline scenario, version 1: the three demo tenants, the demo organization, and one user per role whose subject is the
+# same person as the realm user of the same name (infra/keycloak/realm-pdfe-demo.json). Everything here is synthetic.
+# The file is listed in SHA256SUMS: changing it without changing the list is refused (MANIFEST_CHECKSUM_MISMATCH).
+code: baseline
+version: v1
+title:
+  en: "Baseline platform"
+  ar: "المنصة الأساسية"
+clock:
+  base: "2026-01-15T08:00:00Z"
+  step_ms: 1000
+tenants:
+  - { id: "22222222-0000-7000-8000-000000000001", code: platform, kind: platform, name: "PDFE Platform (demo)" }
+  - { id: "22222222-0000-7000-8000-000000000002", code: consumers, kind: consumer_pool, name: "Consumer pool (demo)" }
+  - { id: "22222222-0000-7000-8000-000000000003", code: demo-merchant, kind: merchant, name: "Demo Merchant" }
+organizations:
+  - { tenant: demo-merchant, type: merchant, display_name: "Demo Cafe" }
+users:
+  - { subject: "11111111-0000-7000-8000-000000000001", tenant: platform, display_name: "Demo Admin A", roles: [platform_admin] }
+  - { subject: "11111111-0000-7000-8000-000000000002", tenant: platform, display_name: "Demo Admin B", roles: [platform_admin] }
+  - { subject: "11111111-0000-7000-8000-000000000003", tenant: consumers, display_name: "Demo Individual", roles: [individual] }
+  - { subject: "11111111-0000-7000-8000-000000000004", tenant: demo-merchant, display_name: "Demo Merchant Owner", roles: [merchant_owner] }
+  - { subject: "11111111-0000-7000-8000-000000000005", tenant: demo-merchant, display_name: "Demo Merchant Cashier", roles: [merchant_cashier] }
+  - { subject: "11111111-0000-7000-8000-000000000006", tenant: demo-merchant, display_name: "Demo Business Preparer", roles: [biz_preparer] }
+  - { subject: "11111111-0000-7000-8000-000000000007", tenant: demo-merchant, display_name: "Demo Business Approver", roles: [biz_approver] }
+  - { subject: "11111111-0000-7000-8000-000000000008", tenant: platform, display_name: "Demo Operations Analyst", roles: [ops_analyst] }
+  - { subject: "11111111-0000-7000-8000-000000000009", tenant: platform, display_name: "Demo Compliance Analyst", roles: [compliance_analyst] }
+  - { subject: "11111111-0000-7000-8000-000000000010", tenant: platform, display_name: "Demo Compliance Approver", roles: [compliance_approver] }
+  - { subject: "11111111-0000-7000-8000-000000000011", tenant: platform, display_name: "Demo Finance Analyst", roles: [finance_analyst] }
+  - { subject: "11111111-0000-7000-8000-000000000012", tenant: platform, display_name: "Demo Finance Approver", roles: [finance_approver] }
+  - { subject: "11111111-0000-7000-8000-000000000013", tenant: platform, display_name: "Demo Issuer Operator", roles: [issuer_operator] }
+  - { subject: "11111111-0000-7000-8000-000000000014", tenant: platform, display_name: "Demo Stable-Value Approver", roles: [stb_approver] }
+  - { subject: "11111111-0000-7000-8000-000000000015", tenant: platform, display_name: "Demo Auditor", roles: [auditor] }
+  - { subject: "11111111-0000-7000-8000-000000000016", tenant: platform, display_name: "Demo Viewer", roles: [demo_viewer] }
+# Initial active versions. A setting not listed here starts at its default from the registry.
+config:
+  - { key: fees.default_minor, value: 0 }
+  - { key: limits.transfer_max_minor, value: 500000 }
+  - { key: fx.spread_bps, value: 0 }
+mock_hub:
+  - { kind: bank, latency_ms: 50, failure_rate: 0 }
+  - { kind: fx, latency_ms: 50, failure_rate: 0 }

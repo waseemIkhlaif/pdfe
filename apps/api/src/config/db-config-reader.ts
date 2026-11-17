@@ -14,7 +14,8 @@ const TTL_MS = 5_000;
 
 /**
  * Reads the active version of a setting from `config.config_versions`. It replaces the defaults reader: a setting with no
- * active row (the database is not seeded yet) gives its registry default. Values are cached for a few seconds, and the
+ * active row (the database is not seeded yet), or while the database cannot be reached, gives the last known value or the
+ * registry default. Values are cached for a few seconds, and the
  * cache is cleared at once when this process activates a version (`config.activated`).
  */
 @Injectable()
@@ -30,11 +31,18 @@ export class DbConfigReader implements ConfigReader {
     const now = this.clock.now().getTime();
     const hit = this.cache.get(key);
     if (hit && Math.abs(now - hit.at) < TTL_MS) return hit.value as ConfigValue<K>;
-    const r = await this.pool.query<{ value: unknown }>(
-      "SELECT value FROM config.config_versions WHERE key = $1 AND status = 'active'",
-      [key],
-    );
-    const value = r.rows.length ? r.rows[0]!.value : configRegistry[key].default;
+    let value: unknown;
+    try {
+      const r = await this.pool.query<{ value: unknown }>(
+        "SELECT value FROM config.config_versions WHERE key = $1 AND status = 'active'",
+        [key],
+      );
+      value = r.rows.length ? r.rows[0]!.value : configRegistry[key].default;
+    } catch {
+      // The database cannot be reached: keep serving the last value this process knew, or the default. A request is not
+      // refused because a setting could not be read (the health check reports the database itself).
+      value = hit ? hit.value : configRegistry[key].default;
+    }
     this.cache.set(key, { value, at: now });
     return value as ConfigValue<K>;
   }

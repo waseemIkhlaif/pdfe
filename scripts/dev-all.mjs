@@ -39,6 +39,13 @@ if (up.status !== 0) {
 const smoke = spawnSync(process.execPath, ['scripts/smoke.mjs'], { cwd: ROOT, stdio: 'inherit' });
 if (smoke.status !== 0) process.exit(smoke.status ?? 1);
 
+// Seed the demo data from the baseline scenario (the same data every time: the digest is checked against the committed one).
+const seed = spawnSync(process.execPath, ['scripts/scenario.mjs', 'baseline', '--seed', '42'], {
+  cwd: ROOT,
+  stdio: 'inherit',
+});
+if (seed.status !== 0) process.exit(seed.status ?? 1);
+
 console.log(`
 All services are healthy.
   consumer   http://localhost:3001      merchant   http://localhost:3002      business   http://localhost:3003

@@ -19,3 +19,6 @@ docs/
 packages/contracts/src/clients/
 packages/contracts/openapi.json
 infra/keycloak/realm-pdfe-demo.json
+
+# Scenario manifests are checksummed byte for byte (db/seeds/scenarios/SHA256SUMS): never reformat them.
+db/seeds/scenarios/**

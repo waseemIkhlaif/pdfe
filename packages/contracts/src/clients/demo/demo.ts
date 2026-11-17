@@ -6,8 +6,237 @@
  * OpenAPI spec version: 0.2.0
  */
 import type {
-  ErrorEnvelope
+  ErrorEnvelope,
+  ScenarioList,
+  ScenarioRun,
+  ScenarioRunRequest
 } from '../model';
+
+
+const getHeaders = (...sources: (RequestInit['headers'] | Record<string, string | undefined>)[]) => {
+  const seen = new Set<string>();
+  const layers: [string, string | readonly string[]][][] = [];
+  for (const source of sources.reverse()) {
+    if (!source) continue;
+    const entries = source instanceof Headers
+      ? source.entries()
+      : Symbol.iterator in source
+        ? Array.from(source as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string])
+        : Object.entries<string | readonly string[] | undefined>(source);
+    const layer: [string, string | readonly string[]][] = [];
+    for (const [name, value] of entries) {
+      if (value !== undefined && !seen.has(name.toLowerCase())) layer.push([name, value]);
+    }
+    for (const [name] of layer) seen.add(name.toLowerCase());
+    layers.push(layer);
+  }
+  return Object.fromEntries(layers.reverse().flat()) as Extract<RequestInit['headers'], Record<string, unknown>>;
+};
+
+export type scenarioGetRunResponse200 = {
+  data: ScenarioRun
+  status: 200
+}
+
+export type scenarioGetRunResponse401 = {
+  data: ErrorEnvelope
+  status: 401
+}
+
+export type scenarioGetRunResponse403 = {
+  data: ErrorEnvelope
+  status: 403
+}
+
+export type scenarioGetRunResponse404 = {
+  data: ErrorEnvelope
+  status: 404
+}
+
+export type scenarioGetRunResponse429 = {
+  data: ErrorEnvelope
+  status: 429
+}
+
+export type scenarioGetRunResponseSuccess = (scenarioGetRunResponse200) & {
+  headers: Headers;
+};
+export type scenarioGetRunResponseError = (scenarioGetRunResponse401 | scenarioGetRunResponse403 | scenarioGetRunResponse404 | scenarioGetRunResponse429) & {
+  headers: Headers;
+};
+
+export type scenarioGetRunResponse = (scenarioGetRunResponseSuccess | scenarioGetRunResponseError)
+
+export const getScenarioGetRunUrl = (id: string,) => {
+
+
+
+
+  return `/v1/demo/runs/${id}`
+}
+
+/**
+ * One scenario run: status, digest, and the report of what it created. Needs the permission `demo.scenario.run`. A privileged role also needs a second factor.
+ * @summary One scenario run: status, digest, and the report of what it created.
+ */
+export const scenarioGetRun = async (id: string, options?: RequestInit): Promise<scenarioGetRunResponse> => {
+
+  const res = await fetch(getScenarioGetRunUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: scenarioGetRunResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as scenarioGetRunResponse
+}
+
+
+export type scenarioScenariosResponse200 = {
+  data: ScenarioList
+  status: 200
+}
+
+export type scenarioScenariosResponse401 = {
+  data: ErrorEnvelope
+  status: 401
+}
+
+export type scenarioScenariosResponse403 = {
+  data: ErrorEnvelope
+  status: 403
+}
+
+export type scenarioScenariosResponse429 = {
+  data: ErrorEnvelope
+  status: 429
+}
+
+export type scenarioScenariosResponseSuccess = (scenarioScenariosResponse200) & {
+  headers: Headers;
+};
+export type scenarioScenariosResponseError = (scenarioScenariosResponse401 | scenarioScenariosResponse403 | scenarioScenariosResponse429) & {
+  headers: Headers;
+};
+
+export type scenarioScenariosResponse = (scenarioScenariosResponseSuccess | scenarioScenariosResponseError)
+
+export const getScenarioScenariosUrl = () => {
+
+
+
+
+  return `/v1/demo/scenarios`
+}
+
+/**
+ * The registered scenarios: code, version, titles and the checksum of the manifest. Needs the permission `demo.scenario.run`. A privileged role also needs a second factor.
+ * @summary The registered scenarios: code, version, titles and the checksum of the manifest.
+ */
+export const scenarioScenarios = async ( options?: RequestInit): Promise<scenarioScenariosResponse> => {
+
+  const res = await fetch(getScenarioScenariosUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: scenarioScenariosResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as scenarioScenariosResponse
+}
+
+
+export type scenarioRunResponse201 = {
+  data: ScenarioRun
+  status: 201
+}
+
+export type scenarioRunResponse400 = {
+  data: ErrorEnvelope
+  status: 400
+}
+
+export type scenarioRunResponse401 = {
+  data: ErrorEnvelope
+  status: 401
+}
+
+export type scenarioRunResponse403 = {
+  data: ErrorEnvelope
+  status: 403
+}
+
+export type scenarioRunResponse404 = {
+  data: ErrorEnvelope
+  status: 404
+}
+
+export type scenarioRunResponse409 = {
+  data: ErrorEnvelope
+  status: 409
+}
+
+export type scenarioRunResponse422 = {
+  data: ErrorEnvelope
+  status: 422
+}
+
+export type scenarioRunResponse429 = {
+  data: ErrorEnvelope
+  status: 429
+}
+
+export type scenarioRunResponseSuccess = (scenarioRunResponse201) & {
+  headers: Headers;
+};
+export type scenarioRunResponseError = (scenarioRunResponse400 | scenarioRunResponse401 | scenarioRunResponse403 | scenarioRunResponse404 | scenarioRunResponse409 | scenarioRunResponse422 | scenarioRunResponse429) & {
+  headers: Headers;
+};
+
+export type scenarioRunResponse = (scenarioRunResponseSuccess | scenarioRunResponseError)
+
+export const getScenarioRunUrl = (code: string,) => {
+
+
+
+
+  return `/v1/demo/scenarios/${code}/runs`
+}
+
+/**
+ * Reset the demo data and seed it from a scenario, deterministically for the seed. Returns the finished run: succeeded with its digest and report, or failed with an error code (the data is then in the reset state). Needs the permission `demo.scenario.run`. A privileged role also needs a second factor. Refused while the caller has an active elevation.
+ * @summary Reset the demo data and seed it from a scenario, deterministically for the seed. Returns the finished run: succeeded with its digest and report, or failed with an error code (the data is then in the reset state).
+ */
+export const scenarioRun = async (code: string,
+    scenarioRunRequest: ScenarioRunRequest, options?: RequestInit): Promise<scenarioRunResponse> => {
+
+  const res = await fetch(getScenarioRunUrl(code),
+  {
+    ...options,
+    method: 'POST',
+    headers: getHeaders({ 'Content-Type': 'application/json' }, options?.headers),
+    body: JSON.stringify(scenarioRunRequest)
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: scenarioRunResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as scenarioRunResponse
+}
 
 
 export type simulateerrorSimulateResponse400 = {

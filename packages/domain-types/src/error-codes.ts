@@ -23,6 +23,7 @@ export const ERROR_CODES = {
   // configuration
   CONFIG_INVALID: 422,
   CONFIG_SAFETY_LOCKED: 409,
+  CONFIG_STALE: 409,
   // scenarios
   MANIFEST_CHECKSUM_MISMATCH: 409,
   RUN_IN_PROGRESS: 409,

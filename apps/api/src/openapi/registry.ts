@@ -140,6 +140,26 @@ export const REGISTRY: Record<string, RouteDoc> = {
     errors: [404, 409, 422],
   },
 
+  'GET /v1/demo/scenarios': {
+    summary: 'The registered scenarios: code, version, titles and the checksum of the manifest.',
+    tag: 'demo',
+    response: 'ScenarioList',
+  },
+  'POST /v1/demo/scenarios/:code/runs': {
+    summary:
+      'Reset the demo data and seed it from a scenario, deterministically for the seed. Returns the finished run: succeeded with its digest and report, or failed with an error code (the data is then in the reset state).',
+    tag: 'demo',
+    request: 'ScenarioRunRequest',
+    response: 'ScenarioRun',
+    errors: [404, 409, 422],
+  },
+  'GET /v1/demo/runs/:id': {
+    summary: 'One scenario run: status, digest, and the report of what it created.',
+    tag: 'demo',
+    response: 'ScenarioRun',
+    errors: [404],
+  },
+
   'POST /v1/elevations': {
     summary: 'Start a read-only, time-limited, audited elevation into one other tenant.',
     tag: 'tenancy',
