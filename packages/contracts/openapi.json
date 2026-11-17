@@ -35,6 +35,10 @@
     {
       "name": "audit",
       "description": "The tamper-evident audit trail"
+    },
+    {
+      "name": "demo",
+      "description": "Demonstrations for the DEMO mode only"
     }
   ],
   "paths": {
@@ -832,6 +836,82 @@
           },
           "429": {
             "description": "Too many requests (RATE_LIMITED). See Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/demo/simulate-error": {
+      "post": {
+        "operationId": "simulateerror_simulate",
+        "summary": "DEMO only: records the audit event demo.error_simulated, then fails with the ordinary 500 error envelope.",
+        "description": "DEMO only: records the audit event demo.error_simulated, then fails with the ordinary 500 error envelope. Needs the permission `me.read`. A privileged role also needs a second factor. Refused while the caller has an active elevation.",
+        "tags": [
+          "demo"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-permission": "me.read",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CorrelationId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Missing or malformed Idempotency-Key (IDEMPOTENCY_KEY_REQUIRED).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid token, or a second factor is required (UNAUTHENTICATED, MFA_REQUIRED).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The caller lacks the permission (FORBIDDEN).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests (RATE_LIMITED). See Retry-After.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected failure (INTERNAL). The envelope carries the correlation ID to quote.",
             "content": {
               "application/json": {
                 "schema": {

@@ -10,6 +10,8 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1, // sign-ins use one-time codes; one worker keeps their timing simple
   retries: process.env.CI ? 1 : 0,
+  // Keep the files a passing test wrote too: the correlation spec saves screenshots that are evidence (SC-012).
+  preserveOutput: 'always',
   timeout: 90_000,
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   use: { ...devices['Desktop Chrome'], trace: 'retain-on-failure' },
@@ -27,5 +29,11 @@ export default defineConfig({
       use: { baseURL: 'http://localhost:8080' },
     },
     { name: 'negative', testMatch: 'label-negative.spec.ts' },
+    // One action followed through every component, with Grafana (SC-012). Needs the whole stack, lgtm included.
+    {
+      name: 'correlation',
+      testMatch: 'correlation.spec.ts',
+      use: { baseURL: 'http://localhost:3000' },
+    },
   ],
 });

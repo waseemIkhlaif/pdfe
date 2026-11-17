@@ -50,6 +50,7 @@ Every action records an event with these fields: actor, role, tenant, action, ta
 | `config.proposed` / `config.activated` / `config.rolled_back` / `config.refused_locked` | Configuration |
 | `scenario.run_started` / `scenario.run_finished` | Scenario engine |
 | `audit.exported` / `audit.verified` | Auditor actions |
+| `demo.error_simulated` | A signed-in user asks the DEMO-only endpoint `POST /v1/demo/simulate-error` for a failure to look at (the error page's demonstration) |
 | `system.start_refused` | Logged to stderr and, when the database is reachable, recorded (startup guard) |
 
 ### Audit actions not yet implemented

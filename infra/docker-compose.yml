@@ -6,6 +6,8 @@ x-app-env: &app-env
   APP_MODE: DEMO
   INTERNAL_HOSTS: postgres,redis,keycloak,mock-hub,api,worker,lgtm,localhost,127.0.0.1
   REDIS_URL: redis://redis:6379
+  # Traces, metrics and logs of api, worker and mock-hub go to the collector in the lgtm container.
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
 
 services:
   postgres:
@@ -51,6 +53,27 @@ services:
   # Identity provider for the demo realm `pdfe-demo` (ADR-010). The realm is code: infra/keycloak/realm-pdfe-demo.json.
   # KC_HOSTNAME fixes the issuer to the public address, so tokens carry the same `iss` for browsers and for the
   # API, which reaches Keycloak by its service name on the internal network.
+  # Grafana, Loki, Tempo and Prometheus in one container (grafana/otel-lgtm). It receives the services' OTLP data on the
+  # internal network, and reads the audit trail through readonly_role. Grafana is published through the gateway on
+  # localhost:3000; anonymous access is the image's default and is fine for a synthetic local demo.
+  lgtm:
+    image: grafana/otel-lgtm:0.41.0
+    networks: [app]
+    environment:
+      READONLY_PASSWORD: ${READONLY_PASSWORD:?run pnpm bootstrap first}
+    volumes:
+      - ./grafana/provisioning/datasources/pdfe.yaml:/otel-lgtm/grafana/conf/provisioning/datasources/pdfe.yaml:ro
+      - ./grafana/provisioning/dashboards/pdfe.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/pdfe.yaml:ro
+      - ./grafana/dashboards:/pdfe-dashboards:ro
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -sf http://127.0.0.1:3000/api/health | grep -q ok']
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 40s
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.8.2
     networks: [app]
@@ -356,6 +379,7 @@ services:
       - '127.0.0.1:3004:3004'
       - '127.0.0.1:3005:3005'
       - '127.0.0.1:3006:3006'
+      - '127.0.0.1:3000:3000'
       - '127.0.0.1:4000:4000'
       - '127.0.0.1:8080:8080'
     volumes:
@@ -363,6 +387,7 @@ services:
     depends_on:
       api: { condition: service_healthy }
       keycloak: { condition: service_healthy }
+      lgtm: { condition: service_healthy }
       web-consumer: { condition: service_healthy }
       web-merchant: { condition: service_healthy }
       web-business: { condition: service_healthy }

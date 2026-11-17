@@ -14,6 +14,7 @@ const ERROR_TEXT: Record<number, string> = {
   409: 'A rule refuses the action (for example SOD_CONFLICT, SELF_APPROVAL, NOT_PENDING, ELEVATION_ACTIVE, ELEVATION_READ_ONLY).',
   422: 'The input is invalid (VALIDATION_FAILED) or an idempotency key was reused with other content (IDEMPOTENCY_KEY_REUSED).',
   429: 'Too many requests (RATE_LIMITED). See Retry-After.',
+  500: 'An unexpected failure (INTERNAL). The envelope carries the correlation ID to quote.',
 };
 
 /** Nest `:id` to OpenAPI `{id}`. */
@@ -80,27 +81,32 @@ function operation(route: RouteInfo): Json {
 
   const success = doc.status ?? route.httpCode ?? (route.method === 'POST' ? 201 : 200);
   const responses: Record<string, Json> = {};
-  responses[String(success)] = doc.file
-    ? {
-        description: 'A file.',
-        content: Object.fromEntries(
-          Object.entries(doc.file).map(([type, d]) => [
-            type,
-            { schema: { type: 'string', description: d } },
-          ]),
-        ),
-      }
-    : doc.response
-      ? { description: 'Success.', content: { 'application/json': { schema: ref(doc.response) } } }
-      : { description: 'Success. No body.' };
-  for (const s of doc.alsoStatus ?? []) {
-    responses[String(s)] =
-      s === 204
-        ? { description: 'No content.' }
-        : {
-            description: 'Reported with the same body.',
-            content: { 'application/json': { schema: ref(doc.response ?? 'ErrorEnvelope') } },
-          };
+  if (!doc.fails) {
+    responses[String(success)] = doc.file
+      ? {
+          description: 'A file.',
+          content: Object.fromEntries(
+            Object.entries(doc.file).map(([type, d]) => [
+              type,
+              { schema: { type: 'string', description: d } },
+            ]),
+          ),
+        }
+      : doc.response
+        ? {
+            description: 'Success.',
+            content: { 'application/json': { schema: ref(doc.response) } },
+          }
+        : { description: 'Success. No body.' };
+    for (const s of doc.alsoStatus ?? []) {
+      responses[String(s)] =
+        s === 204
+          ? { description: 'No content.' }
+          : {
+              description: 'Reported with the same body.',
+              content: { 'application/json': { schema: ref(doc.response ?? 'ErrorEnvelope') } },
+            };
+    }
   }
   const errors = new Set<number>(doc.errors ?? []);
   if (!route.public) [401, 429].forEach((s) => errors.add(s));
@@ -162,6 +168,7 @@ export function buildOpenApiDocument(version: string): Json {
       { name: 'approvals', description: 'Maker-checker' },
       { name: 'tenancy', description: 'Read-only tenant elevation' },
       { name: 'audit', description: 'The tamper-evident audit trail' },
+      { name: 'demo', description: 'Demonstrations for the DEMO mode only' },
     ],
     paths,
     components: {

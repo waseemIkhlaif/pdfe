@@ -1,0 +1,90 @@
+{
+  "uid": "pdfe-correlation",
+  "title": "Follow one action (correlation ID)",
+  "description": "Paste the correlation ID from an error screen or a response header. Everything that action did shows up: log lines of every service, the trace, the audit events, and the worker's job logs. SIMULATION: synthetic data only.",
+  "tags": ["pdfe", "correlation"],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "time": { "from": "now-6h", "to": "now" },
+  "refresh": "",
+  "templating": {
+    "list": [
+      {
+        "name": "correlation_id",
+        "label": "Correlation ID",
+        "type": "textbox",
+        "query": "none",
+        "current": { "text": "none", "value": "none" },
+        "options": [{ "selected": true, "text": "none", "value": "none" }]
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "logs",
+      "title": "Logs of every service",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 10 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "expr": "{service_name=~\".+\"} | correlation_id=\"$correlation_id\"",
+          "queryType": "range"
+        }
+      ],
+      "options": { "showTime": true, "wrapLogMessage": true, "sortOrder": "Ascending" }
+    },
+    {
+      "id": 2,
+      "type": "table",
+      "title": "Traces",
+      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 9 },
+      "datasource": { "type": "tempo", "uid": "tempo" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "tempo", "uid": "tempo" },
+          "queryType": "traceql",
+          "query": "{ span.correlation_id = \"$correlation_id\" }",
+          "limit": 20
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Audit events",
+      "gridPos": { "x": 12, "y": 10, "w": 12, "h": 9 },
+      "datasource": { "type": "postgres", "uid": "pdfe-audit" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "postgres", "uid": "pdfe-audit" },
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code",
+          "rawSql": "SELECT seq, occurred_at, action, actor_role, tenant_id, target_type, target_id, reason FROM audit.audit_events WHERE correlation_id = '$correlation_id' ORDER BY seq"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "logs",
+      "title": "Job logs (worker)",
+      "gridPos": { "x": 0, "y": 19, "w": 24, "h": 8 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "expr": "{service_name=\"worker\"} | correlation_id=\"$correlation_id\"",
+          "queryType": "range"
+        }
+      ],
+      "options": { "showTime": true, "wrapLogMessage": true, "sortOrder": "Ascending" }
+    }
+  ]
+}

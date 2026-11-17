@@ -32,6 +32,7 @@ The service base is `http://api:4000` inside Docker and `http://localhost:4000` 
 | GET `/v1/iam/roles` | `iam.read` | Roles, permissions, conflicts | |
 | POST `/v1/iam/users/{id}/role-grants` | `iam.role.grant.request` | `{ role_code, organization_id?, reason }` creates the approval `iam.role.grant` | 409 `SOD_CONFLICT`; `details` lists the requested role (`role_code`) and each conflicting held role (`held_role`) as `roles.<code>`, and the refusal is audited (`iam.role.grant_refused_sod`) **Δ** |
 | POST `/v1/iam/users/{id}/role-revocations` | `iam.role.grant.request` | `{ role_code, organization_id?, reason }` creates the approval `iam.role.revoke` | |
+| POST `/v1/demo/simulate-error` | `me.read` | DEMO only. Records the audit event `demo.error_simulated`, then fails with the ordinary 500 envelope, so the error page can show a correlation ID that is real | 500 `INTERNAL`; 404 outside DEMO mode |
 | POST `/v1/elevations` | `tenant.elevate` | `{ target_tenant_id, reason }` starts a read-only elevation | 409 `ELEVATION_ACTIVE`; default TTL from `security.elevation.ttl_minutes` |
 | GET `/v1/elevations/current` | `tenant.elevate` | The caller's active elevation or 204 | |
 | POST `/v1/elevations/{id}/end` | owner | Ends the elevation | |

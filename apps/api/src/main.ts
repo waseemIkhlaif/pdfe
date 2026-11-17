@@ -1,7 +1,9 @@
+import { telemetry } from './telemetry-start';
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { configRegistry } from '@pdfe/domain-types';
 import { guardStartup, installEgressGuard, refuseStart } from '@pdfe/platform-core';
+import { PinoNestLogger, createLogger } from '@pdfe/platform-core/logger';
 import { AppModule } from './app.module';
 import { loadAdapterConfig } from './integration/adapter-config.loader';
 import { configureApp } from './app';
@@ -19,18 +21,21 @@ async function bootstrap(): Promise<void> {
       configRegistry['egress.internal_hosts'].default,
   );
 
-  const app = await NestFactory.create(AppModule, { bufferLogs: false });
+  const logger = createLogger({ service: 'api' });
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(new PinoNestLogger(logger));
   configureApp(app);
   app.enableShutdownHooks();
   if (process.argv.includes('--once')) {
     // Start, check that everything wired up, and exit (startup-guard tests and smoke runs).
     await app.init();
     await app.close();
+    await telemetry?.shutdown();
     return;
   }
   const port = Number(process.env.PORT ?? 4000);
   await app.listen(port, '0.0.0.0');
-  console.log(JSON.stringify({ msg: 'api listening', port, mode: 'DEMO' }));
+  logger.info({ port, mode: 'DEMO' }, 'api listening');
 }
 
 bootstrap().catch((err: unknown) => {

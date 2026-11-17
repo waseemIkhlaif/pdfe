@@ -593,30 +593,30 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 6 ⚠️ (write first, must fail)
 
-- [ ] T141 [P] [US6] Write `packages/platform-core/test/logger-redaction.test.ts`:
+- [x] T141 [P] [US6] Write `packages/platform-core/test/logger-redaction.test.ts`:
   - `display_name`, `full_name`, `name`, `Authorization`, `cookie`, `password`, `secret`, `token`, `totp`, document-number-like values (9 or more digits) and IBAN-like values become `[REDACTED]`;
   - `correlation_id` and `trace_id` are present on every line
-- [ ] T142 [P] [US6] Write `apps/api/test/correlation.int.spec.ts`:
+- [x] T142 [P] [US6] Write `apps/api/test/correlation.int.spec.ts`:
   - a header that is too long or has invalid characters is replaced, and the raw value never appears in the captured logs;
   - the ID reaches the BullMQ job data, the worker's logs, the `X-Correlation-Id` header of the mock adapter call, the mock-hub log, the audit event and the error envelope
-- [ ] T143 [P] [US6] Write `tests/e2e-web/specs/correlation.spec.ts`:
+- [x] T143 [P] [US6] Write `tests/e2e-web/specs/correlation.spec.ts`:
   - `/{locale}/error?simulate=500` in web-consumer shows a correlation ID with a copy button;
   - the Grafana API through `localhost:3000` (datasource proxy for Loki and Tempo, and the Postgres audit datasource) finds the log lines, the trace and the audit event for that ID
 
 ### Implementation for User Story 6
 
-- [ ] T144 [US6] Implement `packages/platform-core/src/telemetry.ts`, an OpenTelemetry NodeSDK (HTTP, pg, ioredis and undici instrumentations; OTLP to `OTEL_EXPORTER_OTLP_ENDPOINT`; `correlation_id` as a span attribute and metric exemplar). Start it before Nest in the api, worker and mock-hub mains
-- [ ] T145 [US6] Implement `packages/platform-core/src/logger.ts`: Pino with redact paths and a pattern redactor, and a mixin adding `correlation_id`, `trace_id` and `span_id`. Replace the Nest logger in all three services. Make T141 pass
-- [ ] T146 [US6] Complete propagation:
+- [x] T144 [US6] Implement `packages/platform-core/src/telemetry.ts`, an OpenTelemetry NodeSDK (HTTP, pg, ioredis and undici instrumentations; OTLP to `OTEL_EXPORTER_OTLP_ENDPOINT`; `correlation_id` as a span attribute and metric exemplar). Start it before Nest in the api, worker and mock-hub mains
+- [x] T145 [US6] Implement `packages/platform-core/src/logger.ts`: Pino with redact paths and a pattern redactor, and a mixin adding `correlation_id`, `trace_id` and `span_id`. Replace the Nest logger in all three services. Make T141 pass
+- [x] T146 [US6] Complete propagation:
   - `packages/platform-core/src/queue/producer.ts`, which puts `correlation_id` into job data, and the consumer base, which restores the context;
   - mock adapters send `X-Correlation-Id`;
   - `apps/mock-hub/src/core/correlation.middleware.ts`.
 
   Make T142 pass
-- [ ] T147 [US6] Add `POST /v1/demo/simulate-error` (`me.read`, DEMO only). It records audit `demo.error_simulated`, then returns a 500 envelope. Add the matrix entry, and add the route and audit action to `contracts/http-api.md` and `contracts/events-and-config.md`
-- [ ] T148 [US6] Add `packages/ui-web/src/ErrorView.tsx` (the message from `message_key`, the correlation ID inside `<bdi>`, and `CopyButton`). Add the `/[locale]/error` route in all six web apps; in DEMO it calls the simulate endpoint when `simulate=500` is set. `apiFetch` forwards the `correlation_id` to the error page. Update the route manifests
-- [ ] T149 [US6] Add `lgtm` (`grafana/otel-lgtm`) to `infra/docker-compose.yml` on the `app` network, and Grafana `localhost:3000` to `infra/Caddyfile`. Add the provisioning files `infra/grafana/provisioning/{datasources,dashboards}/*.yaml` (Loki, Tempo, Prometheus, and Postgres as `readonly_role`) and the dashboard `infra/grafana/dashboards/correlation.json` (variable `correlation_id`; panels for logs, trace search, audit rows and job logs). Make T143 pass
-- [ ] T150 [US6] Write `docs/evidence/phase-2/correlation.md` with the `quickstart.md` §9 walkthrough: the ID, screenshots of the dashboard, and the redaction check
+- [x] T147 [US6] Add `POST /v1/demo/simulate-error` (`me.read`, DEMO only). It records audit `demo.error_simulated`, then returns a 500 envelope. Add the matrix entry, and add the route and audit action to `contracts/http-api.md` and `contracts/events-and-config.md`
+- [x] T148 [US6] Add `packages/ui-web/src/ErrorView.tsx` (the message from `message_key`, the correlation ID inside `<bdi>`, and `CopyButton`). Add the `/[locale]/error` route in all six web apps; in DEMO it calls the simulate endpoint when `simulate=500` is set. `apiFetch` forwards the `correlation_id` to the error page. Update the route manifests
+- [x] T149 [US6] Add `lgtm` (`grafana/otel-lgtm`) to `infra/docker-compose.yml` on the `app` network, and Grafana `localhost:3000` to `infra/Caddyfile`. Add the provisioning files `infra/grafana/provisioning/{datasources,dashboards}/*.yaml` (Loki, Tempo, Prometheus, and Postgres as `readonly_role`) and the dashboard `infra/grafana/dashboards/correlation.json` (variable `correlation_id`; panels for logs, trace search, audit rows and job logs). Make T143 pass
+- [x] T150 [US6] Write `docs/evidence/phase-2/correlation.md` with the `quickstart.md` §9 walkthrough: the ID, screenshots of the dashboard, and the redaction check
 
 **Checkpoint**: SC-012 is met.
 

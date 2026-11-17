@@ -1,0 +1,10 @@
+# Loads the PDFE dashboards from the folder mounted at /pdfe-dashboards.
+apiVersion: 1
+
+providers:
+  - name: PDFE
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    options:
+      path: /pdfe-dashboards

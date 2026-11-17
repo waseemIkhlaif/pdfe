@@ -1,0 +1,18 @@
+# Added to the datasources that grafana/otel-lgtm provisions (Prometheus, Tempo, Loki). The audit trail, read-only.
+# `readonly_role` can only SELECT; the password comes from the container environment (READONLY_PASSWORD in .env).
+apiVersion: 1
+
+datasources:
+  - name: PDFE audit (read-only)
+    type: postgres
+    uid: pdfe-audit
+    url: postgres:5432
+    user: readonly_role
+    editable: false
+    jsonData:
+      database: pdfe
+      sslmode: disable
+      postgresVersion: 1600
+      maxOpenConns: 2
+    secureJsonData:
+      password: $__env{READONLY_PASSWORD}
