@@ -326,7 +326,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 3 ⚠️ (write first, must fail)
 
-- [ ] T078 [P] [US3] Write `packages/domain-types/test/rbac.test.ts`:
+- [x] T078 [P] [US3] Write `packages/domain-types/test/rbac.test.ts`:
   - every permission in `data-model.md` §RBAC exists and has its holders;
   - the privileged set is exactly the 9 console roles;
   - every SoD pair is stored in both orders;
@@ -382,7 +382,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation for User Story 3
 
-- [ ] T090 [US3] Implement `packages/domain-types/src/rbac.ts`:
+- [x] T090 [US3] Implement `packages/domain-types/src/rbac.ts`:
   - the 15 roles from spec Story 3, each with `privileged`;
   - the permissions from `data-model.md` §RBAC plus the §J.3 starter permissions, each with `high_risk`;
   - `rolePermissions`;
