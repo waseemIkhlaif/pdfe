@@ -8,7 +8,7 @@ import type { SchemaName } from './schemas';
  */
 export interface RouteDoc {
   summary: string;
-  tag: 'platform' | 'identity' | 'approvals' | 'tenancy' | 'audit';
+  tag: 'platform' | 'identity' | 'approvals' | 'tenancy' | 'audit' | 'demo';
   request?: SchemaName;
   /** Query parameters. */
   query?: { name: string; description: string; required?: boolean }[];
@@ -16,6 +16,8 @@ export interface RouteDoc {
   response?: SchemaName;
   /** The body is a file, not JSON: the content types it can have, with what each holds. */
   file?: Record<string, string>;
+  /** The route never succeeds: it records something and then fails with a 500 (the error page's demonstration). */
+  fails?: true;
   /** Success status when it is not the default (201 for POST, 200 otherwise). */
   status?: number;
   /** Extra success statuses (`204` for "no active elevation"). */
@@ -151,6 +153,13 @@ export const REGISTRY: Record<string, RouteDoc> = {
         'An object with meta.label (the simulation label), meta.filters and the events array.',
     },
     errors: [422],
+  },
+  'POST /v1/demo/simulate-error': {
+    summary:
+      'DEMO only: records the audit event demo.error_simulated, then fails with the ordinary 500 error envelope.',
+    tag: 'demo',
+    fails: true,
+    errors: [500],
   },
   'GET /v1/elevations/current': {
     summary: 'The caller active elevation, or 204 when there is none.',

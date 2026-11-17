@@ -5,6 +5,7 @@ import { AuditModule } from './audit/audit.module';
 import { CoreModule } from './core/core.module';
 import { RequestContextMiddleware } from './core/request-context.middleware';
 import { DbModule } from './db/db.module';
+import { DemoModule } from './demo/demo.module';
 import { HealthModule } from './health/health.module';
 import { AuthGuard } from './identity/auth.guard';
 import { IdentityModule } from './identity/identity.module';
@@ -24,6 +25,7 @@ import { TenantContextInterceptor } from './tenancy/tenant-context.interceptor';
     CoreModule,
     DbModule,
     AuditModule,
+    DemoModule,
     ApprovalsModule,
     IntegrationModule,
     IdentityModule,

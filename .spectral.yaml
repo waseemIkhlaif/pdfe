@@ -40,3 +40,9 @@ rules:
   # Not needed for a simulation API, and the information is in the description.
   info-contact: off
   oas3-api-servers: warn
+overrides:
+  # The one operation that never succeeds on purpose: it records an event and then fails with the 500 envelope.
+  - files:
+      - 'packages/contracts/openapi.json#/paths/~1v1~1demo~1simulate-error'
+    rules:
+      operation-success-response: off

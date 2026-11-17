@@ -6,5 +6,6 @@
  */
 export const routes = [
   { path: '/', roles: ['demo_viewer'], states: ['populated'] },
+  { path: '/error', roles: ['demo_viewer'], states: ['error'] },
   { path: '/sign-in', roles: ['anonymous'], states: ['populated'] },
 ] as const;

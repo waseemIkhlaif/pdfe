@@ -49,6 +49,7 @@ const REQUIRED: Record<string, string[]> = {
   'tenant.elevation_ended': [...ACTOR, ...TARGET, 'elevation_id'],
   'audit.exported': [...ACTOR, 'target_type'],
   'audit.verified': [...ACTOR, 'target_type'],
+  'demo.error_simulated': [...ACTOR, ...TARGET],
 };
 /** Triggered by the worker; its own test checks the same fields (see the last describe block). */
 const BY_WORKER = new Set(['approval.expired']);
@@ -139,6 +140,13 @@ const TRIGGERS: Record<string, () => Promise<string>> = {
   'audit.exported': async () =>
     cid(await w.as(auditor).get('/v1/audit/export?format=csv&action=approval.created')),
   'audit.verified': async () => cid(await w.as(auditor).post('/v1/audit/verify')),
+  'demo.error_simulated': async () => {
+    const res = await w.as(w.admin1).post('/v1/demo/simulate-error');
+    expect(res.status).toBe(500);
+    expect(res.body.error.code).toBe('INTERNAL');
+    expect(res.body.error.correlation_id).toBe(cid(res));
+    return cid(res);
+  },
 };
 let elevated: { user: TestUser; id: string };
 

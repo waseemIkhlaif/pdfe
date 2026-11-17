@@ -38,6 +38,8 @@ export const MATRIX: Record<string, Entry> = {
     foreign: 404,
   },
 
+  'POST /v1/demo/simulate-error': { kind: 'permission', permission: 'me.read' },
+
   'GET /v1/audit/events': { kind: 'permission', permission: 'audit.read' },
   'POST /v1/audit/verify': { kind: 'permission', permission: 'audit.verify' },
   'GET /v1/audit/export': { kind: 'permission', permission: 'audit.export' },

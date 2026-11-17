@@ -6,5 +6,6 @@
  */
 export const routes = [
   { path: '/', roles: ['individual'], states: ['populated'], baseline: 'CON-008' },
+  { path: '/error', roles: ['individual'], states: ['error'] },
   { path: '/sign-in', roles: ['anonymous'], states: ['populated'] },
 ] as const;

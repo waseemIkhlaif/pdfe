@@ -10,6 +10,8 @@ const ids = new IdGenerator(clock, new SystemRandom());
 let cached: AuthConfig | undefined;
 const config = (): AuthConfig => (cached ??= authConfigFromEnv());
 
+export { ApiError, correlationIdOf, ensureOk, errorPath, isCorrelationId } from './api-error';
+
 /** The caller has no session, or it has expired. A page turns this into a redirect to sign-in. */
 export class NotSignedInError extends Error {
   constructor() {
