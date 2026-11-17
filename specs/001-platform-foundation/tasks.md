@@ -408,7 +408,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Make T079 pass
 - [x] T095 [US3] Implement `packages/platform-core/src/migrate/reference-data.ts`, run by the migration CLI after the migrations. Using the migrator connection, it idempotently upserts `iam.roles`, `iam.permissions`, `iam.role_permissions` and `iam.sod_conflicts` from `rbac.ts`
-- [ ] T096 [US3] Add Drizzle schemas `apps/api/src/db/schema/{iam,integration,audit}.ts`
+- [x] T096 [US3] Add Drizzle schemas `apps/api/src/db/schema/{iam,integration,audit}.ts`
 - [x] T097 [US3] Create `infra/keycloak/realm-pdfe-demo.json` for realm `pdfe-demo`:
   - confidential BFF clients `web-consumer` … `web-devportal`, with `localhost:300N` redirect URIs;
   - a public PKCE client `mobile`, with redirect `pdfe://auth`;
@@ -427,7 +427,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - a Testcontainers Keycloak with the realm import;
   - `tokenFor(username, { otp })` through `pdfe-tests`;
   - `createTestApp()`, which boots the api against containers and runs migrations and reference data
-- [ ] T101 [US3] Implement `apps/api/src/identity/`:
+- [x] T101 [US3] Implement `apps/api/src/identity/`:
   - `jwt.verifier.ts`: JOSE remote JWKS from `OIDC_ISSUER`; it accepts the internal and the public issuer;
   - `auth.guard.ts`: builds the request principal (user, tenant, roles, permissions, `mfa`);
   - `mfa.guard.ts`: a privileged role without `otp` gets 401 `MFA_REQUIRED`, audited;
