@@ -372,7 +372,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - an event is written in the same transaction as its cause, and a rollback leaves no event;
   - two concurrent relays publish each event once (`SKIP LOCKED`);
   - a consumer receiving the same event twice processes it once
-- [ ] T086 [P] [US3] Write `apps/api/test/rate-limit.int.spec.ts`: going over `api.rate_limit.per_user_per_minute` returns 429 `RATE_LIMITED` with `Retry-After`, the event is logged, and the per-IP limit applies to unauthenticated routes
+- [x] T086 [P] [US3] Write `apps/api/test/rate-limit.int.spec.ts`: going over `api.rate_limit.per_user_per_minute` returns 429 `RATE_LIMITED` with `Retry-After`, the event is logged, and the per-IP limit applies to unauthenticated routes
 - [x] T087 [P] [US3] Write `apps/api/test/audit-minimal.int.spec.ts`:
   - an approved role grant produces exactly one `iam.role.granted` event with actor, role, tenant, action, target, reason, time, correlation ID and approval reference;
   - a forced audit insert failure rolls the grant back;
@@ -452,7 +452,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `packages/platform-core/src/queue/consumer.ts`, a base consumer that de-duplicates through `integration.inbox`.
 
   Make T085 pass
-- [ ] T108 [US3] Add rate limiting: `@nestjs/throttler` with Redis storage, per user and per IP, values from `api.rate_limit`, the 429 envelope with `Retry-After`, and a log line. Make T086 pass
+- [x] T108 [US3] Add rate limiting: `@nestjs/throttler` with Redis storage, per user and per IP, values from `api.rate_limit`, the 429 envelope with `Retry-After`, and a log line. Make T086 pass
 - [x] T109 [US3] Implement `apps/api/src/approvals/`:
   - `approvals.service.ts`:
     - create: `payload_hash` from RFC 8785, expiry from `approvals.default_expiry_hours`, audit `approval.created`, outbox `approval.requested`;

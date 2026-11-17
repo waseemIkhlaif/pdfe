@@ -10,12 +10,16 @@ import {
   LocalIssuer,
   createDbRoles,
   startPostgres,
+  startRedis,
   type DbUrls,
   type PgHandle,
 } from '@pdfe/test-kit';
 import { configureApp } from '../../src/app';
 import { AppModule } from '../../src/app.module';
-import { CLOCK, OIDC_OPTIONS, PG_POOL } from '../../src/core/tokens';
+import { Redis } from 'ioredis';
+import { DefaultsConfigReader, type ConfigKey } from '@pdfe/domain-types';
+import { CLOCK, CONFIG_READER, OIDC_OPTIONS, PG_POOL, REDIS } from '../../src/core/tokens';
+import { MemoryRateLimitStore, RATE_LIMIT_STORE } from '../../src/ratelimit/rate-limit.store';
 import { HEALTH_CHECKS } from '../../src/health/health.checks';
 
 const MIGRATIONS = resolve(__dirname, '../../../../db/migrations');
@@ -53,7 +57,13 @@ const uuid = (kind: number): string => {
 
 /** Boots the whole API against a disposable Postgres with migrations and reference data, and a local token issuer. */
 export async function createTestApp(
-  opts: { controllers?: Type<unknown>[] } = {},
+  opts: {
+    controllers?: Type<unknown>[];
+    /** Use a real Redis container for the rate limiter instead of the in-memory store. */
+    redis?: boolean;
+    /** Rate limits per minute; the defaults (600 and 1200) are out of reach of ordinary tests. */
+    limits?: { perUser: number; perIp: number };
+  } = {},
 ): Promise<TestApp> {
   const pgh: PgHandle = await startPostgres();
   const urls = await createDbRoles(pgh.url);
@@ -66,7 +76,17 @@ export async function createTestApp(
   const issuer = await LocalIssuer.create();
   const clock = new ScenarioClock(BASE_TIME, 1000);
 
-  const mod = await Test.createTestingModule({
+  const redisHandle = opts.redis ? await startRedis() : undefined;
+  const redis = redisHandle ? new Redis(redisHandle.url) : undefined;
+  const defaults = new DefaultsConfigReader();
+  const configReader = {
+    get: async (key: ConfigKey) =>
+      key === 'api.rate_limit' && opts.limits
+        ? { per_user_per_minute: opts.limits.perUser, per_ip_per_minute: opts.limits.perIp }
+        : defaults.get(key),
+  };
+
+  let builder = Test.createTestingModule({
     imports: [AppModule],
     controllers: opts.controllers ?? [],
   })
@@ -76,9 +96,13 @@ export async function createTestApp(
     .useValue(clock)
     .overrideProvider(OIDC_OPTIONS)
     .useValue({ issuers: [issuer.issuer], keys: issuer.keys })
+    .overrideProvider(CONFIG_READER)
+    .useValue(configReader)
     .overrideProvider(HEALTH_CHECKS)
-    .useValue([])
-    .compile();
+    .useValue([]);
+  if (redis) builder = builder.overrideProvider(REDIS).useValue(redis);
+  else builder = builder.overrideProvider(RATE_LIMIT_STORE).useValue(new MemoryRateLimitStore());
+  const mod = await builder.compile();
   const app = mod.createNestApplication();
   configureApp(app);
   await app.init();
@@ -123,6 +147,8 @@ export async function createTestApp(
     },
     async close() {
       await app.close();
+      redis?.disconnect();
+      await redisHandle?.stop();
       await admin.end();
       await pgh.stop();
     },

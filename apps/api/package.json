@@ -16,7 +16,6 @@
     "@nestjs/common": "^12.5.0",
     "@nestjs/core": "^12.5.0",
     "@nestjs/platform-express": "^12.5.0",
-    "@nestjs/throttler": "^6.8.0",
     "@pdfe/domain-types": "workspace:*",
     "@pdfe/platform-core": "workspace:*",
     "drizzle-orm": "^0.45.4",
