@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { cancelSchema, decisionSchema } from '../approvals/approvals.service';
+import { verifySchema } from '../audit/audit.service';
 import { roleChangeSchema } from '../identity/iam.service';
 import { startElevationSchema } from '../tenancy/elevation.service';
 
@@ -91,10 +92,49 @@ export const IamRole = z.object({
 });
 export const IamRoleList = z.object({ items: z.array(IamRole) });
 
+export const AuditEvent = z.object({
+  seq: z.number().int().min(1),
+  id: uuid,
+  tenant_id: uuid.nullable(),
+  actor_id: uuid.nullable(),
+  actor_role: z.string().nullable(),
+  action: z.string(),
+  target_type: z.string().nullable(),
+  target_id: z.string().nullable(),
+  reason: z.string().nullable(),
+  approval_request_id: uuid.nullable(),
+  elevation_id: uuid.nullable(),
+  correlation_id: z.string(),
+  occurred_at: iso,
+  data: z.record(z.string(), z.unknown()),
+  prev_hash: z.string().regex(/^[0-9a-f]{64}$/),
+  hash: z.string().regex(/^[0-9a-f]{64}$/),
+});
+export const AuditEventList = z.object({
+  items: z.array(AuditEvent),
+  next_cursor: z.number().int().nullable(),
+});
+export const VerifyResult = z.union([
+  z.object({
+    result: z.literal('ok'),
+    from_seq: z.number().int(),
+    to_seq: z.number().int(),
+    events: z.number().int(),
+    anchors_checked: z.number().int(),
+  }),
+  z.object({
+    result: z.literal('broken'),
+    seq: z.number().int(),
+    reason: z.enum(['hash_mismatch', 'prev_link_mismatch', 'seq_gap', 'anchor_mismatch']),
+    anchor_id: uuid.optional(),
+  }),
+]);
+
 export const StartElevationRequest = startElevationSchema;
 export const ApprovalDecisionRequest = decisionSchema;
 export const ApprovalCancelRequest = cancelSchema;
 export const RoleChangeRequest = roleChangeSchema;
+export const VerifyRequest = verifySchema;
 
 /** Named schemas that become `components.schemas`. */
 export const NAMED = {
@@ -115,5 +155,9 @@ export const NAMED = {
   ApprovalDecisionRequest,
   ApprovalCancelRequest,
   RoleChangeRequest,
+  AuditEvent,
+  AuditEventList,
+  VerifyResult,
+  VerifyRequest,
 } as const;
 export type SchemaName = keyof typeof NAMED;

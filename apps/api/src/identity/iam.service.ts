@@ -9,7 +9,7 @@ import {
   type ApprovedRequest,
 } from '../approvals/approval-handler.registry';
 import { ApprovalsService, type ApprovalView } from '../approvals/approvals.service';
-import { AuditWriter } from '../audit/audit.writer';
+import { AuditService } from '../audit/audit.service';
 import { parseInput } from '../common/validate';
 import { CLOCK, PG_POOL } from '../core/tokens';
 import type { ClockService } from '@pdfe/platform-core';
@@ -32,7 +32,7 @@ export class IamService implements OnModuleInit {
   constructor(
     @Inject(PG_POOL) private readonly pool: Pool,
     @Inject(CLOCK) private readonly clock: ClockService,
-    private readonly audit: AuditWriter,
+    private readonly audit: AuditService,
     private readonly approvals: ApprovalsService,
     private readonly registry: ApprovalHandlerRegistry,
   ) {}
@@ -147,6 +147,7 @@ export class IamService implements OnModuleInit {
       await this.refuseSod(
         r.tenantId,
         r.approvedBy,
+        r.approverRole,
         user_id,
         role_code,
         v.conflicts,
@@ -177,6 +178,7 @@ export class IamService implements OnModuleInit {
     await this.audit.record(tx, {
       tenantId: r.tenantId,
       actorId: r.approvedBy,
+      actorRole: r.approverRole,
       action: 'iam.role.granted',
       targetType: 'user',
       targetId: user_id,
@@ -211,6 +213,7 @@ export class IamService implements OnModuleInit {
     await this.audit.record(tx, {
       tenantId: r.tenantId,
       actorId: r.approvedBy,
+      actorRole: r.approverRole,
       action: 'iam.role.revoked',
       targetType: 'user',
       targetId: user_id,
@@ -259,6 +262,7 @@ export class IamService implements OnModuleInit {
     await this.refuseSod(
       p.tenantId,
       p.userId,
+      p.roles[0] ?? null,
       userId,
       role,
       v.conflicts,
@@ -274,6 +278,7 @@ export class IamService implements OnModuleInit {
   private async refuseSod(
     tenantId: string,
     actorId: string,
+    actorRole: string | null,
     userId: string,
     role: string,
     conflicts: string[],
@@ -285,6 +290,7 @@ export class IamService implements OnModuleInit {
       this.audit.record(tx, {
         tenantId,
         actorId,
+        actorRole,
         action: 'iam.role.grant_refused_sod',
         targetType: 'user',
         targetId: userId,

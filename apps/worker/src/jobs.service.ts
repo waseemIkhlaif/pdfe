@@ -3,6 +3,7 @@ import { Redis } from 'ioredis';
 import { IdGenerator, SystemClock, SystemRandom } from '@pdfe/platform-core';
 import { AuditRecorder } from '@pdfe/platform-core/audit';
 import { createPool, type Pool } from '@pdfe/platform-core/db';
+import { AnchorJob } from './audit-anchor/anchor.job';
 import { ApprovalsExpiryJob } from './approvals-expiry/expiry.job';
 import { ElevationExpiryJob } from './elevation-expiry/expiry.job';
 import { BullPublisher } from './outbox-relay/bull.publisher';
@@ -34,7 +35,9 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     const relay = new OutboxRelay(this.pool, clock, this.publisher);
     const approvals = new ApprovalsExpiryJob(this.pool, clock, ids, audit);
     const elevations = new ElevationExpiryJob(this.pool, clock, ids, audit);
+    const anchors = new AnchorJob(this.pool, clock, ids);
     this.every('outbox-relay', 1_000, () => relay.runOnce());
+    this.every('audit-anchor', 30_000, () => anchors.runOnce());
     this.every('approvals-expiry', 30_000, () => approvals.runOnce());
     this.every('elevation-expiry', 30_000, () => elevations.runOnce());
   }

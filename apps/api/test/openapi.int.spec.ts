@@ -119,6 +119,19 @@ describe('real responses match the documented schemas', () => {
     expect(end.text).toBe('');
   });
 
+  it('audit: search and verify', async () => {
+    const auditor = await w.t.createUser('doc-auditor', w.tenant, ['auditor']);
+    const a = w.as(auditor);
+    const events = await a.get('/v1/audit/events?limit=5');
+    expect(events.status).toBe(200);
+    parse(S.AuditEventList, events.body);
+    expect(events.body.items.length).toBeGreaterThan(0);
+    const verify = await a.post('/v1/audit/verify');
+    expect(verify.status).toBe(200);
+    parse(S.VerifyResult, verify.body);
+    expect(verify.body.result).toBe('ok');
+  });
+
   it('errors use the one envelope', async () => {
     const a = w.as(w.admin1);
     const res = await a.get('/v1/approvals/00000000-0000-7000-8000-00000000dead');

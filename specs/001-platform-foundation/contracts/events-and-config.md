@@ -51,3 +51,13 @@ Every action records an event with these fields: actor, role, tenant, action, ta
 | `scenario.run_started` / `scenario.run_finished` | Scenario engine |
 | `audit.exported` / `audit.verified` | Auditor actions |
 | `system.start_refused` | Logged to stderr and, when the database is reachable, recorded (startup guard) |
+
+### Audit actions not yet implemented
+
+`apps/api/test/audit.coverage.int.spec.ts` reads this file. Every action in the table above must either be triggered and checked by that test (one event, every required field) or be listed here with the task that will implement it. When a story implements an action it moves out of this table, and the test then requires it to be covered.
+
+| Action | Implemented by |
+|---|---|
+| `config.proposed`, `config.activated`, `config.rolled_back`, `config.refused_locked` | T157 (US7) |
+| `scenario.run_started`, `scenario.run_finished` | T170 (US8) |
+| `system.start_refused` | T160 (US7): until then it is only written to stderr |

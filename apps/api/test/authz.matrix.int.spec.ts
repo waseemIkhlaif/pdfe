@@ -153,7 +153,11 @@ describe('authorization matrix', () => {
                 ).not.toContain(res.status);
               }
               // The platform administrator's user directory spans tenants by design.
-              const directory = route === 'GET /v1/iam/users' && r.name === 'platform_admin';
+              // The platform administrator's user directory and the audit reads span tenants by design.
+              const directory =
+                (route === 'GET /v1/iam/users' && r.name === 'platform_admin') ||
+                route === 'GET /v1/audit/events' ||
+                route === 'GET /v1/audit/export';
               if (
                 target === 'other' &&
                 !directory &&

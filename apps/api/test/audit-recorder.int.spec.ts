@@ -4,14 +4,14 @@ import { createDbRoles, startPostgres, type DbUrls, type PgHandle } from '@pdfe/
 import { IdGenerator, ScenarioClock, SystemRandom } from '@pdfe/platform-core';
 import { createPool, withTx, type Pool } from '@pdfe/platform-core/db';
 import { runMigrations } from '@pdfe/platform-core/migrate';
-import { AuditWriter } from '../src/audit/audit.writer';
+import { AuditRecorder } from '@pdfe/platform-core/audit';
 import { GENESIS_HASH, chainHash, type AuditHashRow } from '../src/audit/audit.chain';
 
 const MIGRATIONS = resolve(__dirname, '../../../db/migrations');
 let pgh: PgHandle;
 let urls: DbUrls;
 let pool: Pool;
-let writer: AuditWriter;
+let writer: AuditRecorder;
 
 beforeAll(async () => {
   pgh = await startPostgres();
@@ -19,14 +19,14 @@ beforeAll(async () => {
   await runMigrations({ url: urls.admin, dir: MIGRATIONS });
   pool = createPool(urls.app, 4);
   const clock = new ScenarioClock('2026-01-15T08:00:00Z', 1000);
-  writer = new AuditWriter(clock, new IdGenerator(clock, new SystemRandom()));
+  writer = new AuditRecorder(clock, new IdGenerator(clock, new SystemRandom()));
 });
 afterAll(async () => {
   await pool?.end();
   await pgh?.stop();
 });
 
-describe('AuditWriter', () => {
+describe('AuditService (recorder)', () => {
   it('links each event to the previous hash, starting at the genesis hash', async () => {
     const a = await withTx(pool, {}, (tx) =>
       writer.record(tx, { action: 'x.one', correlationId: 'COR-1' }),

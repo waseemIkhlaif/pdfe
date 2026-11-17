@@ -8,12 +8,14 @@ import type { SchemaName } from './schemas';
  */
 export interface RouteDoc {
   summary: string;
-  tag: 'platform' | 'identity' | 'approvals' | 'tenancy';
+  tag: 'platform' | 'identity' | 'approvals' | 'tenancy' | 'audit';
   request?: SchemaName;
   /** Query parameters. */
-  query?: { name: string; description: string }[];
+  query?: { name: string; description: string; required?: boolean }[];
   /** The body of the success response. Omit for an empty body. */
   response?: SchemaName;
+  /** The body is a file, not JSON: the content types it can have, with what each holds. */
+  file?: Record<string, string>;
   /** Success status when it is not the default (201 for POST, 200 otherwise). */
   status?: number;
   /** Extra success statuses (`204` for "no active elevation"). */
@@ -103,6 +105,52 @@ export const REGISTRY: Record<string, RouteDoc> = {
     request: 'StartElevationRequest',
     response: 'Elevation',
     errors: [409, 422],
+  },
+  'GET /v1/audit/events': {
+    summary:
+      'Search the audit trail by actor, action, tenant, time range or correlation ID. Newest first.',
+    tag: 'audit',
+    query: [
+      { name: 'actor', description: 'User ID of the actor' },
+      { name: 'action', description: 'For example iam.role.granted' },
+      { name: 'tenant', description: 'Tenant ID' },
+      { name: 'from', description: 'Earliest time, ISO 8601' },
+      { name: 'to', description: 'Latest time, ISO 8601' },
+      { name: 'correlation_id', description: 'Follow one action across components' },
+      { name: 'cursor', description: 'The next_cursor of the previous page' },
+      { name: 'limit', description: '1 to 100, default 50' },
+    ],
+    response: 'AuditEventList',
+    errors: [422],
+  },
+  'POST /v1/audit/verify': {
+    summary:
+      'Check the hash chain and its anchors. Says ok, or names the first event that does not check out.',
+    tag: 'audit',
+    request: 'VerifyRequest',
+    response: 'VerifyResult',
+    status: 200,
+    errors: [422],
+  },
+  'GET /v1/audit/export': {
+    summary: 'Export the matching events as a labelled CSV or JSON file, streamed.',
+    tag: 'audit',
+    query: [
+      { name: 'format', description: 'csv or json', required: true },
+      { name: 'actor', description: 'User ID of the actor' },
+      { name: 'action', description: 'For example iam.role.granted' },
+      { name: 'tenant', description: 'Tenant ID' },
+      { name: 'from', description: 'Earliest time, ISO 8601' },
+      { name: 'to', description: 'Latest time, ISO 8601' },
+      { name: 'correlation_id', description: 'Follow one action across components' },
+    ],
+    file: {
+      'text/csv':
+        'First line: the simulation label as a comment. Then a header row and one row per event.',
+      'application/json':
+        'An object with meta.label (the simulation label), meta.filters and the events array.',
+    },
+    errors: [422],
   },
   'GET /v1/elevations/current': {
     summary: 'The caller active elevation, or 204 when there is none.',

@@ -144,8 +144,9 @@ describe('tenant_elevations', () => {
 });
 
 describe('audit.audit_events', () => {
-  const row = `INSERT INTO audit.audit_events (id, action, correlation_id, occurred_at, prev_hash, hash)
-               VALUES (gen_random_uuid(),'x','c',$1,$2,$2) RETURNING seq`;
+  // `seq` has no default since migration 0007: the writer assigns it under the audit lock.
+  const row = `INSERT INTO audit.audit_events (seq, id, action, correlation_id, occurred_at, prev_hash, hash)
+               VALUES (1, gen_random_uuid(),'x','c',$1,$2,$2) RETURNING seq`;
   it('app_role can insert and read, but not update, delete or truncate', async () => {
     const r = await app.query(row, [T, '0'.repeat(64)]);
     expect(r.rows[0].seq).toBeTruthy();
