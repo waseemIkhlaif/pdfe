@@ -368,7 +368,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - the same key with a different body gets 422 `IDEMPOTENCY_KEY_REUSED`;
   - a concurrent duplicate gets 409 `IDEMPOTENCY_IN_PROGRESS`;
   - after the TTL, the key can be reused
-- [ ] T085 [P] [US3] Write `apps/api/test/outbox.int.spec.ts`:
+- [x] T085 [P] [US3] Write `apps/api/test/outbox.int.spec.ts`:
   - an event is written in the same transaction as its cause, and a rollback leaves no event;
   - two concurrent relays publish each event once (`SKIP LOCKED`);
   - a consumer receiving the same event twice processes it once
@@ -446,7 +446,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   Add the matrix entries. Make T083 pass
 - [x] T105 [US3] Implement `apps/api/src/audit/audit.writer.ts`, the minimal writer. `record(tx, event)` validates the required fields, takes `pg_advisory_xact_lock(hashtext('audit'))`, computes `prev_hash` and `hash` with `canonical-json` and `sha256Hex`, and inserts in the caller's transaction. US4 adds the shared chain module, verification, anchors and export. Make T087 pass
 - [x] T106 [US3] Implement `apps/api/src/integration/idempotency.middleware.ts`, covering POST, PUT, PATCH and DELETE under `/v1`, with key validation, the request hash, replay, 422, 409 and TTL from `idempotency.ttl_hours`. Make T084 pass
-- [ ] T107 [US3] Implement the outbox:
+- [x] T107 [US3] Implement the outbox:
   - `apps/api/src/integration/outbox.writer.ts`, which writes in the caller's transaction;
   - `apps/worker/src/outbox-relay/outbox-relay.job.ts`, which uses `FOR UPDATE SKIP LOCKED` to send to BullMQ queues by topic and sets `published_at` and `attempts`, with backoff and an alert log after 10 failures;
   - `packages/platform-core/src/queue/consumer.ts`, a base consumer that de-duplicates through `integration.inbox`.
@@ -462,7 +462,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `approval-handler.registry.ts`, where owning modules register a handler per `action_type`; each handler runs once per `approval_id` through the inbox.
 
   Add the matrix entries. Make T080 pass
-- [ ] T110 [P] [US3] Implement `apps/worker/src/approvals-expiry/expiry.job.ts` (marks expired requests, audit `approval.expired`, outbox `approval.expired`) and `apps/worker/src/elevation-expiry/expiry.job.ts` (sets `ended_at` and `end_reason = expired`, audit `tenant.elevation_ended`), both using the injected `ClockService`
+- [x] T110 [P] [US3] Implement `apps/worker/src/approvals-expiry/expiry.job.ts` (marks expired requests, audit `approval.expired`, outbox `approval.expired`) and `apps/worker/src/elevation-expiry/expiry.job.ts` (sets `ended_at` and `end_reason = expired`, audit `tenant.elevation_ended`), both using the injected `ClockService`
 - [x] T111 [US3] Implement `apps/api/src/identity/iam.{service,controller}.ts`:
   - `GET /v1/iam/users`: own tenant, or `iam.list_users_all()` for `platform_admin`;
   - `GET /v1/iam/roles`;
