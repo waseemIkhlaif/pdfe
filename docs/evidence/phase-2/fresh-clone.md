@@ -16,6 +16,12 @@ Status: **waiting for the owner's self-attestation.** The local run and the CI r
 - `fresh-clone` job, green on pull request #24 (4 min 26 s): the `ci` run for commit `0e0672a`'s branch. Pull request: https://github.com/waseemIkhlaif/pdfe/pull/24
 - The `ci` check was added to the `main-protection-solo` ruleset on 2026-11-15 after this first green run. Export: `ruleset.json` in this folder.
 
+## Later runs
+
+`fresh-clone` has stayed green on every pull request since: #25 (safety boundary), #26 (identity, with Keycloak and migrations 0003 to 0006) and #27 (audit anchors, migration 0007). A run on #26 caught a real fault that the local tests could not, a migration statement that needs more than the migrator role's rights, which is now covered by `apps/api/test/migrate-as-migrator.int.spec.ts`.
+
+Merges are blocked as required: see `blocked-prs.md` (SC-002).
+
 ## Self-attestation (solo mode)
 
 Re-review pending: outside reviewer before Gate 1/B.
