@@ -15,10 +15,13 @@
     "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests"
   },
   "dependencies": {
-    "pg": "^8.23.1",
-    "pure-rand": "^8.4.2",
+    "@fontsource/noto-naskh-arabic": "^5.3.0",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "@pdfe/domain-types": "workspace:*",
     "drizzle-orm": "^0.45.4",
-    "@pdfe/domain-types": "workspace:*"
+    "pdf-lib": "^1.17.1",
+    "pg": "^8.23.1",
+    "pure-rand": "^8.4.2"
   },
   "devDependencies": {
     "@pdfe/config": "workspace:*",
@@ -26,6 +29,7 @@
     "@types/node": "^22.0.0",
     "@types/pg": "^8.23.1",
     "fast-check": "^4.10.2",
+    "pdfjs-dist": "^6.5.438",
     "vitest": "^5.1.0"
   },
   "exports": {
@@ -52,6 +56,10 @@
     "./db": {
       "types": "./dist/db/index.d.ts",
       "default": "./dist/db/index.js"
+    },
+    "./sim-label-pdf": {
+      "types": "./dist/sim-label-pdf.d.ts",
+      "default": "./dist/sim-label-pdf.js"
     }
   },
   "files": [

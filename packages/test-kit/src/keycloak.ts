@@ -7,6 +7,7 @@ const KEYCLOAK_IMAGE = 'quay.io/keycloak/keycloak:26.8.2';
 const REALM = 'pdfe-demo';
 const REALM_FILE = resolve(__dirname, '../../../infra/keycloak/realm-pdfe-demo.json');
 const GENERATOR = resolve(__dirname, '../../../infra/keycloak/generate-realm.mjs');
+const THEME_DIR = resolve(__dirname, '../../../infra/keycloak/themes/pdfe');
 
 export interface DemoUser {
   username: string;
@@ -61,6 +62,7 @@ export async function startKeycloak(): Promise<KeycloakHandle> {
     .withCopyFilesToContainer([
       { source: REALM_FILE, target: '/opt/keycloak/data/import/realm-pdfe-demo.json' },
     ])
+    .withCopyDirectoriesToContainer([{ source: THEME_DIR, target: '/opt/keycloak/themes/pdfe' }])
     .withCommand(['start-dev', '--import-realm'])
     .withExposedPorts(8080)
     .withWaitStrategy(

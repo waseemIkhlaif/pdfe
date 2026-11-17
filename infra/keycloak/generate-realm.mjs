@@ -346,6 +346,10 @@ const realm = {
   otpPolicyDigits: 6,
   otpPolicyPeriod: 30,
   otpPolicyLookAheadWindow: 1,
+  loginTheme: 'pdfe',
+  internationalizationEnabled: true,
+  supportedLocales: ['ar', 'en'],
+  defaultLocale: 'ar',
   browserFlow: 'browser-pdfe',
   directGrantFlow: 'direct-grant-pdfe',
   components: {

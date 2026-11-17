@@ -531,46 +531,46 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Tests for User Story 5 ⚠️ (write first, must fail)
 
-- [ ] T126 [P] [US5] Create the workspace package `tests/e2e-web` (`@pdfe/e2e-web`):
+- [x] T126 [P] [US5] Create the workspace package `tests/e2e-web` (`@pdfe/e2e-web`):
   - `playwright.config.ts`, with one project per app, `baseURL` on `localhost:300N`, and Chromium only;
   - `src/routes.ts`, which loads every app's `routes.manifest.ts`;
   - `src/sign-in.ts`, which signs in through the Keycloak UI with `pnpm totp` codes for privileged roles;
   - `src/banner-check.ts`, which asserts that `[data-sim="1"]` is visible with `role="status"`, that its text equals `SIM_LABEL_EN` (en) or `SIM_LABEL_AR` (ar), and that `document.elementFromPoint` at the banner's centre is inside the banner
-- [ ] T127 [P] [US5] Write `tests/e2e-web/specs/label.spec.ts`. For each route in each manifest, × {ar, en}, signed in as the route's role, it runs `banner-check`, and a failure names the app and route. It also signs in through Keycloak and checks the banner on the Keycloak login and OTP pages
-- [ ] T128 [P] [US5] Write `tests/e2e-web/specs/label-negative.spec.ts` with fixtures `tests/e2e-web/fixtures/{no-banner,covered-banner,altered-text}.html`. `banner-check` must fail on each one, which proves that removing or covering the label fails the build
-- [ ] T129 [P] [US5] Write `scripts/ci/check-route-manifests.test.mjs` (`node:test`, with a temporary app fixture): a `page.tsx` on disk with no manifest entry fails, and so does a manifest entry with no page
-- [ ] T130 [P] [US5] Write `packages/platform-core/test/sim-label-exports.test.ts`:
+- [x] T127 [P] [US5] Write `tests/e2e-web/specs/label.spec.ts`. For each route in each manifest, × {ar, en}, signed in as the route's role, it runs `banner-check`, and a failure names the app and route. It also signs in through Keycloak and checks the banner on the Keycloak login and OTP pages
+- [x] T128 [P] [US5] Write `tests/e2e-web/specs/label-negative.spec.ts` with fixtures `tests/e2e-web/fixtures/{no-banner,covered-banner,altered-text}.html`. `banner-check` must fail on each one, which proves that removing or covering the label fails the build
+- [x] T129 [P] [US5] Write `scripts/ci/check-route-manifests.test.mjs` (`node:test`, with a temporary app fixture): a `page.tsx` on disk with no manifest entry fails, and so does a manifest entry with no page
+- [x] T130 [P] [US5] Write `packages/platform-core/test/sim-label-exports.test.ts`:
   - `csvWithLabel` puts `# SIM_LABEL` on line 1;
   - `jsonWithLabel` puts `meta.label`;
   - `pdfWithWatermark` produces a PDF whose extracted text contains both label strings on every page;
   - `notificationWithLabel` prefixes the subject and body
-- [ ] T131 [P] [US5] Write `packages/ui-web/test/SimulationBanner.final.test.tsx`:
+- [x] T131 [P] [US5] Write `packages/ui-web/test/SimulationBanner.final.test.tsx`:
   - a type test (`expect-type`) shows that the component accepts no props;
   - the banner sits above the Radix portal container in the DOM order and in its z-index token;
   - the `SimShell` root layout always renders it
-- [ ] T132 [P] [US5] Write the Maestro label flows `apps/mobile/maestro/label-{home,pay,send,markets,profile}-{ar,en}.yaml` (10 flows). Each opens the tab in the language and asserts that the exact banner text is visible
+- [x] T132 [P] [US5] Write the Maestro label flows `apps/mobile/maestro/label-{home,pay,send,markets,profile}-{ar,en}.yaml` (10 flows). Each opens the tab in the language and asserts that the exact banner text is visible
 
 ### Implementation for User Story 5
 
-- [ ] T133 [US5] Finalize `packages/ui-web/src/SimulationBanner.tsx`:
+- [x] T133 [US5] Finalize `packages/ui-web/src/SimulationBanner.tsx`:
   - sticky, full-width, uses tokens, `role="status"`, `data-sim="1"`, no props;
   - add `packages/ui-web/src/SimShell.tsx`, the root layout wrapper with the banner outside the content and the portal container below it;
   - in `packages/config/eslint.config.base.mjs`, add `no-restricted-imports` so that page code under `apps/web-*/app/**` (except `app/[locale]/layout.tsx`) cannot import the bare layout primitives.
 
   Switch all six root layouts to `SimShell`. Make T131 pass
-- [ ] T134 [P] [US5] Finalize `packages/ui-native/src/SimulationBanner.tsx` and `apps/mobile/app/_layout.tsx` (above the navigator and every modal stack, with an accessibility label equal to the text)
-- [ ] T135 [US5] Add the export helpers to `packages/platform-core/src/sim-label.ts`: `csvWithLabel`, `jsonWithLabel`, `pdfWithWatermark` (using `pdf-lib`; note the dependency in the ADR-002 implementation notes) and `notificationWithLabel`. Use them in the audit export and in the log-only notification consumer of `approval.requested`. Make T130 pass
-- [ ] T136 [US5] Create the Keycloak theme `infra/keycloak/themes/pdfe/login/`: `theme.properties`, a `template.ftl` override that renders the bilingual banner above every login page, and `messages_{ar,en}.properties`. Set `loginTheme: pdfe` in the realm. Full token styling comes in US9
-- [ ] T137 [P] [US5] Create `src/routes.manifest.ts` in all six web apps, with the routes from `contracts/ui-shell.md` §Routes as they exist now. Each entry has `path`, `roles`, `states` and `baseline` where a Phase 2 screen ID exists
-- [ ] T138 [US5] Implement `scripts/ci/check-route-manifests.mjs`, which scans `apps/web-*/app/**/page.tsx` against each manifest, and add it to the `static` job in `.github/workflows/ci.yml`. Make T129 pass
-- [ ] T139 [US5] Add an `e2e-web` job to `.github/workflows/ci.yml`:
+- [x] T134 [P] [US5] Finalize `packages/ui-native/src/SimulationBanner.tsx` and `apps/mobile/app/_layout.tsx` (above the navigator and every modal stack, with an accessibility label equal to the text)
+- [x] T135 [US5] Add the export helpers to `packages/platform-core/src/sim-label.ts`: `csvWithLabel`, `jsonWithLabel`, `pdfWithWatermark` (using `pdf-lib`; note the dependency in the ADR-002 implementation notes) and `notificationWithLabel`. Use them in the audit export and in the log-only notification consumer of `approval.requested`. Make T130 pass
+- [x] T136 [US5] Create the Keycloak theme `infra/keycloak/themes/pdfe/login/`: `theme.properties`, a `template.ftl` override that renders the bilingual banner above every login page, and `messages_{ar,en}.properties`. Set `loginTheme: pdfe` in the realm. Full token styling comes in US9
+- [x] T137 [P] [US5] Create `src/routes.manifest.ts` in all six web apps, with the routes from `contracts/ui-shell.md` §Routes as they exist now. Each entry has `path`, `roles`, `states` and `baseline` where a Phase 2 screen ID exists
+- [x] T138 [US5] Implement `scripts/ci/check-route-manifests.mjs`, which scans `apps/web-*/app/**/page.tsx` against each manifest, and add it to the `static` job in `.github/workflows/ci.yml`. Make T129 pass
+- [x] T139 [US5] Add an `e2e-web` job to `.github/workflows/ci.yml`:
   - path-filtered to `apps/web-*/**`, `packages/ui-web/**`, `packages/i18n/**`, `infra/keycloak/**`, and nightly;
   - starts the stack, runs `seed:dev` (until T171), installs Playwright Chromium, and runs `label.spec.ts` and `label-negative.spec.ts`;
   - uploads the report;
   - is added to `ci` needs.
 
   Make T127 and T128 pass
-- [ ] T140 [US5] Add a `mobile` job to `.github/workflows/ci.yml`:
+- [x] T140 [US5] Add a `mobile` job to `.github/workflows/ci.yml`:
   - path-filtered to `apps/mobile/**`, `packages/ui-native/**`, `packages/i18n/**`, and nightly;
   - `expo prebuild --platform android`, then a Gradle debug APK;
   - `reactivecircus/android-emulator-runner` (API 34), install the APK, `maestro test apps/mobile/maestro/`;

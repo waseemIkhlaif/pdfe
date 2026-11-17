@@ -1,0 +1,19 @@
+{
+  "name": "@pdfe/e2e-web",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Browser tests of the web apps: every route shows the simulation banner, in both languages, signed in as the route's role.",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "playwright test",
+    "test:negative": "playwright test --project=negative",
+    "test:unit": "echo no unit tests in e2e-web"
+  },
+  "devDependencies": {
+    "@pdfe/config": "workspace:*",
+    "@pdfe/platform-core": "workspace:*",
+    "@pdfe/test-kit": "workspace:*",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^22.0.0"
+  }
+}

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { IdGenerator, getContext, type ClockService } from '@pdfe/platform-core';
 import { AuditRecorder } from '@pdfe/platform-core/audit';
 import { withTx, type Pool } from '@pdfe/platform-core/db';
-import { SIM_LABEL } from '@pdfe/platform-core/sim-label';
+import { CSV_LABEL_LINE, jsonWithLabel } from '@pdfe/platform-core/sim-label';
 import { parseInput } from '../common/validate';
 import { CLOCK, PG_POOL } from '../core/tokens';
 import type { Principal } from '../identity/principal';
@@ -209,9 +209,10 @@ export class AuditService extends AuditRecorder {
       try {
         await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
         if (format === 'csv') {
-          yield `# ${SIM_LABEL}\n${CSV_HEADER.join(',')}\n`;
+          yield `${CSV_LABEL_LINE}${CSV_HEADER.join(',')}\n`;
         } else {
-          yield `{"meta":${JSON.stringify({ label: SIM_LABEL, generated_at: generatedAt, filters })},"events":[`;
+          const { meta } = jsonWithLabel({}, { generated_at: generatedAt, filters });
+          yield `{"meta":${JSON.stringify(meta)},"events":[`;
         }
         let last = 0;
         let first = true;

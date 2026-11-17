@@ -30,6 +30,8 @@ jobs:
     outputs:
       fresh_clone: ${{ steps.f.outputs.fresh_clone }}
       egress: ${{ steps.f.outputs.egress }}
+      web: ${{ steps.f.outputs.web }}
+      mobile: ${{ steps.f.outputs.mobile }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -38,7 +40,8 @@ jobs:
         name: Decide which path-filtered jobs run
         run: |
           if [ "${{ github.event_name }}" != "pull_request" ]; then
-            echo "fresh_clone=true" >> "$GITHUB_OUTPUT"; echo "egress=true" >> "$GITHUB_OUTPUT"; exit 0
+            echo "fresh_clone=true" >> "$GITHUB_OUTPUT"; echo "egress=true" >> "$GITHUB_OUTPUT"
+            echo "web=true" >> "$GITHUB_OUTPUT"; echo "mobile=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
           if echo "$files" | grep -Eq '^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|infra/|scripts/(bootstrap|dev-all|smoke)|apps/|packages/|db/|\.github/workflows/ci\.yml)'; then
@@ -50,6 +53,16 @@ jobs:
             echo "egress=true" >> "$GITHUB_OUTPUT"
           else
             echo "egress=false" >> "$GITHUB_OUTPUT"
+          fi
+          if echo "$files" | grep -Eq '^(apps/web-|packages/ui-web/|packages/auth-web/|packages/i18n/|packages/design-tokens/|packages/platform-core/src/sim-label|infra/|tests/e2e-web/|\.github/workflows/ci\.yml)'; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "web=false" >> "$GITHUB_OUTPUT"
+          fi
+          if echo "$files" | grep -Eq '^(apps/mobile/|packages/ui-native/|packages/i18n/|packages/design-tokens/|packages/platform-core/src/sim-label|\.github/workflows/ci\.yml)'; then
+            echo "mobile=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "mobile=false" >> "$GITHUB_OUTPUT"
           fi
 
   static:
@@ -71,6 +84,8 @@ jobs:
         run: pnpm format:check
       - name: Type check
         run: pnpm typecheck
+      - name: Route manifests (every page is listed, so the label crawl reaches it)
+        run: node scripts/ci/check-route-manifests.mjs
       - name: OpenAPI contract (regenerate from the routes, lint with Spectral, fail on any difference)
         run: |
           pnpm --filter @pdfe/contracts generate
@@ -228,10 +243,119 @@ jobs:
         if: always()
         run: docker compose --env-file .env -f infra/docker-compose.yml down -v
 
+  # The simulation label on every web route, in both languages, signed in through Keycloak (SC-011), plus the fixtures
+  # that prove the check fails when the label is removed, covered, shortened or hidden.
+  e2e-web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Start the stack
+        run: |
+          node -e "import('./scripts/bootstrap.mjs').then((m) => m.ensureEnv())"
+          docker compose --env-file .env -f infra/docker-compose.yml up -d --build --wait
+      - name: Seed the development data (until the scenario engine replaces it)
+        run: |
+          docker compose --env-file .env -f infra/docker-compose.yml run --rm --no-deps             -v "$PWD/infra/keycloak:/realm:ro" -e REALM_GENERATOR=/realm/generate-realm.mjs             api node dist/demo/dev-seed.js
+      - name: Build the packages the tests import
+        run: pnpm turbo run build --filter='@pdfe/e2e-web^...'
+      - name: Install Chromium for Playwright
+        run: pnpm --filter @pdfe/e2e-web exec playwright install --with-deps chromium
+      - name: Label checks (every route, Arabic and English) and the negative fixtures
+        run: pnpm --filter @pdfe/e2e-web exec playwright test
+      - name: Upload the Playwright report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: e2e-web-report
+          path: |
+            tests/e2e-web/playwright-report
+            tests/e2e-web/test-results
+      - name: Logs (on failure)
+        if: failure()
+        run: docker compose --env-file .env -f infra/docker-compose.yml logs --no-color | tail -300
+      - name: Stop and delete the stack
+        if: always()
+        run: docker compose --env-file .env -f infra/docker-compose.yml down -v
+
+  # The simulation label on every mobile tab, in both languages, on an Android emulator (SC-011).
+  mobile:
+    needs: changes
+    if: needs.changes.outputs.mobile == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # Maestro reads the flow files with the machine's default character set; make it UTF-8 as well (the flows are also
+      # plain ASCII).
+      LC_ALL: C.UTF-8
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Install pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.0.9 --activate
+      - run: pnpm install --frozen-lockfile
+      - name: Build the packages the app uses
+        run: pnpm turbo run build --filter='@pdfe/mobile^...'
+      - name: Check the API base address, then generate the Android project
+        run: |
+          pnpm --filter @pdfe/mobile run prebuild:check
+          pnpm --filter @pdfe/mobile exec expo prebuild --platform android --no-install
+      - name: Build the APK (the JavaScript is bundled in, so the emulator needs no dev server)
+        working-directory: apps/mobile/android
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=x86_64
+      - name: Install Maestro (pinned release, checksum verified)
+        run: |
+          curl -fsSL -o maestro.zip https://github.com/mobile-dev-inc/maestro/releases/download/cli-2.12.1/maestro.zip
+          echo "54dbb0716425626604973cbb374c585ca30272375d9ce15177a1152765ddd9d7  maestro.zip" | sha256sum -c -
+          unzip -q maestro.zip -d "$HOME/maestro-cli"
+          echo "$HOME/maestro-cli/maestro/bin" >> "$GITHUB_PATH"
+      - name: Enable hardware acceleration for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Label flows on an Android 14 emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          script: |
+            adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+            maestro test apps/mobile/maestro/ --format junit --output maestro-report.xml --debug-output maestro-debug --flatten-debug-output
+      - name: Upload the Maestro report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: maestro-report
+          path: |
+            maestro-report.xml
+            maestro-debug
+          if-no-files-found: ignore
+
   # The single required check. Skipped path-filtered jobs do not fail it.
   ci:
     if: always()
-    needs: [changes, static, unit, deps, build, integration, fresh-clone, egress]
+    needs: [changes, static, unit, deps, build, integration, fresh-clone, egress, e2e-web, mobile]
     runs-on: ubuntu-latest
     steps:
       - name: Fail if any job failed or was cancelled
