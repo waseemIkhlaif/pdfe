@@ -333,7 +333,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `auditor` conflicts with every role holding a write permission;
   - no single role's permissions span the three triple-rule groups;
   - every `action_type` has an approve permission
-- [ ] T079 [P] [US3] Write `apps/api/test/rls.int.spec.ts`. For every table with `tenant_id`:
+- [x] T079 [P] [US3] Write `apps/api/test/rls.int.spec.ts`. For every table with `tenant_id`:
   - a transaction with `app.tenant_id = A` reads 0 rows of tenant B;
   - an insert with `tenant_id = B` fails the `WITH CHECK`;
   - a missing `app.tenant_id` reads 0 rows;
@@ -391,23 +391,23 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `approvePermissionFor` (`iam.role.grant` and `iam.role.revoke` → `iam.role.grant.approve`; `config.change` and `config.rollback` → `config.approve`).
 
   Make T078 pass
-- [ ] T091 [US3] Write `db/migrations/0003_iam.sql`:
+- [x] T091 [US3] Write `db/migrations/0003_iam.sql`:
   - `iam.users`, `roles`, `permissions`, `role_permissions`, `user_roles`, `sod_conflicts`, `approval_requests`, `approval_decisions` and `tenant_elevations`, as in `data-model.md`, including the partial unique index for one active elevation per user;
   - trigger `trg_no_self_approval`;
   - trigger `trg_user_roles_sod`, covering the conflicts and the triple rule, with an error that names the roles;
   - SECURITY DEFINER function `iam.list_users_all()`, which returns non-PII directory columns and is executable only by `app_role`; the service calls it only for `platform_admin`
-- [ ] T092 [US3] Write `db/migrations/0004_idempotency_outbox.sql`: `integration.idempotency_keys` (with `response_status`), `integration.outbox` (partial index `WHERE published_at IS NULL`) and `integration.inbox` (`consumer`, `event_id`, PK on both, for consumer de-duplication)
-- [ ] T093 [US3] Write `db/migrations/0005_audit.sql`:
+- [x] T092 [US3] Write `db/migrations/0004_idempotency_outbox.sql`: `integration.idempotency_keys` (with `response_status`), `integration.outbox` (partial index `WHERE published_at IS NULL`) and `integration.inbox` (`consumer`, `event_id`, PK on both, for consumer de-duplication)
+- [x] T093 [US3] Write `db/migrations/0005_audit.sql`:
   - `audit.audit_events` as in `data-model.md`, including `elevation_id` and the indexes;
   - a BEFORE UPDATE OR DELETE trigger that raises `audit is append-only`;
   - grants: `app_role` INSERT and SELECT only, `readonly_role` SELECT
-- [ ] T094 [US3] Write `db/migrations/0006_rls_grants.sql`:
+- [x] T094 [US3] Write `db/migrations/0006_rls_grants.sql`:
   - `ENABLE` and `FORCE ROW LEVEL SECURITY`, with the policy from `data-model.md` §RLS, on `platform.legal_entities`, `platform.organizations`, `iam.users`, `iam.approval_requests` and `integration.idempotency_keys`;
   - table grants for `app_role` and `readonly_role`;
   - `TRUNCATE` on the demo-resettable tables for `demo_reset_role`, and `GRANT demo_reset_role TO app_role`.
 
   Make T079 pass
-- [ ] T095 [US3] Implement `packages/platform-core/src/migrate/reference-data.ts`, run by the migration CLI after the migrations. Using the migrator connection, it idempotently upserts `iam.roles`, `iam.permissions`, `iam.role_permissions` and `iam.sod_conflicts` from `rbac.ts`
+- [x] T095 [US3] Implement `packages/platform-core/src/migrate/reference-data.ts`, run by the migration CLI after the migrations. Using the migrator connection, it idempotently upserts `iam.roles`, `iam.permissions`, `iam.role_permissions` and `iam.sod_conflicts` from `rbac.ts`
 - [ ] T096 [US3] Add Drizzle schemas `apps/api/src/db/schema/{iam,integration,audit}.ts`
 - [ ] T097 [US3] Create `infra/keycloak/realm-pdfe-demo.json` for realm `pdfe-demo`:
   - confidential BFF clients `web-consumer` … `web-devportal`, with `localhost:300N` redirect URIs;
