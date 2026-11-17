@@ -16,3 +16,5 @@ scripts/safety/
 .claude/
 .specify/
 docs/
+packages/contracts/src/clients/
+packages/contracts/openapi.json

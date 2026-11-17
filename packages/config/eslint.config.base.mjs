@@ -11,6 +11,7 @@ export default [
       '**/.turbo/**',
       '**/node_modules/**',
       'docs/**',
+      'packages/contracts/src/clients/**',
       'specs/**',
       'scripts/design/**',
       'packages/design-tokens/**',

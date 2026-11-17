@@ -1,0 +1,24 @@
+{
+  "name": "@pdfe/contracts",
+  "version": "0.2.0",
+  "private": true,
+  "description": "The HTTP contract: the OpenAPI 3.1 document generated from the API routes, and the typed clients generated from it.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "openapi.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "generate": "pnpm --filter @pdfe/api build && pnpm --filter @pdfe/api openapi && orval --config orval.config.ts",
+    "lint:spec": "spectral lint openapi.json --ruleset ../../.spectral.yaml --fail-severity=warn"
+  },
+  "devDependencies": {
+    "@pdfe/config": "workspace:*",
+    "@stoplight/spectral-cli": "^6.17.1",
+    "@types/node": "^22.0.0",
+    "orval": "^8.48.0"
+  }
+}

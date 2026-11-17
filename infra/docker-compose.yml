@@ -69,11 +69,7 @@ services:
       # The image has no curl: speak HTTP to the management port with bash.
       test:
         - CMD-SHELL
-        - 'exec 3<>/dev/tcp/127.0.0.1/9000 && printf "GET /health/ready HTTP/1.1
-Host: localhost
-Connection: close
-
-" >&3 && grep -q "UP" <&3'
+        - 'exec 3<>/dev/tcp/127.0.0.1/9000 && printf "GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 && grep -q "UP" <&3'
       interval: 5s
       timeout: 5s
       retries: 40
@@ -161,6 +157,14 @@ Connection: close
       PORT: '3001'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
+      APP_BASE_URL: http://localhost:3001
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
+      OIDC_CLIENT_ID: web-consumer
+      # Cookies are shared across ports on localhost, so each app needs its own cookie name.
+      SESSION_COOKIE_NAME: pdfe_session_web_consumer
+      OIDC_CLIENT_SECRET: demo-secret-web-consumer
+      SESSION_SECRET: ${SESSION_SECRET:-demo-session-secret-synthetic-do-not-reuse-0000}
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -186,6 +190,14 @@ Connection: close
       PORT: '3002'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
+      APP_BASE_URL: http://localhost:3002
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
+      OIDC_CLIENT_ID: web-merchant
+      # Cookies are shared across ports on localhost, so each app needs its own cookie name.
+      SESSION_COOKIE_NAME: pdfe_session_web_merchant
+      OIDC_CLIENT_SECRET: demo-secret-web-merchant
+      SESSION_SECRET: ${SESSION_SECRET:-demo-session-secret-synthetic-do-not-reuse-0000}
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -211,6 +223,14 @@ Connection: close
       PORT: '3003'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
+      APP_BASE_URL: http://localhost:3003
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
+      OIDC_CLIENT_ID: web-business
+      # Cookies are shared across ports on localhost, so each app needs its own cookie name.
+      SESSION_COOKIE_NAME: pdfe_session_web_business
+      OIDC_CLIENT_SECRET: demo-secret-web-business
+      SESSION_SECRET: ${SESSION_SECRET:-demo-session-secret-synthetic-do-not-reuse-0000}
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -236,6 +256,14 @@ Connection: close
       PORT: '3004'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
+      APP_BASE_URL: http://localhost:3004
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
+      OIDC_CLIENT_ID: web-console
+      # Cookies are shared across ports on localhost, so each app needs its own cookie name.
+      SESSION_COOKIE_NAME: pdfe_session_web_console
+      OIDC_CLIENT_SECRET: demo-secret-web-console
+      SESSION_SECRET: ${SESSION_SECRET:-demo-session-secret-synthetic-do-not-reuse-0000}
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -261,6 +289,14 @@ Connection: close
       PORT: '3005'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
+      APP_BASE_URL: http://localhost:3005
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
+      OIDC_CLIENT_ID: web-investor
+      # Cookies are shared across ports on localhost, so each app needs its own cookie name.
+      SESSION_COOKIE_NAME: pdfe_session_web_investor
+      OIDC_CLIENT_SECRET: demo-secret-web-investor
+      SESSION_SECRET: ${SESSION_SECRET:-demo-session-secret-synthetic-do-not-reuse-0000}
     depends_on:
       api: { condition: service_healthy }
     healthcheck:
@@ -286,6 +322,14 @@ Connection: close
       PORT: '3006'
       HOSTNAME: 0.0.0.0
       API_BASE_URL: http://api:4000
+      APP_BASE_URL: http://localhost:3006
+      OIDC_ISSUER: http://keycloak:8080/realms/pdfe-demo
+      OIDC_PUBLIC_ISSUER: http://localhost:8080/realms/pdfe-demo
+      OIDC_CLIENT_ID: web-devportal
+      # Cookies are shared across ports on localhost, so each app needs its own cookie name.
+      SESSION_COOKIE_NAME: pdfe_session_web_devportal
+      OIDC_CLIENT_SECRET: demo-secret-web-devportal
+      SESSION_SECRET: ${SESSION_SECRET:-demo-session-secret-synthetic-do-not-reuse-0000}
     depends_on:
       api: { condition: service_healthy }
     healthcheck:

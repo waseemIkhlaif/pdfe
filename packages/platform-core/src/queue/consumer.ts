@@ -31,7 +31,10 @@ export abstract class BaseConsumer {
   async consume(message: OutboxMessage): Promise<boolean> {
     return withTx(
       this.pool,
-      { ...(message.tenantId ? { tenantId: message.tenantId } : {}), correlationId: message.correlationId },
+      {
+        ...(message.tenantId ? { tenantId: message.tenantId } : {}),
+        correlationId: message.correlationId,
+      },
       async (tx) => {
         const first = await tx.client.query(
           `INSERT INTO integration.inbox (consumer, event_id, processed_at) VALUES ($1,$2,$3)

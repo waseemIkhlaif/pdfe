@@ -97,6 +97,21 @@ const clientScopeMappers = [
   mapper('tenant_id', { attr: 'tenant_id', claim: 'tenant_id' }),
   simple('sub', 'oidc-sub-mapper'),
   simple('amr', 'oidc-amr-mapper'),
+  simple('full name', 'oidc-full-name-mapper'),
+  {
+    name: 'preferred_username',
+    protocol: 'openid-connect',
+    protocolMapper: 'oidc-usermodel-property-mapper',
+    consentRequired: false,
+    config: {
+      'user.attribute': 'username',
+      'claim.name': 'preferred_username',
+      'jsonType.label': 'String',
+      'id.token.claim': 'true',
+      'access.token.claim': 'true',
+      'userinfo.token.claim': 'true',
+    },
+  },
 ];
 
 // Conditional second factor: users holding the realm role `privileged` must enter a one-time password.

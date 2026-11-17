@@ -8,6 +8,8 @@ packages:
 # style-dictionary and glob: the token build needs no install scripts.
 # cpu-features, protobufjs, ssh2: Testcontainers transitive add-ons; the pure-JS fallbacks are enough.
 # msgpackr-extract: optional BullMQ native accelerator; the pure-JS fallback is enough.
+# @scarf/scarf: telemetry pinged by orval's dependencies; never wanted.
+# esbuild: orval and Spectral load their config with it; the binary arrives as a platform package, so the install script is not needed.
 allowBuilds:
   '@bundled-es-modules/glob': false
   style-dictionary: false
@@ -15,3 +17,5 @@ allowBuilds:
   protobufjs: false
   ssh2: false
   msgpackr-extract: false
+  '@scarf/scarf': false
+  esbuild: false

@@ -11,7 +11,8 @@
     "start:once": "node dist/main.js --once",
     "test:unit": "vitest run",
     "test:int": "vitest run --config vitest.int.config.ts --passWithNoTests",
-    "seed:dev": "node dist/demo/dev-seed.js"
+    "seed:dev": "node dist/demo/dev-seed.js",
+    "openapi": "node dist/openapi/generate.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.5.0",

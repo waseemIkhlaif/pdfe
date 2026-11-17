@@ -377,7 +377,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - an approved role grant produces exactly one `iam.role.granted` event with actor, role, tenant, action, target, reason, time, correlation ID and approval reference;
   - a forced audit insert failure rolls the grant back;
   - `UPDATE` and `DELETE` on `audit.audit_events` as `app_role` fail
-- [ ] T088 [P] [US3] Write `packages/auth-web/test/session.test.ts`: the session cookie is `HttpOnly` and `SameSite=Lax` and encrypted; the access token never appears in any server-component prop or response body sent to the browser; sign-out clears the session
+- [x] T088 [P] [US3] Write `packages/auth-web/test/session.test.ts`: the session cookie is `HttpOnly` and `SameSite=Lax` and encrypted; the access token never appears in any server-component prop or response body sent to the browser; sign-out clears the session
 - [x] T089 [US3] Write `apps/api/test/authz.matrix.spec.ts`. It discovers every route through Nest `DiscoveryService` and every role from `rbac.ts`, and asserts the expected status for each route × role × {with second factor, without} × {own tenant, other tenant}. A route with no matrix entry fails the suite. It covers only the routes that exist; later stories extend it in the same task that adds a route
 
 ### Implementation for User Story 3
@@ -471,16 +471,16 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Add the matrix entries. Make T081 pass
 - [x] T112 [US3] Implement a provisional development seed in `apps/api/src/demo/dev-seed.ts` (`pnpm --filter @pdfe/api seed:dev`, DEMO only). Through the services, it creates the three tenants, the demo organization, and one user per realm demo user with their role grants, using the `system:seed` path. US8 replaces it (T171)
-- [ ] T113 [US3] Implement `packages/auth-web` (`@pdfe/auth-web`):
+- [x] T113 [US3] Implement `packages/auth-web` (`@pdfe/auth-web`):
   - route-handler factories for `/api/auth/sign-in`, `/api/auth/callback` and `/api/auth/sign-out` (`openid-client`, Authorization Code + PKCE);
   - an `iron-session` session;
   - `getSession()`;
   - `apiFetch()`, which runs server-side only and adds the bearer token, `X-Correlation-Id` and a generated `Idempotency-Key` on mutations.
 
   Wire it into `app/api/auth/*` and `app/[locale]/sign-in/page.tsx` of all six web apps (unthemed; US9 styles it). Make T088 pass
-- [ ] T114 [US3] Generate the OpenAPI document: `apps/api/scripts/openapi.ts` writes `packages/contracts/openapi.json` (`nestjs-zod`, OpenAPI 3.1). Add `packages/contracts/orval.config.ts`, which generates typed clients into `packages/contracts/src/clients/`, and `.spectral.yaml`. In `.github/workflows/ci.yml` `static`, add Spectral lint plus a drift check (regenerate and `git diff --exit-code`)
-- [ ] T115 [US3] Add Keycloak to the `integration` job in `.github/workflows/ci.yml`, through Testcontainers with the realm import from `infra/keycloak/realm-pdfe-demo.json`. Make T089 pass across every current route
-- [ ] T116 [US3] Record the design deltas found while implementing this story:
+- [x] T114 [US3] Generate the OpenAPI document: `apps/api/scripts/openapi.ts` writes `packages/contracts/openapi.json` (`nestjs-zod`, OpenAPI 3.1). Add `packages/contracts/orval.config.ts`, which generates typed clients into `packages/contracts/src/clients/`, and `.spectral.yaml`. In `.github/workflows/ci.yml` `static`, add Spectral lint plus a drift check (regenerate and `git diff --exit-code`)
+- [x] T115 [US3] Add Keycloak to the `integration` job in `.github/workflows/ci.yml`, through Testcontainers with the realm import from `infra/keycloak/realm-pdfe-demo.json`. Make T089 pass across every current route
+- [x] T116 [US3] Record the design deltas found while implementing this story:
   - `contracts/http-api.md`: `IDEMPOTENCY_KEY_REQUIRED`, `ELEVATION_READ_ONLY`, and the platform-admin user directory;
   - `data-model.md`: `integration.inbox`, `iam.list_users_all()`
 

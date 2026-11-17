@@ -10,9 +10,10 @@ The service base is `http://api:4000` inside Docker and `http://localhost:4000` 
 | Second factor | If the caller holds any privileged role, the token must show OTP (`amr` contains `otp`). Otherwise 401 `MFA_REQUIRED` |
 | Tenant | Taken only from the token claim `tenant_id`, or from the active elevation (read-only) |
 | Permission | Each route lists its permission. A missing permission gives 403 `FORBIDDEN` |
-| Idempotency | POST, PUT, PATCH and DELETE require `Idempotency-Key` (8–128 visible characters). Replay gives the stored response. A reused key with different content gives 422 `IDEMPOTENCY_KEY_REUSED`; a request still running gives 409 `IDEMPOTENCY_IN_PROGRESS` |
+| Idempotency | POST, PUT, PATCH and DELETE require `Idempotency-Key` (8–128 visible characters). Replay gives the stored response. A missing or malformed key gives 400 `IDEMPOTENCY_KEY_REQUIRED` **Δ**; a reused key with different content gives 422 `IDEMPOTENCY_KEY_REUSED`; a request still running gives 409 `IDEMPOTENCY_IN_PROGRESS`. A run that fails releases the key, so the client can retry **Δ** |
 | Correlation | `X-Correlation-Id` is accepted if it matches `^[A-Za-z0-9._-]{8,64}$`, otherwise it is generated. Always echoed in the response header |
-| Rate limit | Over the limit gives 429 `RATE_LIMITED`, with `Retry-After` |
+| Rate limit | Over the limit gives 429 `RATE_LIMITED`, with `Retry-After`. The limit is per user for signed-in calls and per IP for calls with no token (signed-in traffic is not counted per IP, because the web servers share addresses) **Δ**. Limits come from `api.rate_limit` |
+| Elevation | While the caller has an active elevation, any POST, PUT, PATCH or DELETE (except the elevation routes below) gives 409 `ELEVATION_READ_ONLY` **Δ**. An elevation that has expired gives 403 on the next request and is closed |
 | Errors | `{ "error": { "code": "UPPER_SNAKE", "message_key": "errors.<code_lower>", "correlation_id": "COR-…" } }`. Validation errors add `details: [{ path, message_key }]` |
 | Mode | Every response carries `X-PDFE-Mode: DEMO` |
 
@@ -27,9 +28,9 @@ The service base is `http://api:4000` inside Docker and `http://localhost:4000` 
 | GET `/v1/approvals/{id}` | `approvals.read` | Request with its decisions | |
 | POST `/v1/approvals/{id}/decisions` | approve permission for its `action_type` | `{ decision: approve\|reject, reason }` | 409 `SELF_APPROVAL`, `NOT_PENDING`, `EXPIRED`, `PAYLOAD_CHANGED`; 403 if the approve permission is missing |
 | POST `/v1/approvals/{id}/cancel` | requester only | `{ reason }` | |
-| GET `/v1/iam/users` | `iam.read` | Users of the caller's tenant, or of all tenants for platform_admin | |
+| GET `/v1/iam/users` | `iam.read` | Users of the caller's tenant, or of all tenants for platform_admin | The all-tenants directory for `platform_admin` comes from the database function `iam.list_users_all()` and carries non-PII columns only (id, tenant_id, display_name, locale, status, created_at, roles) **Δ** |
 | GET `/v1/iam/roles` | `iam.read` | Roles, permissions, conflicts | |
-| POST `/v1/iam/users/{id}/role-grants` | `iam.role.grant.request` | `{ role_code, organization_id?, reason }` creates the approval `iam.role.grant` | 409 `SOD_CONFLICT` with the conflicting roles |
+| POST `/v1/iam/users/{id}/role-grants` | `iam.role.grant.request` | `{ role_code, organization_id?, reason }` creates the approval `iam.role.grant` | 409 `SOD_CONFLICT`; `details` lists the requested role (`role_code`) and each conflicting held role (`held_role`) as `roles.<code>`, and the refusal is audited (`iam.role.grant_refused_sod`) **Δ** |
 | POST `/v1/iam/users/{id}/role-revocations` | `iam.role.grant.request` | `{ role_code, organization_id?, reason }` creates the approval `iam.role.revoke` | |
 | POST `/v1/elevations` | `tenant.elevate` | `{ target_tenant_id, reason }` starts a read-only elevation | 409 `ELEVATION_ACTIVE`; default TTL from `security.elevation.ttl_minutes` |
 | GET `/v1/elevations/current` | `tenant.elevate` | The caller's active elevation or 204 | |
@@ -52,4 +53,8 @@ The service base is `http://api:4000` inside Docker and `http://localhost:4000` 
 
 ## Negative authorization suite
 
-`apps/api/test/authz.matrix.spec.ts` iterates **every route above × every role in `rbac.ts`**, with and without a second factor, in-tenant and cross-tenant. It asserts the expected status (2xx/4xx) from the matrix. A route that is missing from the matrix fails the suite (SC-005).
+`apps/api/test/authz.matrix.int.spec.ts` iterates **every route above × every role in `rbac.ts`**, with and without a second factor, in-tenant and cross-tenant. It asserts the expected status (2xx/4xx) from the matrix. A route that is missing from the matrix fails the suite (SC-005).
+
+## Machine-readable contract **Δ**
+
+`packages/contracts/openapi.json` is generated from the routes by `pnpm --filter @pdfe/contracts generate`. The route list comes from the controller metadata, and what each route takes and returns comes from the registry in `apps/api/src/openapi/registry.ts` and the Zod schemas in `schemas.ts` (the request schemas are the ones the services validate with). A route with no registry entry fails `openapi.int.spec.ts`, real responses are checked against the schemas there, and CI fails when the committed document or the generated clients (`packages/contracts/src/clients/`) differ from a fresh generation. Spectral (`.spectral.yaml`) requires an `x-permission` on every protected operation, the one error envelope on every error response, and the `Idempotency-Key` header on every change.
