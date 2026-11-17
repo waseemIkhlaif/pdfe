@@ -1,10 +1,13 @@
 import type { CSSProperties } from 'react';
 import { SIM_LABEL_AR, SIM_LABEL_EN } from '@pdfe/platform-core/sim-label';
+import { Z_BANNER } from './layers';
 
 const style: CSSProperties = {
   position: 'sticky',
   insetBlockStart: 0,
-  zIndex: 1000,
+  zIndex: `var(--pdfe-z-banner, ${Z_BANNER})` as unknown as number,
+  inlineSize: '100%',
+  boxSizing: 'border-box',
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
@@ -20,8 +23,9 @@ const style: CSSProperties = {
 };
 
 /**
- * Minimal banner (feature 001). It takes no props, so a page cannot hide or change it.
- * The final, locale-aware version replaces it in the labelling story.
+ * The simulation banner (constitution Article VIII, FR-022): sticky, full width, a status region, and the same
+ * bilingual text on every screen in either language. It takes no props, so a page cannot hide, shorten or restyle it.
+ * Pages never render it themselves: SimShell does, in the root layout.
  */
 export function SimulationBanner() {
   return (

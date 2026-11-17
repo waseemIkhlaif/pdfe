@@ -36,6 +36,26 @@ export default [
     rules: { 'pdfe/no-physical-css': 'error', 'pdfe/no-hardcoded-ui-string': 'error' },
   },
   {
+    // Page code never renders the simulation banner or the shell: only the root layout does (FR-022). A page that
+    // imported them could render a second, altered or hidden copy.
+    files: ['apps/web-*/app/**/*.{ts,tsx}'],
+    ignores: ['apps/web-*/app/[[]locale]/layout.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@pdfe/ui-web',
+              importNames: ['SimulationBanner', 'SimShell'],
+              message: 'Only the root layout renders the simulation banner (through SimShell).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['**/test/**', '**/__tests__/**', '**/*.test.*', '**/*.spec.*', 'scripts/**'],
     rules: { 'pdfe/no-nondeterminism': 'off', '@typescript-eslint/no-explicit-any': 'off' },
   },

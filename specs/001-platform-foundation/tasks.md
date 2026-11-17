@@ -544,7 +544,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - `jsonWithLabel` puts `meta.label`;
   - `pdfWithWatermark` produces a PDF whose extracted text contains both label strings on every page;
   - `notificationWithLabel` prefixes the subject and body
-- [ ] T131 [P] [US5] Write `packages/ui-web/test/SimulationBanner.final.test.tsx`:
+- [x] T131 [P] [US5] Write `packages/ui-web/test/SimulationBanner.final.test.tsx`:
   - a type test (`expect-type`) shows that the component accepts no props;
   - the banner sits above the Radix portal container in the DOM order and in its z-index token;
   - the `SimShell` root layout always renders it
@@ -552,7 +552,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
 ### Implementation for User Story 5
 
-- [ ] T133 [US5] Finalize `packages/ui-web/src/SimulationBanner.tsx`:
+- [x] T133 [US5] Finalize `packages/ui-web/src/SimulationBanner.tsx`:
   - sticky, full-width, uses tokens, `role="status"`, `data-sim="1"`, no props;
   - add `packages/ui-web/src/SimShell.tsx`, the root layout wrapper with the banner outside the content and the portal container below it;
   - in `packages/config/eslint.config.base.mjs`, add `no-restricted-imports` so that page code under `apps/web-*/app/**` (except `app/[locale]/layout.tsx`) cannot import the bare layout primitives.
