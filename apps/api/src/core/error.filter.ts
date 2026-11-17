@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AppError, getContext, toEnvelope } from '@pdfe/platform-core';
+import { IdempotentReplay } from '../integration/idempotency.interceptor';
 
 const CODE_BY_STATUS: Record<number, string> = {
   400: 'VALIDATION_FAILED',
@@ -26,6 +27,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const res = host.switchToHttp().getResponse<Response>();
     const correlationId =
       getContext()?.correlationId ?? String(res.getHeader('X-Correlation-Id') ?? 'unknown');
+    if (exception instanceof IdempotentReplay) {
+      // A stored response goes back exactly as it was first sent.
+      if (exception.replayBody === null || exception.replayStatus === 204) {
+        res.status(exception.replayStatus).end();
+      } else {
+        res.status(exception.replayStatus).json(exception.replayBody);
+      }
+      return;
+    }
     let err: unknown = exception;
     if (!(exception instanceof AppError) && exception instanceof HttpException) {
       const status = exception.getStatus();

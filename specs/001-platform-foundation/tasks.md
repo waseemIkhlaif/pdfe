@@ -354,7 +354,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - a privileged user's token without `otp` in `amr` gets 401 `MFA_REQUIRED` on every protected route, and the denial is audited (`auth.signin_denied_mfa`);
   - with a TOTP from the fixed secret, access works;
   - a non-privileged user works without a second factor
-- [ ] T083 [P] [US3] Write `apps/api/test/elevation.int.spec.ts`:
+- [x] T083 [P] [US3] Write `apps/api/test/elevation.int.spec.ts`:
   - starting needs `tenant.elevate` and a reason of at least 10 characters;
   - a second active elevation gives 409 `ELEVATION_ACTIVE`;
   - reads return the target tenant's rows;
@@ -362,7 +362,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - after the expiry passes mid-session, the next read returns 403 and no data;
   - ending works;
   - audit records `tenant.elevation_started`, one `tenant.elevated_read` per read, and `tenant.elevation_ended`
-- [ ] T084 [P] [US3] Write `apps/api/test/idempotency.int.spec.ts`:
+- [x] T084 [P] [US3] Write `apps/api/test/idempotency.int.spec.ts`:
   - a POST without `Idempotency-Key` gets 400 `IDEMPOTENCY_KEY_REQUIRED`;
   - the same key and body replay the original status and body;
   - the same key with a different body gets 422 `IDEMPOTENCY_KEY_REUSED`;
@@ -436,16 +436,16 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Make T082 pass
 - [ ] T102 [US3] Implement `GET /v1/me` in `apps/api/src/identity/me.controller.ts`, returning user, tenant, roles, permissions, `mfa` and the active elevation. Add its matrix entries
-- [ ] T103 [US3] Implement `apps/api/src/tenancy/tenant-context.interceptor.ts`. It opens each request transaction through `withTx`, with the tenant from the token, or with the elevation target, `READ ONLY` and `app.elevation_id` when an elevation is active and not expired. Add `assertSameTenant()` as the second, code-level check
-- [ ] T104 [US3] Implement `apps/api/src/tenancy/elevation.{service,controller}.ts`:
+- [x] T103 [US3] Implement `apps/api/src/tenancy/tenant-context.interceptor.ts`. It opens each request transaction through `withTx`, with the tenant from the token, or with the elevation target, `READ ONLY` and `app.elevation_id` when an elevation is active and not expired. Add `assertSameTenant()` as the second, code-level check
+- [x] T104 [US3] Implement `apps/api/src/tenancy/elevation.{service,controller}.ts`:
   - routes `POST /v1/elevations`, `GET /v1/elevations/current` and `POST /v1/elevations/{id}/end`;
   - the TTL comes from `ConfigReader` `security.elevation.ttl_minutes`;
   - `elevated-read.interceptor.ts` records one `tenant.elevated_read` per read;
   - a guard refuses mutating methods during an elevation.
 
   Add the matrix entries. Make T083 pass
-- [ ] T105 [US3] Implement `apps/api/src/audit/audit.writer.ts`, the minimal writer. `record(tx, event)` validates the required fields, takes `pg_advisory_xact_lock(hashtext('audit'))`, computes `prev_hash` and `hash` with `canonical-json` and `sha256Hex`, and inserts in the caller's transaction. US4 adds the shared chain module, verification, anchors and export. Make T087 pass
-- [ ] T106 [US3] Implement `apps/api/src/integration/idempotency.middleware.ts`, covering POST, PUT, PATCH and DELETE under `/v1`, with key validation, the request hash, replay, 422, 409 and TTL from `idempotency.ttl_hours`. Make T084 pass
+- [x] T105 [US3] Implement `apps/api/src/audit/audit.writer.ts`, the minimal writer. `record(tx, event)` validates the required fields, takes `pg_advisory_xact_lock(hashtext('audit'))`, computes `prev_hash` and `hash` with `canonical-json` and `sha256Hex`, and inserts in the caller's transaction. US4 adds the shared chain module, verification, anchors and export. Make T087 pass
+- [x] T106 [US3] Implement `apps/api/src/integration/idempotency.middleware.ts`, covering POST, PUT, PATCH and DELETE under `/v1`, with key validation, the request hash, replay, 422, 409 and TTL from `idempotency.ttl_hours`. Make T084 pass
 - [ ] T107 [US3] Implement the outbox:
   - `apps/api/src/integration/outbox.writer.ts`, which writes in the caller's transaction;
   - `apps/worker/src/outbox-relay/outbox-relay.job.ts`, which uses `FOR UPDATE SKIP LOCKED` to send to BullMQ queues by topic and sets `published_at` and `attempts`, with backoff and an alert log after 10 failures;

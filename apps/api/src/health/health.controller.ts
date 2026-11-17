@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Controller, Get, Inject, Res } from '@nestjs/common';
 import type { Response } from 'express';
+import { Public } from '../identity/public.decorator';
 import { AdapterRegistry } from '../integration/adapter-registry';
 import { HEALTH_CHECKS, type HealthCheck } from './health.checks';
 
@@ -17,6 +18,7 @@ export class HealthController {
   ) {}
 
   /** Public. Liveness and readiness; always reports the mode. Lists the adapter types, which are all mock types. */
+  @Public()
   @Get('health')
   async health(@Res({ passthrough: true }) res: Response) {
     const results = await Promise.all(
@@ -34,6 +36,7 @@ export class HealthController {
   }
 
   /** Public. API version and build. */
+  @Public()
   @Get('meta')
   meta() {
     return { api: 'v1', version, build: process.env.BUILD_SHA ?? 'dev' };
