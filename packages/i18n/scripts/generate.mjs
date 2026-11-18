@@ -106,6 +106,40 @@ export type MessageKey = (typeof MESSAGE_KEYS)[number];
 
 const json = (v) => `${JSON.stringify(v, null, 2)}\n`;
 
+/**
+ * The Keycloak message keys the login theme overrides, and the catalog key each takes its text from. The theme's labels, titles
+ * and the demo notice are the approved words of the sign-in (CON-002) and one-time code (CON-003) screens; the simulation label
+ * is in both languages in both files, because the banner shows the one that matches the page.
+ */
+export const KEYCLOAK_MESSAGES = {
+  doLogIn: 'ui.sign-in',
+  username: 'ui.username',
+  password: 'ui.password',
+  loginAccountTitle: 'screen.con-002.title',
+  loginOtpOneTime: 'ui.enter-your-code',
+  demoAccountsOnly: 'ui.demo-accounts-only-no-real-accounts-exis',
+};
+export const KEYCLOAK_DIR = '../../../infra/keycloak/themes/pdfe/login/messages';
+
+function keycloakFiles(rows) {
+  const by = new Map(rows.map((r) => [r.key, r]));
+  const out = {};
+  for (const lang of ['en', 'ar']) {
+    const lines = [
+      `simulationLabelEn=${by.get('sim.banner').en}`,
+      `simulationLabelAr=${by.get('sim.banner').ar}`,
+    ];
+    for (const [kc, key] of Object.entries(KEYCLOAK_MESSAGES)) {
+      const row = by.get(key);
+      if (!row)
+        throw new Error(`the Keycloak message ${kc} needs ${key}, which is not an approved row`);
+      lines.push(`${kc}=${row[lang]}`);
+    }
+    out[`${KEYCLOAK_DIR}/messages_${lang}.properties`] = `${lines.join('\n')}\n`;
+  }
+  return out;
+}
+
 /** { key: text } from a nested extras file. */
 export function flatten(obj, prefix = '') {
   const out = {};
@@ -131,7 +165,7 @@ export function extraRows(extras, deckKeys) {
 }
 
 /** The generated files as { path: content }, from the deck text and the extras. Throws with every problem when they are not fit. */
-export function generateFiles(markdown, extras) {
+export function generateFiles(markdown, extras, opts = {}) {
   const all = parseDeck(markdown);
   const deck = approved(all);
   const x = extraRows(extras, new Set(deck.map((r) => r.key)));
@@ -143,6 +177,7 @@ export function generateFiles(markdown, extras) {
     'catalogs/en.json': json(nest(rows, 'en')),
     'catalogs/ar.json': json(nest(rows, 'ar')),
     'keys.ts': keysFile(rows),
+    ...(opts.keycloak ? keycloakFiles(rows) : {}),
   };
 }
 
@@ -196,7 +231,7 @@ function main() {
   const check = process.argv.includes('--check');
   let files;
   try {
-    files = generateFiles(readFileSync(DECK, 'utf8'), readExtras());
+    files = generateFiles(readFileSync(DECK, 'utf8'), readExtras(), { keycloak: true });
   } catch (e) {
     console.error(`i18n: ${e.message}`);
     process.exit(1);

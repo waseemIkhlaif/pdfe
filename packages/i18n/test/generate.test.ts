@@ -14,8 +14,11 @@ const HEAD = `| Key | English | Arabic | Regulated | AR review | Native check | 
 `;
 const row = (key: string, en: string, ar: string, status = 'approved') =>
   `| ${key} | ${en} | ${ar} | no | done | n/a | n/a | ${status} | note |\n`;
-const files = (md: string, extras?: unknown): Record<string, string> =>
-  gen.generateFiles(md, extras);
+const files = (
+  md: string,
+  extras?: unknown,
+  opts: { keycloak?: boolean } = {},
+): Record<string, string> => gen.generateFiles(md, extras, opts);
 const flat = (o: Record<string, unknown>, p = ''): string[] =>
   Object.entries(o).flatMap(([k, v]) =>
     typeof v === 'object' && v !== null
@@ -56,7 +59,7 @@ describe('every key exists in both languages', () => {
   });
 
   it('the generated catalogs have exactly the same keys', () => {
-    const real = files(readFileSync(gen.DECK, 'utf8'), gen.readExtras());
+    const real = files(readFileSync(gen.DECK, 'utf8'), gen.readExtras(), { keycloak: true });
     expect(flat(JSON.parse(real['catalogs/ar.json']!)).sort()).toEqual(
       flat(JSON.parse(real['catalogs/en.json']!)).sort(),
     );
@@ -92,7 +95,9 @@ describe('the ICU syntax parses', () => {
   });
 
   it('every message of the real deck is valid', () => {
-    expect(() => files(readFileSync(gen.DECK, 'utf8'), gen.readExtras())).not.toThrow();
+    expect(() =>
+      files(readFileSync(gen.DECK, 'utf8'), gen.readExtras(), { keycloak: true }),
+    ).not.toThrow();
   });
 });
 
@@ -133,7 +138,7 @@ describe('a key used in the code but missing from the catalog', () => {
 
 describe('the committed files are what the deck gives', () => {
   it('catalogs and keys are up to date', () => {
-    const real = files(readFileSync(gen.DECK, 'utf8'), gen.readExtras());
+    const real = files(readFileSync(gen.DECK, 'utf8'), gen.readExtras(), { keycloak: true });
     const read = (p: string) =>
       readFileSync(resolve(__dirname, '../src', p), 'utf8').replace(/\r\n/g, '\n');
     for (const [rel, content] of Object.entries(real)) expect(read(rel), rel).toBe(content);
