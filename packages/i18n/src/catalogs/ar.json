@@ -1,0 +1,394 @@
+{
+  "impl": {
+    "approvals": {
+      "decisions": "القرارات",
+      "refused": "تم رفض القرار."
+    },
+    "code": "الرمز",
+    "compare": "مقارنة",
+    "config": {
+      "effectiveHint": "اختياري. اتركه فارغًا للتطبيق فور الموافقة.",
+      "invalid": "هذه القيمة غير صالحة لهذا الإعداد.",
+      "locked": "هذا الإعداد مقفل لأسباب السلامة. لا يمكن تغييره هنا ولا في أي مكان في العرض.",
+      "readOnly": "يمكنك قراءة هذا الإعداد لكن لا يمكنك طلب تغييره.",
+      "refused": "تم رفض الطلب.",
+      "valueHint": "قيمة JSON، مثلًا 45 أو true أو [1, 2]."
+    },
+    "copied": "تم النسخ",
+    "count": "العدد",
+    "created": "تاريخ الإنشاء",
+    "diff": "الفرق",
+    "digest": "البصمة",
+    "effectiveFrom": "ساري من",
+    "elevation": {
+      "active": "أنت تطّلع على مستأجر آخر للقراءة فقط. تُسجَّل كل قراءة.",
+      "badge": "رفع الصلاحية للقراءة فقط",
+      "end": "إنهاء رفع الصلاحية",
+      "ended": "انتهى",
+      "explain": "اطّلع على بيانات مستأجر آخر للقراءة فقط ولمدة محدودة. تُسجَّل كل قراءة في سجل التدقيق.",
+      "reasonHint": "10 أحرف على الأقل. يُحفظ مع سجل التدقيق.",
+      "refused": "تم رفض رفع الصلاحية.",
+      "start": "بدء رفع الصلاحية",
+      "title": "رفع الصلاحية للقراءة فقط"
+    },
+    "errorCode": "رمز الخطأ",
+    "expires": "ينتهي",
+    "finished": "انتهى في",
+    "kind": "النوع",
+    "noDifference": "لا يوجد فرق",
+    "report": "ما أنشأه التشغيل",
+    "scenarios": {
+      "refused": "تم رفض التشغيل."
+    },
+    "sections": "الأقسام",
+    "started": "بدأ في",
+    "status": {
+      "cancelled": "ملغى",
+      "rejected": "مرفوض",
+      "scheduled": "مجدول",
+      "stale": "قديم",
+      "superseded": "مُستبدل"
+    },
+    "timeLeft": "الوقت المتبقي",
+    "users": {
+      "cannotRequest": "يمكنك رؤية المستخدمين لكن لا يمكنك طلب تغيير دور.",
+      "refused": "تم رفض الطلب.",
+      "requestRole": "طلب دور",
+      "sod": "لدى هذا المستخدم دور لا يمكن الجمع بينه وبين {role}.",
+      "submit": "طلب الموافقة"
+    },
+    "verify": {
+      "broken": "السلسلة مكسورة عند",
+      "refused": "تعذّر إجراء التحقق."
+    }
+  },
+  "money": {
+    "all-payments": "كل المدفوعات",
+    "balances-and-journals": "الأرصدة والقيود",
+    "balances-and-quick-actions": "الأرصدة والإجراءات السريعة",
+    "batches-and-payouts": "الدفعات والتحويلات",
+    "funding-approvals": "موافقات التمويل",
+    "funding-request": "طلب تمويل",
+    "merchant-payment-j2": "دفع التاجر (J2)",
+    "must-always-balance": "يجب أن يتوازن دائمًا",
+    "payments": "المدفوعات",
+    "payout-approvals": "موافقات الدفعات",
+    "payouts": "الدفعات",
+    "refunds": "المرتجعات",
+    "send": "إرسال",
+    "send-abroad": "إرسال للخارج",
+    "send-money": "أرسل أموالًا",
+    "trial-balance": "ميزان المراجعة",
+    "wallet-payments-remittance": "المحفظة والمدفوعات والتحويلات",
+    "western-digits-are-the-default-for-amoun": "الأرقام الغربية هي الافتراضية للمبالغ."
+  },
+  "screen": {
+    "adm-001": {
+      "title": "المستخدمون"
+    },
+    "adm-002": {
+      "title": "الأدوار"
+    },
+    "adm-003": {
+      "title": "قائمة الإعدادات"
+    },
+    "adm-004": {
+      "title": "سجل الإعدادات"
+    },
+    "adm-005": {
+      "title": "مقارنة الإعدادات والموافقة"
+    },
+    "adm-006": {
+      "title": "التراجع عن الإعدادات"
+    },
+    "adm-007": {
+      "title": "مفاتيح الميزات"
+    },
+    "adm-008": {
+      "title": "المستأجرون"
+    },
+    "biz-001": {
+      "title": "هيكل البوابة"
+    },
+    "cmp-001": {
+      "title": "هيكل وحدة الامتثال"
+    },
+    "cmp-011": {
+      "title": "البحث في سجل التدقيق"
+    },
+    "cmp-012": {
+      "title": "التحقق من سجل التدقيق"
+    },
+    "cmp-013": {
+      "title": "تصدير سجل التدقيق"
+    },
+    "con-001": {
+      "title": "شاشة البداية وإشعار المحاكاة"
+    },
+    "con-002": {
+      "title": "تسجيل الدخول"
+    },
+    "con-003": {
+      "title": "التحقق بخطوتين (للأدوار المميزة)"
+    },
+    "con-004": {
+      "title": "اختيار دور تجريبي"
+    },
+    "con-005": {
+      "title": "تبديل اللغة"
+    },
+    "con-006": {
+      "title": "قفل التطبيق"
+    },
+    "con-007": {
+      "title": "شاشات الخطأ وعدم الاتصال والصلاحيات"
+    },
+    "con-008": {
+      "title": "هيكل التطبيق"
+    },
+    "dev-001": {
+      "title": "هيكل بوابة المطورين"
+    },
+    "fin-001": {
+      "title": "هيكل وحدة المالية"
+    },
+    "inv-001": {
+      "title": "هيكل لوحة المستثمر"
+    },
+    "mer-001": {
+      "title": "هيكل البوابة"
+    },
+    "ops-001": {
+      "title": "هيكل وحدة العمليات"
+    },
+    "ops-002": {
+      "title": "متحكم السيناريو"
+    }
+  },
+  "sim": {
+    "about-the-simulation": "حول المحاكاة",
+    "banner": "محاكاة — ليست أموالاً حقيقية",
+    "compliance-analyst": "محلل امتثال",
+    "compliance-console": "وحدة الامتثال",
+    "default-fee-placeholder": "الرسم الافتراضي (نائب مؤقت)",
+    "everything-here-is-simulated-pretend-mon": "كل ما هنا محاكاة: أموال وهمية وأشخاص وهميون وبنوك وهمية.",
+    "exports-carry-a-simulation-watermark": "تحمل الملفات المصدّرة علامة مائية للمحاكاة.",
+    "new-simulated-items-will-appear-here": "ستظهر هنا العناصر المحاكاة الجديدة.",
+    "no-user-may-hold-all-of-post-journals-ap": "لا يجوز لأي مستخدم الجمع بين: ترحيل القيود واعتماد الإصدار وإدارة التدقيق.",
+    "partner-simulator": "محاكي الشركاء",
+    "psh-program": "برنامج PSH",
+    "routine-simulated-request": "طلب محاكاة روتيني.",
+    "scenarios-use-synthetic-data-only-and-ru": "تستخدم السيناريوهات بيانات اصطناعية فقط وتعمل ببذرة ثابتة.",
+    "simulated": "محاكاة",
+    "simulated-biometric-unlock-no-real-biome": "فتح بالبصمة محاكى. لا تُستخدم أي بيانات بيومترية حقيقية.",
+    "simulation": "محاكاة",
+    "synthetic-screening-this-is-not-a-real-c": "فحص تجريبي. هذا ليس فحص امتثال حقيقي.",
+    "this-dashboard-shows-modeled-simulated-f": "تعرض هذه اللوحة أرقامًا نمذجة ومحاكاة. وليست نتائج من عملاء أو أسواق حقيقية.",
+    "transfer-limit-placeholder": "حد التحويل (نائب مؤقت)",
+    "you-are-choosing-a-role-inside-a-simulat": "أنت تختار دورًا داخل محاكاة."
+  },
+  "status": {
+    "completed": "مكتملة",
+    "draft": "مسودة",
+    "expired": "منتهية الصلاحية",
+    "failed": "فشلت",
+    "held": "معلّقة",
+    "pending": "قيد الانتظار",
+    "reversed": "تم عكسها",
+    "underReview": "قيد المراجعة"
+  },
+  "ui": {
+    "a-demonstration-of-digital-financial-ser": "عرض توضيحي للخدمات المالية الرقمية.",
+    "accounts": "الحسابات",
+    "action": "الإجراء",
+    "active": "نشط",
+    "activity": "النشاط",
+    "actor": "المنفّذ",
+    "add-user": "إضافة مستخدم",
+    "alerts": "التنبيهات",
+    "api-keys": "مفاتيح API",
+    "api-reference": "مرجع API",
+    "approvals": "الموافقات",
+    "approve": "موافقة",
+    "approve-change": "الموافقة على التغيير",
+    "approved": "معتمد",
+    "approved-change": "اعتماد تغيير",
+    "approver": "الموافِق",
+    "approver-roles": "أدوار الاعتماد",
+    "ask-an-administrator-for-access-to-this-": "اطلب من المسؤول صلاحية الوصول إلى هذه الصفحة.",
+    "auditor": "مدقق",
+    "auth": "المصادقة",
+    "bank-reconciliation": "تسوية البنك",
+    "business-approver": "معتمد الأعمال",
+    "cases": "الحالات",
+    "change-the-filters-and-search-again": "غيّر المرشحات وابحث مجددًا.",
+    "choose": "اختر",
+    "choose-a-demo-role": "اختر دورًا تجريبيًا",
+    "close-dashboard": "لوحة الإقفال",
+    "configuration": "الإعدادات",
+    "conflicts-with": "يتعارض مع",
+    "consumer-transfer-j1": "تحويل المستهلك (J1)",
+    "continue": "متابعة",
+    "controls": "الضوابط",
+    "controls-and-architecture": "الضوابط والبنية",
+    "copy-reference": "نسخ المرجع",
+    "correlation": "المرجع المترابط",
+    "create-and-track": "إنشاء ومتابعة",
+    "current": "الحالي",
+    "customers": "العملاء",
+    "dashboard": "لوحة التحكم",
+    "delivery-explorer": "مستكشف التسليم",
+    "demo-a": "تجريبي أ",
+    "demo-accounts-only-no-real-accounts-exis": "حسابات تجريبية فقط. لا توجد حسابات حقيقية.",
+    "demo-b": "تجريبي ب",
+    "demo-user-a": "مستخدم تجريبي أ",
+    "demo-user-a-same-person": "مستخدم تجريبي أ (نفس الشخص)",
+    "demo-user-b": "مستخدم تجريبي ب",
+    "demo-user-c": "مستخدم تجريبي ج",
+    "demo-viewer": "مشاهد العرض",
+    "developer": "مطوّر",
+    "developer-portal": "بوابة المطورين",
+    "digits": "الأرقام",
+    "english": "العربية",
+    "enter-the-6-digit-code-from-your-authent": "أدخل الرمز المكوّن من 6 أرقام من تطبيق المصادقة.",
+    "enter-your-code": "أدخل الرمز",
+    "enter-your-pin": "أدخل الرقم السري",
+    "exchange-user": "مستخدم البورصة",
+    "explore-partners": "استكشاف الشركاء",
+    "export": "تصدير",
+    "exported-report": "تصدير تقرير",
+    "finance-analyst": "محلل المالية",
+    "finance-and-treasury-console": "وحدة المالية والخزينة",
+    "flag": "الميزة",
+    "format": "الصيغة",
+    "from": "من",
+    "fx-position": "مركز الصرف",
+    "general-ledger": "دفتر الأستاذ",
+    "getting-started": "البدء",
+    "go-back": "العودة",
+    "guided-scenarios": "سيناريوهات موجّهة",
+    "home": "الرئيسية",
+    "individual": "فرد",
+    "investor-demo-dashboard": "لوحة المستثمر التوضيحية",
+    "invoices": "الفواتير",
+    "journals": "القيود",
+    "kpis": "المؤشرات",
+    "landing": "الصفحة الرئيسية",
+    "language": "اللغة",
+    "last-run": "آخر تشغيل",
+    "loading": "جارٍ التحميل",
+    "locked": "مقفل",
+    "main": "الرئيسية",
+    "market-controls": "ضوابط السوق",
+    "markets": "الأسواق",
+    "merchant": "تاجر",
+    "merchant-mode": "وضع التاجر",
+    "merchant-mode-and-portal": "وضع التاجر والبوابة",
+    "merchant-owner": "مالك تاجر",
+    "mfa": "التحقق بخطوتين",
+    "next-page": "الصفحة التالية",
+    "no": "لا",
+    "no-access": "لا صلاحية",
+    "no-audit-events-found": "لم يُعثر على أحداث تدقيق",
+    "none": "لا شيء",
+    "not-required": "غير مطلوب",
+    "nothing-here-yet": "لا يوجد شيء هنا بعد",
+    "object": "الكائن",
+    "off": "معطّل",
+    "offline": "غير متصل",
+    "on": "مفعّل",
+    "onboarding-queue": "طابور التسجيل",
+    "operations-analyst": "محلل العمليات",
+    "operations-console": "وحدة العمليات",
+    "paper-trading": "التداول الورقي",
+    "password": "كلمة المرور",
+    "pay-scan": "دفع/مسح",
+    "pdfe-demo": "منصة PDFE التجريبية",
+    "permissions": "الصلاحيات",
+    "platform-admin": "مسؤول المنصة",
+    "previous-page": "الصفحة السابقة",
+    "primary": "القائمة الرئيسية",
+    "profile": "الملف",
+    "proposed": "المقترح",
+    "proposed-change": "التغيير المقترح",
+    "queues": "الطوابير",
+    "queues-and-aging": "الطوابير والتقادم",
+    "quote-validity": "مدة صلاحية العرض",
+    "reason": "السبب",
+    "receivables-and-payables": "الذمم المدينة والدائنة",
+    "reconciliation": "التسوية",
+    "reference": "المرجع",
+    "reject": "رفض",
+    "remittance-corridors": "ممرات التحويل",
+    "remittance-j3": "تحويل دولي (J3)",
+    "reports": "التقارير",
+    "request-rollback": "طلب التراجع",
+    "requester": "مقدّم الطلب",
+    "reset-data": "إعادة ضبط البيانات",
+    "restore-previous-limit": "استعادة الحد السابق",
+    "role": "الدور",
+    "roll-back-to-version": "التراجع إلى الإصدار",
+    "rolling-back-creates-a-new-version-histo": "يُنشئ التراجع إصدارًا جديدًا. يُحفظ السجل.",
+    "rules": "القواعد",
+    "run-a-scenario": "تشغيل سيناريو",
+    "run-demo-scenarios": "تشغيل سيناريوهات العرض",
+    "run-scenario": "تشغيل السيناريو",
+    "safety-locked": "مقفل للأمان",
+    "safety-locked-flags-cannot-be-changed-he": "لا يمكن تغيير المفاتيح المقفلة للأمان هنا.",
+    "sales-and-the-next-settlement": "المبيعات والتسوية القادمة",
+    "sandbox": "المحاكاة",
+    "save": "حفظ",
+    "scan-a-qr-code": "امسح رمز QR",
+    "scenario": "السيناريو",
+    "scenarios": "السيناريوهات",
+    "search": "بحث",
+    "search-and-trace": "بحث وتتبّع",
+    "seed": "البذرة",
+    "separation-of-duties": "فصل المهام",
+    "setting": "الإعداد",
+    "settlements": "التسويات",
+    "showing-1-n-of-n": "عرض 1–{n} من {n}",
+    "sign-in": "دخول",
+    "signed-in-as": "تم الدخول باسم",
+    "something-went-wrong": "حدث خطأ ما",
+    "staff": "الموظفون",
+    "state": "الحالة",
+    "statements": "الكشوف",
+    "status": "الحالة",
+    "suppliers": "المورّدون",
+    "system-health": "صحة النظام",
+    "team-and-limits": "الفريق والحدود",
+    "tenant": "المستأجر",
+    "tenant-demo-a": "المستأجر: تجريبي أ",
+    "the-hash-chain-is-intact-for-the-selecte": "سلسلة التجزئة سليمة للنطاق المحدد.",
+    "time": "الوقت",
+    "to": "إلى",
+    "transaction-explorer": "مستكشف المعاملات",
+    "try-again": "حاول مرة أخرى",
+    "unlock": "فتح",
+    "use-asia-jerusalem-time": "استخدام توقيت القدس",
+    "use-the-tabs-or-the-side-menu-to-move-ar": "استخدم علامات التبويب أو القائمة الجانبية للتنقل.",
+    "user": "المستخدم",
+    "username": "اسم المستخدم",
+    "v2-approved": "اعتُمد الإصدار 2",
+    "v3-approved": "اعتُمد الإصدار 3",
+    "value": "القيمة",
+    "verified": "تم التحقق",
+    "verify": "تحقق",
+    "verify-integrity": "التحقق من السلامة",
+    "version": "الإصدار",
+    "versions": "الإصدارات",
+    "viewed-record": "عرض سجل",
+    "we-could-not-complete-that-try-again": "تعذّر إكمال هذا. حاول مرة أخرى.",
+    "webhook-catalog": "كتالوج الويب هوك",
+    "welcome": "مرحبًا",
+    "welcome-to-the-business-portal": "مرحبًا بك في بوابة الأعمال",
+    "welcome-to-the-merchant-portal": "مرحبًا بك في بوابة التاجر",
+    "western-0-9": "غربية (0-9)",
+    "where-to-go": "إلى أين تذهب",
+    "you-are-offline-we-will-retry-when-you-a": "أنت غير متصل. سنعيد المحاولة عند عودة الاتصال.",
+    "you-cannot-approve-your-own-request-ask-": "لا يمكنك الموافقة على طلبك. اطلب من موافِق آخر.",
+    "you-do-not-have-access": "ليس لديك صلاحية الوصول",
+    "you-do-not-have-access-to-this-page-ask-": "ليس لديك صلاحية الوصول إلى هذه الصفحة. اطلب من المسؤول."
+  }
+}

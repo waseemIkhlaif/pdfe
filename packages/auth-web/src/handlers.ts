@@ -14,6 +14,16 @@ export function safeReturnTo(value: string | null | undefined, fallback: string)
   return value;
 }
 
+/** A demo username as the realm has them (`demo.admin.a`): letters, digits, dots, underscores and hyphens only. */
+export const isLoginHint = (v: string | null | undefined): v is string =>
+  typeof v === 'string' && /^[a-z0-9][a-z0-9._-]{0,63}$/.test(v);
+
+/** The language of a local path such as `/ar/admin/users`, if its first segment is one. */
+export const localeOfPath = (path: string): 'ar' | 'en' | undefined => {
+  const first = path.split('/')[1];
+  return first === 'ar' || first === 'en' ? first : undefined;
+};
+
 function redirect(location: string): Response {
   return new Response(null, {
     status: 302,
@@ -50,15 +60,20 @@ export function createAuthRoutes(
       const session = await getIronSession<SessionData>(req, res, options);
       const { state, codeVerifier } = oidc.newFlow();
       delete session.auth;
-      session.flow = {
-        state,
-        codeVerifier,
-        returnTo: safeReturnTo(url.searchParams.get('returnTo'), home()),
-      };
+      const returnTo = safeReturnTo(url.searchParams.get('returnTo'), home());
+      session.flow = { state, codeVerifier, returnTo };
       await session.save();
+      const hint = url.searchParams.get('login_hint');
+      const locale = localeOfPath(returnTo);
       res.headers.set(
         'Location',
-        await oidc.authorizationUrl({ state, codeVerifier, redirectUri }),
+        await oidc.authorizationUrl({
+          state,
+          codeVerifier,
+          redirectUri,
+          ...(isLoginHint(hint) ? { loginHint: hint } : {}),
+          ...(locale ? { uiLocales: locale } : {}),
+        }),
       );
       return res;
     },

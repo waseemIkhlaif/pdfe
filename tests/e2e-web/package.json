@@ -10,10 +10,14 @@
     "test:unit": "echo no unit tests in e2e-web"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
     "@pdfe/config": "workspace:*",
     "@pdfe/platform-core": "workspace:*",
     "@pdfe/test-kit": "workspace:*",
     "@playwright/test": "^1.65.1",
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "@types/pngjs": "^6.0.5",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0"
   }
 }

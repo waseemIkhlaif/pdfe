@@ -1,0 +1,126 @@
+/* PDFE login theme: restyles the Keycloak v2 (PatternFly 5) login pages with the design tokens, following the approved
+   screens CON-002 (sign-in) and CON-003 (one-time code). Logical properties only, so Arabic (right to left) is mirrored.
+   `resources/css/pdfe.css` is this file after the token variables: `node infra/keycloak/generate-theme.mjs` writes it. */
+
+html,
+body,
+#keycloak-bg,
+.pf-v5-c-login {
+  background: var(--pdfe-color-neutral-200);
+  color: var(--pdfe-color-text-primary);
+  font-family: var(--pdfe-font-family-latin), 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-size: var(--pdfe-font-size-14);
+}
+html[lang='ar'] body,
+html[lang='ar'] .pf-v5-c-login {
+  font-family: var(--pdfe-font-family-arabic), 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+.pf-v5-c-login__container {
+  max-inline-size: 440px;
+  margin-inline: auto;
+  padding-block: var(--pdfe-space-24);
+  display: block;
+}
+.pf-v5-c-login__header {
+  padding-block: 0 var(--pdfe-space-16);
+  text-align: start;
+}
+.pf-v5-c-login__main {
+  background: var(--pdfe-color-surface-default);
+  border: 1px solid var(--pdfe-color-border-subtle);
+  border-radius: var(--pdfe-radius-12);
+  box-shadow: var(--pdfe-elevation-1);
+  padding: var(--pdfe-space-16);
+}
+.pf-v5-c-login__main-header,
+.pf-v5-c-login__main-body,
+.pf-v5-c-login__main-footer {
+  padding-inline: 0;
+}
+.pf-v5-c-login__main-header-desc {
+  display: none;
+}
+#kc-page-title,
+.pf-v5-c-title {
+  font-size: var(--pdfe-font-size-24);
+  line-height: var(--pdfe-font-line-height-tight);
+  font-weight: var(--pdfe-font-weight-bold);
+  color: var(--pdfe-color-text-primary);
+}
+
+/* fields */
+.pf-v5-c-form__label-text {
+  font-weight: var(--pdfe-font-weight-semibold);
+  color: var(--pdfe-color-text-primary);
+}
+.pf-v5-c-form-control,
+.pf-v5-c-form-control input,
+.pf-v5-c-form-control select {
+  font: inherit;
+  min-block-size: 44px;
+  border-radius: var(--pdfe-radius-8);
+  color: var(--pdfe-color-text-primary);
+}
+.pf-v5-c-form-control {
+  border: 1px solid var(--pdfe-color-border-strong);
+  background: var(--pdfe-color-surface-default);
+  --pf-v5-c-form-control--BorderColor: var(--pdfe-color-border-strong);
+  --pf-v5-c-form-control--BorderRadius: var(--pdfe-radius-8);
+}
+.pf-v5-c-form-control input {
+  padding-inline: var(--pdfe-space-12);
+  text-align: start;
+}
+/* a one-time code is a number: always left to right, also in Arabic */
+input#otp,
+input[name='otp'],
+input[name='username'],
+input[name='password'] {
+  direction: ltr;
+}
+html[dir='rtl'] input#otp,
+html[dir='rtl'] input[name='otp'] {
+  text-align: right;
+}
+
+/* buttons */
+.pf-v5-c-button {
+  min-block-size: 44px;
+  border-radius: var(--pdfe-radius-8);
+  font-weight: var(--pdfe-font-weight-semibold);
+}
+.pf-v5-c-button.pf-m-primary {
+  --pf-v5-c-button--m-primary--BackgroundColor: var(--pdfe-color-brand-primary);
+  --pf-v5-c-button--m-primary--Color: var(--pdfe-color-brand-on-primary);
+  background: var(--pdfe-color-brand-primary);
+  border-color: var(--pdfe-color-brand-primary);
+  color: var(--pdfe-color-brand-on-primary);
+}
+.pf-v5-c-button.pf-m-block {
+  inline-size: auto;
+  padding-inline: var(--pdfe-space-16);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--pdfe-color-brand-focus);
+  outline-offset: 2px;
+}
+
+/* messages */
+.pf-v5-c-alert {
+  border-radius: var(--pdfe-radius-8);
+}
+
+/* the demo notice under the form (CON-002): "Demo accounts only. No real accounts exist." */
+.pdfe-notice {
+  display: block;
+  margin-block-start: var(--pdfe-space-16);
+  padding: var(--pdfe-space-12);
+  border: 1px solid currentColor;
+  border-radius: var(--pdfe-radius-8);
+  background: var(--pdfe-color-semantic-info-bg);
+  color: var(--pdfe-color-semantic-info-fg);
+}

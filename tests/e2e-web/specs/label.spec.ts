@@ -8,21 +8,28 @@ import { signedInContext, userFor } from '../src/sign-in';
  * banner (SC-011). The routes come from the apps' own manifests, and `check-route-manifests` makes sure that is every page.
  * A failure names the app and the route.
  */
+// A route with a variable part is visited at its example, or at an ID that does not exist (the not-found page carries the banner too).
+const NONE = '00000000-0000-0000-0000-000000000000';
 for (const app of APPS) {
-  for (const route of app.routes) {
+  for (const route of app.routes as readonly {
+    path: string;
+    roles: readonly string[];
+    example?: string;
+  }[]) {
     for (const role of route.roles) {
       for (const lang of LANGS) {
         test(`[${app.name}] ${route.path} (${lang}) as ${role}`, async ({ browser, page }) => {
+          const path = route.example ?? route.path.replace(/\[[a-z]+\]/g, NONE);
           const where = `${app.name} ${route.path} (${lang}) as ${role}`;
           if (role === 'anonymous') {
-            await page.goto(`${baseUrl(app)}${pathIn(lang, route.path)}`);
+            await page.goto(`${baseUrl(app)}${pathIn(lang, path)}`);
             await assertBanner(page, lang, where);
             return;
           }
           const context = await signedInContext(browser, app, role, lang);
           const signedIn = await context.newPage();
           try {
-            await signedIn.goto(`${baseUrl(app)}${pathIn(lang, route.path)}`);
+            await signedIn.goto(`${baseUrl(app)}${pathIn(lang, path)}`);
             await assertBanner(signedIn, lang, where);
           } finally {
             await signedIn.close();

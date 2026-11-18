@@ -30,8 +30,8 @@ const config: AuthConfig = {
 function fakeOidc(): OidcClient {
   return {
     newFlow: () => ({ state: 'STATE-1', codeVerifier: 'VERIFIER-1' }),
-    authorizationUrl: async ({ state, redirectUri }) =>
-      `http://localhost:8080/realms/pdfe-demo/protocol/openid-connect/auth?state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}&code_challenge_method=S256`,
+    authorizationUrl: async ({ state, redirectUri, loginHint, uiLocales }) =>
+      `http://localhost:8080/realms/pdfe-demo/protocol/openid-connect/auth?state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}&code_challenge_method=S256${loginHint ? `&login_hint=${encodeURIComponent(loginHint)}` : ''}${uiLocales ? `&ui_locales=${uiLocales}` : ''}`,
     exchangeCode: async ({ callbackUrl, state, codeVerifier }) => {
       const u = new URL(callbackUrl);
       if (u.searchParams.get('state') !== state) throw new Error('state mismatch');
@@ -244,5 +244,32 @@ describe('sign-out', () => {
   it('works without a session too', async () => {
     const out = await routes().signOut(get('/api/auth/sign-out'));
     expect(out.status).toBe(302);
+  });
+});
+
+describe('sign-in with a demo role (the role picker)', () => {
+  const start = async (query: string) =>
+    routes().signIn(new Request(`http://localhost:3001/api/auth/sign-in?${query}`));
+
+  it('passes a valid login_hint on, and the language of the page it will return to', async () => {
+    const res = await start('returnTo=/en/admin/users&login_hint=demo.admin.a');
+    const location = new URL(res.headers.get('Location')!);
+    expect(location.searchParams.get('login_hint')).toBe('demo.admin.a');
+    expect(location.searchParams.get('ui_locales')).toBe('en');
+  });
+
+  it.each(['', 'Demo Admin', 'demo.admin.a&prompt=none', '../x', 'a'.repeat(65), 'UPPER'])(
+    'drops a login_hint that is not a demo username: %j',
+    async (hint) => {
+      const res = await start(`returnTo=/ar&login_hint=${encodeURIComponent(hint)}`);
+      const location = new URL(res.headers.get('Location')!);
+      expect(location.searchParams.has('login_hint')).toBe(false);
+      expect(location.searchParams.get('ui_locales')).toBe('ar');
+    },
+  );
+
+  it('asks for no language when the return path has none', async () => {
+    const res = await start('returnTo=/somewhere');
+    expect(new URL(res.headers.get('Location')!).searchParams.has('ui_locales')).toBe(false);
   });
 });

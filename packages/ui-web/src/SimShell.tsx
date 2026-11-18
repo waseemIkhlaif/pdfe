@@ -25,7 +25,9 @@ export function SimShell({ locale, children }: { locale: ShellLocale; children: 
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} style={layers}>
       <body style={bodyStyle}>
         <SimulationBanner />
-        <div id="pdfe-content">{children}</div>
+        <div id="pdfe-content" className="frame">
+          {children}
+        </div>
         <div id="pdfe-portal-root" style={{ position: 'relative', zIndex: Z_PORTAL }} />
       </body>
     </html>

@@ -208,7 +208,10 @@ describe('the login pages show the simulation banner', () => {
     const start = await createAuthRoutes(config).signIn(
       new Request(`${config.appBaseUrl}/api/auth/sign-in`),
     );
-    return `${start.headers.get('location')}${lang ? `&ui_locales=${lang}` : ''}`;
+    // The sign-in route already asks for the language of its return path: set it, do not repeat it.
+    const url = new URL(start.headers.get('location')!);
+    if (lang) url.searchParams.set('ui_locales', lang);
+    return url.href;
   };
 
   it.each(['en', 'ar'])('the password page, in %s', async (lang) => {

@@ -1,0 +1,45 @@
+{
+  "name": "@pdfe/i18n",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Message catalogs (Arabic and English) generated from the approved copy deck, with typed keys and the setup for next-intl and i18next.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "default": "./dist/next.js"
+    },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "default": "./dist/native.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "check": "node scripts/generate.mjs --check",
+    "build": "node scripts/generate.mjs && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "i18next": "^25.0.0",
+    "intl-messageformat": "^10.7.0",
+    "use-intl": "^4.0.0"
+  },
+  "devDependencies": {
+    "@formatjs/icu-messageformat-parser": "^2.11.0",
+    "@pdfe/config": "workspace:*",
+    "@pdfe/platform-core": "workspace:*",
+    "@pdfe/test-kit": "workspace:*",
+    "@types/node": "^22.0.0",
+    "vitest": "^5.1.0"
+  }
+}

@@ -2,10 +2,14 @@ import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { SimShell } from '@pdfe/ui-web';
 import '@pdfe/design-tokens/dist/web/tokens.css';
+import '@pdfe/ui-web/styles.css';
 
 const LOCALES = ['ar', 'en'] as const;
 type Locale = (typeof LOCALES)[number];
 const isLocale = (v: string): v is Locale => (LOCALES as readonly string[]).includes(v);
+
+// A page needs a title (WCAG 2.4.2); the product name is the same in both languages.
+export const metadata = { title: 'PDFE' };
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));

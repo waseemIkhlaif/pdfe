@@ -43,6 +43,7 @@ export const Elevation = z.object({
 export const Me = z.object({
   user: z.object({ id: uuid, display_name: z.string(), locale: z.enum(['ar', 'en']) }),
   tenant_id: uuid,
+  tenant: z.object({ id: uuid, code: z.string(), name: z.string() }),
   roles: z.array(z.string()),
   permissions: z.array(z.string()),
   mfa: z.boolean(),
@@ -85,6 +86,15 @@ export const IamUser = z.object({
   created_at: iso,
   roles: z.array(z.string()),
 });
+export const Tenant = z.object({
+  id: uuid,
+  code: z.string(),
+  name: z.string(),
+  kind: z.string(),
+  status: z.enum(['active', 'disabled']),
+  created_at: iso,
+});
+export const TenantList = z.object({ items: z.array(Tenant) });
 export const IamUserList = z.object({ items: z.array(IamUser) });
 export const IamRole = z.object({
   code: z.string(),
@@ -226,6 +236,8 @@ export const NAMED = {
   IamUserList,
   IamRole,
   IamRoleList,
+  Tenant,
+  TenantList,
   StartElevationRequest,
   ApprovalDecisionRequest,
   ApprovalCancelRequest,

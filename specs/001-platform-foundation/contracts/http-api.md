@@ -39,6 +39,7 @@ The service base is `http://api:4000` inside Docker and `http://localhost:4000` 
 | GET `/v1/audit/events?actor=&action=&tenant=&from=&to=&correlation_id=` | `audit.read` | Search | Paginated |
 | POST `/v1/audit/verify` | `audit.verify` | `{ from_seq?, to_seq? }` returns `{ result: ok }` or `{ result: broken, seq, reason }` | `reason` ∈ {hash_mismatch, prev_link_mismatch, seq_gap, anchor_mismatch} |
 | GET `/v1/audit/export?format=csv\|json&…filters` | `audit.export` | Streamed export | CSV first line: `# SIMULATION — NOT REAL MONEY / محاكاة — ليست أموالاً حقيقية`. JSON: `{ meta: { label }, events: [...] }`. The export itself is audited |
+| GET `/v1/tenants` | `iam.read` | The tenants (id, code, name, kind, status, created_at), read only | Platform scope: tenants are not row-secured and hold no personal data |
 | GET `/v1/config` | `config.read` | Settings with their active versions | Safety-locked items are marked `editable: false` |
 | GET `/v1/config/{key}/versions` | `config.read` | Version history | |
 | GET `/v1/config/{key}/diff?from=&to=` | `config.read` | JSON Patch between two versions | |

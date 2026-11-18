@@ -18,6 +18,10 @@ export interface OidcClient {
     state: string;
     codeVerifier: string;
     redirectUri: string;
+    /** The demo user to start the hosted sign-in with (the role picker), already validated. */
+    loginHint?: string;
+    /** The page language, so the hosted page opens in it (`ui_locales`). */
+    uiLocales?: string;
   }): Promise<string>;
   /** Exchanges the callback URL (with `code` and `state`) for tokens. Throws if state, PKCE or the ID token is wrong. */
   exchangeCode(p: {
@@ -57,13 +61,15 @@ export function createOidcClient(config: AuthConfig): OidcClient {
 
   return {
     newFlow: () => ({ state: client.randomState(), codeVerifier: client.randomPKCECodeVerifier() }),
-    async authorizationUrl({ state, codeVerifier, redirectUri }) {
+    async authorizationUrl({ state, codeVerifier, redirectUri, loginHint, uiLocales }) {
       const url = client.buildAuthorizationUrl(oidc, {
         redirect_uri: redirectUri,
         scope: 'openid',
         state,
         code_challenge: await client.calculatePKCECodeChallenge(codeVerifier),
         code_challenge_method: 'S256',
+        ...(loginHint ? { login_hint: loginHint } : {}),
+        ...(uiLocales ? { ui_locales: uiLocales } : {}),
       });
       return url.href;
     },

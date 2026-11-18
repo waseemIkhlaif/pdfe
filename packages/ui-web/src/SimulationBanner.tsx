@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { SIM_LABEL_AR, SIM_LABEL_EN } from '@pdfe/platform-core/sim-label';
+import { Icon } from './Icon';
 import { Z_BANNER } from './layers';
 
 const style: CSSProperties = {
@@ -20,6 +21,9 @@ const style: CSSProperties = {
   fontWeight: 700,
   fontSize: 'var(--pdfe-font-size-12, 12px)',
   textAlign: 'center',
+  // The diagonal hatch of the approved design: the banner is recognisable even without reading it.
+  backgroundImage:
+    'repeating-linear-gradient(135deg, transparent 0 10px, rgba(245,158,11,.25) 10px 20px)',
 };
 
 /** Shows the label in the page language only. The page language is the `lang` of the root element. */
@@ -37,6 +41,7 @@ export function SimulationBanner() {
   return (
     <div role="status" data-sim="1" style={style}>
       <style>{HIDE_OTHER_LANGUAGE}</style>
+      <Icon name="info" />
       <bdi className="pdfe-sim-en" lang="en" dir="ltr">
         {SIM_LABEL_EN}
       </bdi>

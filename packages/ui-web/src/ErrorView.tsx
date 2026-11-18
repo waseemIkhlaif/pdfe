@@ -1,4 +1,4 @@
-import { CopyButton } from './CopyButton';
+import { StateBox } from './StateBox';
 
 /** Everything the error screen says, in the language of the page. */
 export interface ErrorText {
@@ -14,22 +14,30 @@ export interface ErrorText {
 /**
  * The screen a user sees when something failed. It shows the correlation ID of the failed request inside `<bdi>`
  * (an ID is left-to-right text, also in an Arabic sentence) with a button to copy it, so the user can quote it and
- * someone can find the logs, the trace and the audit event of that very request (SC-012).
+ * someone can find the logs, the trace and the audit event of that very request (SC-012). It is the `error` state box of
+ * the shell, so it looks like every other failed page.
  */
-export function ErrorView({ text, correlationId }: { text: ErrorText; correlationId?: string }) {
+export function ErrorView({
+  text,
+  correlationId,
+  retryHref,
+  retryLabel,
+}: {
+  text: ErrorText;
+  correlationId?: string;
+  retryHref?: string;
+  retryLabel?: string;
+}) {
   return (
-    <main data-testid="error-view" role="alert">
-      <h1>{text.title}</h1>
-      <p>{text.message}</p>
-      {correlationId ? (
-        <p data-testid="correlation-reference">
-          <span>{text.reference}</span>{' '}
-          <bdi dir="ltr" data-testid="correlation-id">
-            {correlationId}
-          </bdi>{' '}
-          <CopyButton value={correlationId} label={text.copy} copiedLabel={text.copied} />
-        </p>
-      ) : null}
-    </main>
+    <StateBox
+      kind="error"
+      title={text.title}
+      body={text.message}
+      reference={text.reference}
+      copy={text.copy}
+      copied={text.copied}
+      {...(correlationId ? { correlationId } : {})}
+      {...(retryHref && retryLabel ? { retry: { label: retryLabel, href: retryHref } } : {})}
+    />
   );
 }

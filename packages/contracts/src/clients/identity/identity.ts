@@ -11,7 +11,8 @@ import type {
   IamRoleList,
   IamUserList,
   Me,
-  RoleChangeRequest
+  RoleChangeRequest,
+  TenantList
 } from '../model';
 
 
@@ -369,6 +370,66 @@ export const meMe = async ( options?: RequestInit): Promise<meMeResponse> => {
 
   const data: meMeResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as meMeResponse
+}
+
+
+export type tenantsListResponse200 = {
+  data: TenantList
+  status: 200
+}
+
+export type tenantsListResponse401 = {
+  data: ErrorEnvelope
+  status: 401
+}
+
+export type tenantsListResponse403 = {
+  data: ErrorEnvelope
+  status: 403
+}
+
+export type tenantsListResponse429 = {
+  data: ErrorEnvelope
+  status: 429
+}
+
+export type tenantsListResponseSuccess = (tenantsListResponse200) & {
+  headers: Headers;
+};
+export type tenantsListResponseError = (tenantsListResponse401 | tenantsListResponse403 | tenantsListResponse429) & {
+  headers: Headers;
+};
+
+export type tenantsListResponse = (tenantsListResponseSuccess | tenantsListResponseError)
+
+export const getTenantsListUrl = () => {
+
+
+
+
+  return `/v1/tenants`
+}
+
+/**
+ * The tenants of the platform, read only. Needs the permission `iam.read`. A privileged role also needs a second factor.
+ * @summary The tenants of the platform, read only.
+ */
+export const tenantsList = async ( options?: RequestInit): Promise<tenantsListResponse> => {
+
+  const res = await fetch(getTenantsListUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: tenantsListResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as tenantsListResponse
 }
 
 

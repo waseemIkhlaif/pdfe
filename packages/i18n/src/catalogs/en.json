@@ -1,0 +1,394 @@
+{
+  "impl": {
+    "approvals": {
+      "decisions": "Decisions",
+      "refused": "The decision was refused."
+    },
+    "code": "Code",
+    "compare": "Compare",
+    "config": {
+      "effectiveHint": "Optional. Leave empty to apply at once, after approval.",
+      "invalid": "That value is not valid for this setting.",
+      "locked": "This setting is safety-locked. It cannot be changed here or anywhere in the demo.",
+      "readOnly": "You can read this setting but not ask for a change.",
+      "refused": "The request was refused.",
+      "valueHint": "A JSON value, for example 45, true or [1, 2]."
+    },
+    "copied": "Copied",
+    "count": "Count",
+    "created": "Created",
+    "diff": "Difference",
+    "digest": "Digest",
+    "effectiveFrom": "Effective from",
+    "elevation": {
+      "active": "You are looking at another tenant, read only. Every read is recorded.",
+      "badge": "Read-only elevation",
+      "end": "End elevation",
+      "ended": "Ended",
+      "explain": "Look at another tenant's data, read only, for a limited time. Every read is recorded in the audit trail.",
+      "reasonHint": "At least 10 characters. It is kept with the audit record.",
+      "refused": "The elevation was refused.",
+      "start": "Start elevation",
+      "title": "Read-only elevation"
+    },
+    "errorCode": "Error code",
+    "expires": "Expires",
+    "finished": "Finished",
+    "kind": "Kind",
+    "noDifference": "No difference",
+    "report": "What the run created",
+    "scenarios": {
+      "refused": "The run was refused."
+    },
+    "sections": "Sections",
+    "started": "Started",
+    "status": {
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "scheduled": "Scheduled",
+      "stale": "Out of date",
+      "superseded": "Replaced"
+    },
+    "timeLeft": "Time left",
+    "users": {
+      "cannotRequest": "You can see users but not ask for a role change.",
+      "refused": "The request was refused.",
+      "requestRole": "Ask for a role",
+      "sod": "This user already holds a role that cannot be combined with {role}.",
+      "submit": "Ask for approval"
+    },
+    "verify": {
+      "broken": "The chain is broken at",
+      "refused": "The check could not be run."
+    }
+  },
+  "money": {
+    "all-payments": "All payments",
+    "balances-and-journals": "Balances and journals",
+    "balances-and-quick-actions": "Balances and quick actions",
+    "batches-and-payouts": "Batches and payouts",
+    "funding-approvals": "Funding approvals",
+    "funding-request": "Funding request",
+    "merchant-payment-j2": "Merchant payment (J2)",
+    "must-always-balance": "Must always balance",
+    "payments": "Payments",
+    "payout-approvals": "Payout approvals",
+    "payouts": "Payouts",
+    "refunds": "Refunds",
+    "send": "Send",
+    "send-abroad": "Send abroad",
+    "send-money": "Send money",
+    "trial-balance": "Trial balance",
+    "wallet-payments-remittance": "Wallet, payments, remittance",
+    "western-digits-are-the-default-for-amoun": "Western digits are the default for amounts."
+  },
+  "screen": {
+    "adm-001": {
+      "title": "Users"
+    },
+    "adm-002": {
+      "title": "Roles"
+    },
+    "adm-003": {
+      "title": "Config list"
+    },
+    "adm-004": {
+      "title": "Config history"
+    },
+    "adm-005": {
+      "title": "Config diff and approve"
+    },
+    "adm-006": {
+      "title": "Config rollback"
+    },
+    "adm-007": {
+      "title": "Feature flags"
+    },
+    "adm-008": {
+      "title": "Tenants"
+    },
+    "biz-001": {
+      "title": "App shell"
+    },
+    "cmp-001": {
+      "title": "App shell"
+    },
+    "cmp-011": {
+      "title": "Audit search"
+    },
+    "cmp-012": {
+      "title": "Audit verify"
+    },
+    "cmp-013": {
+      "title": "Audit export"
+    },
+    "con-001": {
+      "title": "Splash and simulation notice"
+    },
+    "con-002": {
+      "title": "Sign-in"
+    },
+    "con-003": {
+      "title": "MFA (privileged only)"
+    },
+    "con-004": {
+      "title": "Demo role picker"
+    },
+    "con-005": {
+      "title": "Language switcher"
+    },
+    "con-006": {
+      "title": "App lock"
+    },
+    "con-007": {
+      "title": "Error, offline and permission screens"
+    },
+    "con-008": {
+      "title": "App shell"
+    },
+    "dev-001": {
+      "title": "App shell"
+    },
+    "fin-001": {
+      "title": "App shell"
+    },
+    "inv-001": {
+      "title": "App shell"
+    },
+    "mer-001": {
+      "title": "App shell"
+    },
+    "ops-001": {
+      "title": "App shell"
+    },
+    "ops-002": {
+      "title": "Scenario controller"
+    }
+  },
+  "sim": {
+    "about-the-simulation": "About the simulation",
+    "banner": "SIMULATION — NOT REAL MONEY",
+    "compliance-analyst": "Compliance analyst",
+    "compliance-console": "Compliance console",
+    "default-fee-placeholder": "Default fee (placeholder)",
+    "everything-here-is-simulated-pretend-mon": "Everything here is simulated: pretend money, pretend people, pretend banks.",
+    "exports-carry-a-simulation-watermark": "Exports carry a simulation watermark.",
+    "new-simulated-items-will-appear-here": "New simulated items will appear here.",
+    "no-user-may-hold-all-of-post-journals-ap": "No user may hold all of: post journals, approve issuance, administer audit.",
+    "partner-simulator": "Partner simulator",
+    "psh-program": "PSH program",
+    "routine-simulated-request": "Routine simulated request.",
+    "scenarios-use-synthetic-data-only-and-ru": "Scenarios use synthetic data only and run with a fixed seed.",
+    "simulated": "SIMULATED",
+    "simulated-biometric-unlock-no-real-biome": "Simulated biometric unlock. No real biometric data is used.",
+    "simulation": "Simulation",
+    "synthetic-screening-this-is-not-a-real-c": "Synthetic screening. This is not a real compliance check.",
+    "this-dashboard-shows-modeled-simulated-f": "This dashboard shows modeled, simulated figures. They are not results from real customers or markets.",
+    "transfer-limit-placeholder": "Transfer limit (placeholder)",
+    "you-are-choosing-a-role-inside-a-simulat": "You are choosing a role inside a simulation."
+  },
+  "status": {
+    "completed": "Completed",
+    "draft": "Draft",
+    "expired": "Expired",
+    "failed": "Failed",
+    "held": "Held",
+    "pending": "Pending",
+    "reversed": "Reversed",
+    "underReview": "Under review"
+  },
+  "ui": {
+    "a-demonstration-of-digital-financial-ser": "A demonstration of digital financial services.",
+    "accounts": "Accounts",
+    "action": "Action",
+    "active": "Active",
+    "activity": "Activity",
+    "actor": "Actor",
+    "add-user": "Add user",
+    "alerts": "Alerts",
+    "api-keys": "API keys",
+    "api-reference": "API reference",
+    "approvals": "Approvals",
+    "approve": "Approve",
+    "approve-change": "Approve change",
+    "approved": "Approved",
+    "approved-change": "Approved change",
+    "approver": "Approver",
+    "approver-roles": "Approver roles",
+    "ask-an-administrator-for-access-to-this-": "Ask an administrator for access to this page.",
+    "auditor": "Auditor",
+    "auth": "Auth",
+    "bank-reconciliation": "Bank reconciliation",
+    "business-approver": "Business approver",
+    "cases": "Cases",
+    "change-the-filters-and-search-again": "Change the filters and search again.",
+    "choose": "Choose",
+    "choose-a-demo-role": "Choose a demo role",
+    "close-dashboard": "Close dashboard",
+    "configuration": "Configuration",
+    "conflicts-with": "Conflicts with",
+    "consumer-transfer-j1": "Consumer transfer (J1)",
+    "continue": "Continue",
+    "controls": "Controls",
+    "controls-and-architecture": "Controls and architecture",
+    "copy-reference": "Copy reference",
+    "correlation": "Correlation",
+    "create-and-track": "Create and track",
+    "current": "Current",
+    "customers": "Customers",
+    "dashboard": "Dashboard",
+    "delivery-explorer": "Delivery explorer",
+    "demo-a": "Demo A",
+    "demo-accounts-only-no-real-accounts-exis": "Demo accounts only. No real accounts exist.",
+    "demo-b": "Demo B",
+    "demo-user-a": "Demo user A",
+    "demo-user-a-same-person": "Demo user A (same person)",
+    "demo-user-b": "Demo user B",
+    "demo-user-c": "Demo user C",
+    "demo-viewer": "Demo viewer",
+    "developer": "Developer",
+    "developer-portal": "Developer portal",
+    "digits": "Digits",
+    "english": "English",
+    "enter-the-6-digit-code-from-your-authent": "Enter the 6-digit code from your authenticator app.",
+    "enter-your-code": "Enter your code",
+    "enter-your-pin": "Enter your PIN",
+    "exchange-user": "Exchange user",
+    "explore-partners": "Explore partners",
+    "export": "Export",
+    "exported-report": "Exported report",
+    "finance-analyst": "Finance analyst",
+    "finance-and-treasury-console": "Finance and treasury console",
+    "flag": "Flag",
+    "format": "Format",
+    "from": "From",
+    "fx-position": "FX position",
+    "general-ledger": "General ledger",
+    "getting-started": "Getting started",
+    "go-back": "Go back",
+    "guided-scenarios": "Guided scenarios",
+    "home": "Home",
+    "individual": "Individual",
+    "investor-demo-dashboard": "Investor demo dashboard",
+    "invoices": "Invoices",
+    "journals": "Journals",
+    "kpis": "KPIs",
+    "landing": "Landing",
+    "language": "Language",
+    "last-run": "Last run",
+    "loading": "Loading",
+    "locked": "Locked",
+    "main": "Main",
+    "market-controls": "Market controls",
+    "markets": "Markets",
+    "merchant": "Merchant",
+    "merchant-mode": "Merchant mode",
+    "merchant-mode-and-portal": "Merchant mode and portal",
+    "merchant-owner": "Merchant owner",
+    "mfa": "MFA",
+    "next-page": "Next page",
+    "no": "No",
+    "no-access": "No access",
+    "no-audit-events-found": "No audit events found",
+    "none": "None",
+    "not-required": "Not required",
+    "nothing-here-yet": "Nothing here yet",
+    "object": "Object",
+    "off": "Off",
+    "offline": "Offline",
+    "on": "On",
+    "onboarding-queue": "Onboarding queue",
+    "operations-analyst": "Operations analyst",
+    "operations-console": "Operations console",
+    "paper-trading": "Paper trading",
+    "password": "Password",
+    "pay-scan": "Pay/Scan",
+    "pdfe-demo": "PDFE Demo",
+    "permissions": "Permissions",
+    "platform-admin": "Platform admin",
+    "previous-page": "Previous page",
+    "primary": "Primary",
+    "profile": "Profile",
+    "proposed": "Proposed",
+    "proposed-change": "Proposed change",
+    "queues": "Queues",
+    "queues-and-aging": "Queues and aging",
+    "quote-validity": "Quote validity",
+    "reason": "Reason",
+    "receivables-and-payables": "Receivables and payables",
+    "reconciliation": "Reconciliation",
+    "reference": "Reference",
+    "reject": "Reject",
+    "remittance-corridors": "Remittance corridors",
+    "remittance-j3": "Remittance (J3)",
+    "reports": "Reports",
+    "request-rollback": "Request rollback",
+    "requester": "Requester",
+    "reset-data": "Reset data",
+    "restore-previous-limit": "Restore previous limit",
+    "role": "Role",
+    "roll-back-to-version": "Roll back to version",
+    "rolling-back-creates-a-new-version-histo": "Rolling back creates a new version. History is kept.",
+    "rules": "Rules",
+    "run-a-scenario": "Run a scenario",
+    "run-demo-scenarios": "Run demo scenarios",
+    "run-scenario": "Run scenario",
+    "safety-locked": "Safety-locked",
+    "safety-locked-flags-cannot-be-changed-he": "Safety-locked flags cannot be changed here.",
+    "sales-and-the-next-settlement": "Sales and the next settlement",
+    "sandbox": "Sandbox",
+    "save": "Save",
+    "scan-a-qr-code": "Scan a QR code",
+    "scenario": "Scenario",
+    "scenarios": "Scenarios",
+    "search": "Search",
+    "search-and-trace": "Search and trace",
+    "seed": "Seed",
+    "separation-of-duties": "Separation of duties",
+    "setting": "Setting",
+    "settlements": "Settlements",
+    "showing-1-n-of-n": "Showing 1–{n} of {n}",
+    "sign-in": "Sign in",
+    "signed-in-as": "Signed in as",
+    "something-went-wrong": "Something went wrong",
+    "staff": "Staff",
+    "state": "State",
+    "statements": "Statements",
+    "status": "Status",
+    "suppliers": "Suppliers",
+    "system-health": "System health",
+    "team-and-limits": "Team and limits",
+    "tenant": "Tenant",
+    "tenant-demo-a": "Tenant: Demo A",
+    "the-hash-chain-is-intact-for-the-selecte": "The hash chain is intact for the selected range.",
+    "time": "Time",
+    "to": "To",
+    "transaction-explorer": "Transaction explorer",
+    "try-again": "Try again",
+    "unlock": "Unlock",
+    "use-asia-jerusalem-time": "Use Asia/Jerusalem time",
+    "use-the-tabs-or-the-side-menu-to-move-ar": "Use the tabs or the side menu to move around.",
+    "user": "User",
+    "username": "Username",
+    "v2-approved": "v2 approved",
+    "v3-approved": "v3 approved",
+    "value": "Value",
+    "verified": "Verified",
+    "verify": "Verify",
+    "verify-integrity": "Verify integrity",
+    "version": "Version",
+    "versions": "Versions",
+    "viewed-record": "Viewed record",
+    "we-could-not-complete-that-try-again": "We could not complete that. Try again.",
+    "webhook-catalog": "Webhook catalog",
+    "welcome": "Welcome",
+    "welcome-to-the-business-portal": "Welcome to the business portal",
+    "welcome-to-the-merchant-portal": "Welcome to the merchant portal",
+    "western-0-9": "Western (0-9)",
+    "where-to-go": "Where to go",
+    "you-are-offline-we-will-retry-when-you-a": "You are offline. We will retry when you are back online.",
+    "you-cannot-approve-your-own-request-ask-": "You cannot approve your own request. Ask a different approver.",
+    "you-do-not-have-access": "You do not have access",
+    "you-do-not-have-access-to-this-page-ask-": "You do not have access to this page. Ask an administrator."
+  }
+}
