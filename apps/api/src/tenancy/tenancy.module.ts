@@ -3,11 +3,12 @@ import { ElevatedReadInterceptor } from './elevated-read.interceptor';
 import { ElevationController } from './elevation.controller';
 import { ElevationService } from './elevation.service';
 import { ReadOnlyElevationGuard } from './read-only-elevation.guard';
+import { TenantsController } from './tenants.controller';
 import { TenantContextInterceptor } from './tenant-context.interceptor';
 
 @Global()
 @Module({
-  controllers: [ElevationController],
+  controllers: [ElevationController, TenantsController],
   providers: [
     ElevationService,
     ReadOnlyElevationGuard,

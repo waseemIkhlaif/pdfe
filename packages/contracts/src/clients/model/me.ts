@@ -6,12 +6,14 @@
  * OpenAPI spec version: 0.2.0
  */
 import type { Elevation } from './elevation.js';
+import type { MeTenant } from './meTenant.js';
 import type { MeUser } from './meUser.js';
 
 export interface Me {
   user: MeUser;
   /** @pattern ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$ */
   tenant_id: string;
+  tenant: MeTenant;
   roles: string[];
   permissions: string[];
   mfa: boolean;

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { SimShell } from '@pdfe/ui-web';
 import '@pdfe/design-tokens/dist/web/tokens.css';
+import '@pdfe/ui-web/styles.css';
 
 const LOCALES = ['ar', 'en'] as const;
 type Locale = (typeof LOCALES)[number];

@@ -13,7 +13,9 @@
   "dependencies": {
     "@pdfe/auth-web": "workspace:*",
     "@pdfe/design-tokens": "workspace:*",
+    "@pdfe/i18n": "workspace:*",
     "@pdfe/ui-web": "workspace:*",
+    "@pdfe/web-kit": "workspace:*",
     "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"

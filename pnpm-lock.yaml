@@ -203,9 +203,15 @@ importers:
       '@pdfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@pdfe/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
+      '@pdfe/web-kit':
+        specifier: workspace:*
+        version: link:../../packages/web-kit
       next:
         specifier: ^16.4.6
         version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -237,9 +243,15 @@ importers:
       '@pdfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@pdfe/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
+      '@pdfe/web-kit':
+        specifier: workspace:*
+        version: link:../../packages/web-kit
       next:
         specifier: ^16.4.6
         version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -271,9 +283,15 @@ importers:
       '@pdfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@pdfe/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
+      '@pdfe/web-kit':
+        specifier: workspace:*
+        version: link:../../packages/web-kit
       next:
         specifier: ^16.4.6
         version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -305,9 +323,15 @@ importers:
       '@pdfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@pdfe/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
+      '@pdfe/web-kit':
+        specifier: workspace:*
+        version: link:../../packages/web-kit
       next:
         specifier: ^16.4.6
         version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -339,9 +363,15 @@ importers:
       '@pdfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@pdfe/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
+      '@pdfe/web-kit':
+        specifier: workspace:*
+        version: link:../../packages/web-kit
       next:
         specifier: ^16.4.6
         version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -373,9 +403,15 @@ importers:
       '@pdfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@pdfe/ui-web':
         specifier: workspace:*
         version: link:../../packages/ui-web
+      '@pdfe/web-kit':
+        specifier: workspace:*
+        version: link:../../packages/web-kit
       next:
         specifier: ^16.4.6
         version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -748,6 +784,61 @@ importers:
       jsdom:
         specifier: ^27.0.0
         version: 27.4.0(@noble/hashes@1.8.0)
+      react:
+        specifier: ^19.3.1
+        version: 19.3.1
+      react-dom:
+        specifier: ^19.3.1
+        version: 19.3.1(react@19.3.1)
+      vitest:
+        specifier: ^5.1.0
+        version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@22.20.5)(jsdom@27.4.0(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/web-kit:
+    dependencies:
+      '@pdfe/auth-web':
+        specifier: workspace:*
+        version: link:../auth-web
+      '@pdfe/domain-types':
+        specifier: workspace:*
+        version: link:../domain-types
+      '@pdfe/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@pdfe/platform-core':
+        specifier: workspace:*
+        version: link:../platform-core
+      '@pdfe/ui-web':
+        specifier: workspace:*
+        version: link:../ui-web
+    devDependencies:
+      '@pdfe/config':
+        specifier: workspace:*
+        version: link:../config
+      '@pdfe/test-kit':
+        specifier: workspace:*
+        version: link:../test-kit
+      '@testing-library/dom':
+        specifier: ^10.4.0
+        version: 10.4.2
+      '@testing-library/react':
+        specifier: ^16.3.0
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.5
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.18
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.3.0(@types/react@19.2.18)
+      jsdom:
+        specifier: ^27.0.0
+        version: 27.4.0(@noble/hashes@1.8.0)
+      next:
+        specifier: ^16.4.6
+        version: 16.4.6(@opentelemetry/api@1.10.0)(@playwright/test@1.65.1)(@types/node@22.20.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -10175,6 +10266,16 @@ snapshots:
       picocolors: 1.1.1
       pretty-format: 27.5.1
 
+  '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@babel/runtime': 7.29.14
+      '@testing-library/dom': 10.4.2
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+    optionalDependencies:
+      '@types/react': 19.2.18
+      '@types/react-dom': 19.3.0(@types/react@19.2.18)
+
   '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@babel/runtime': 7.29.14
@@ -10321,7 +10422,6 @@ snapshots:
   '@types/react-dom@19.3.0(@types/react@19.2.18)':
     dependencies:
       '@types/react': 19.2.18
-    optional: true
 
   '@types/react-dom@19.3.0(@types/react@19.3.0)':
     dependencies:

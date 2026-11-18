@@ -7,6 +7,11 @@
 // The deck (docs/design/copy-decks/phase-02.md) is the single source of the words (FR-023, FR-033). Only rows whose Status is
 // `approved` are emitted: nothing a reviewer has not signed off reaches a screen. Every key must exist in both languages, and
 // every message must be valid ICU MessageFormat, or the build stops here, not on a user's screen.
+//
+// A few words the approved Phase 2 screens do not contain (the elevation page, copy confirmations) live in
+// src/extras/{en,ar}.json under the `impl.` prefix. They are implementation strings, listed in
+// docs/design/qa/phase-02-extra-strings.md for the design owner to review and move into the deck; their Arabic is an AI draft.
+// An `impl.` key can never shadow a deck key, and has to exist in both languages like any other.
 import { existsSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -16,6 +21,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 export const ROOT = resolve(HERE, '../../..');
 export const DECK = join(ROOT, 'docs/design/copy-decks/phase-02.md');
 export const OUT = resolve(HERE, '../src');
+export const EXTRAS = join(OUT, 'extras');
 
 const KEY = /^[a-z][a-zA-Z0-9-]*(\.[a-zA-Z0-9][a-zA-Z0-9-]*)+$/;
 
@@ -100,11 +106,37 @@ export type MessageKey = (typeof MESSAGE_KEYS)[number];
 
 const json = (v) => `${JSON.stringify(v, null, 2)}\n`;
 
-/** The three generated files as { path: content }, from the deck text. Throws with every problem when the deck is not fit. */
-export function generateFiles(markdown) {
+/** { key: text } from a nested extras file. */
+export function flatten(obj, prefix = '') {
+  const out = {};
+  for (const [k, v] of Object.entries(obj ?? {})) {
+    if (v !== null && typeof v === 'object') Object.assign(out, flatten(v, `${prefix}${k}.`));
+    else out[`${prefix}${k}`] = String(v);
+  }
+  return out;
+}
+
+/** Rows for the extras: both languages joined by key, with the problems that are specific to them. */
+export function extraRows(extras, deckKeys) {
+  const en = flatten(extras?.en);
+  const ar = flatten(extras?.ar);
+  const bad = [];
+  const rows = [];
+  for (const key of [...new Set([...Object.keys(en), ...Object.keys(ar)])].sort()) {
+    if (!key.startsWith('impl.')) bad.push(`${key}: an extra string must start with impl.`);
+    if (deckKeys.has(key)) bad.push(`${key}: shadows a key of the copy deck`);
+    rows.push({ key, en: en[key] ?? '', ar: ar[key] ?? '', status: 'approved' });
+  }
+  return { rows, bad };
+}
+
+/** The generated files as { path: content }, from the deck text and the extras. Throws with every problem when they are not fit. */
+export function generateFiles(markdown, extras) {
   const all = parseDeck(markdown);
-  const rows = approved(all);
-  const bad = problems(rows);
+  const deck = approved(all);
+  const x = extraRows(extras, new Set(deck.map((r) => r.key)));
+  const rows = [...deck, ...x.rows].sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  const bad = [...x.bad, ...problems(rows)];
   if (bad.length > 0) throw new Error(`the copy deck cannot be used:\n  ${bad.join('\n  ')}`);
   if (rows.length === 0) throw new Error('the copy deck has no approved rows');
   return {
@@ -154,11 +186,17 @@ export function missingKeys(used, known) {
   return used.filter((u) => !set.has(u.key));
 }
 
+export function readExtras() {
+  const read = (f) =>
+    existsSync(join(EXTRAS, f)) ? JSON.parse(readFileSync(join(EXTRAS, f), 'utf8')) : {};
+  return { en: read('en.json'), ar: read('ar.json') };
+}
+
 function main() {
   const check = process.argv.includes('--check');
   let files;
   try {
-    files = generateFiles(readFileSync(DECK, 'utf8'));
+    files = generateFiles(readFileSync(DECK, 'utf8'), readExtras());
   } catch (e) {
     console.error(`i18n: ${e.message}`);
     process.exit(1);
@@ -185,7 +223,13 @@ function main() {
     ? [...files['keys.ts'].matchAll(/^ {2}'([^']+)',$/gm)].map((m) => m[1])
     : [];
   const missing = missingKeys(
-    usedKeys(['apps', 'packages/ui-web/src', 'packages/ui-native/src', 'packages/auth-web/src']),
+    usedKeys([
+      'apps',
+      'packages/ui-web/src',
+      'packages/ui-native/src',
+      'packages/auth-web/src',
+      'packages/web-kit/src',
+    ]),
     known,
   );
   if (missing.length > 0) {

@@ -14,7 +14,8 @@ const HEAD = `| Key | English | Arabic | Regulated | AR review | Native check | 
 `;
 const row = (key: string, en: string, ar: string, status = 'approved') =>
   `| ${key} | ${en} | ${ar} | no | done | n/a | n/a | ${status} | note |\n`;
-const files = (md: string): Record<string, string> => gen.generateFiles(md);
+const files = (md: string, extras?: unknown): Record<string, string> =>
+  gen.generateFiles(md, extras);
 const flat = (o: Record<string, unknown>, p = ''): string[] =>
   Object.entries(o).flatMap(([k, v]) =>
     typeof v === 'object' && v !== null
@@ -55,7 +56,7 @@ describe('every key exists in both languages', () => {
   });
 
   it('the generated catalogs have exactly the same keys', () => {
-    const real = files(readFileSync(gen.DECK, 'utf8'));
+    const real = files(readFileSync(gen.DECK, 'utf8'), gen.readExtras());
     expect(flat(JSON.parse(real['catalogs/ar.json']!)).sort()).toEqual(
       flat(JSON.parse(real['catalogs/en.json']!)).sort(),
     );
@@ -91,7 +92,7 @@ describe('the ICU syntax parses', () => {
   });
 
   it('every message of the real deck is valid', () => {
-    expect(() => files(readFileSync(gen.DECK, 'utf8'))).not.toThrow();
+    expect(() => files(readFileSync(gen.DECK, 'utf8'), gen.readExtras())).not.toThrow();
   });
 });
 
@@ -132,7 +133,7 @@ describe('a key used in the code but missing from the catalog', () => {
 
 describe('the committed files are what the deck gives', () => {
   it('catalogs and keys are up to date', () => {
-    const real = files(readFileSync(gen.DECK, 'utf8'));
+    const real = files(readFileSync(gen.DECK, 'utf8'), gen.readExtras());
     const read = (p: string) =>
       readFileSync(resolve(__dirname, '../src', p), 'utf8').replace(/\r\n/g, '\n');
     for (const [rel, content] of Object.entries(real)) expect(read(rel), rel).toBe(content);
@@ -169,5 +170,34 @@ describe('the catalogs at run time', () => {
     }
     await native.changeLanguage('en');
     expect(native.t('ui.sign-in')).toBe(translate('en', 'ui.sign-in'));
+  });
+});
+
+describe('the extra strings (impl.*) the approved deck does not hold', () => {
+  const deck = HEAD + row('ui.one', 'One', 'واحد');
+  const ok = { en: { impl: { copied: 'Copied' } }, ar: { impl: { copied: 'تم النسخ' } } };
+
+  it('are merged into both catalogs and the keys', () => {
+    const out = files(deck, ok);
+    expect(JSON.parse(out['catalogs/en.json']!)).toEqual({
+      impl: { copied: 'Copied' },
+      ui: { one: 'One' },
+    });
+    expect(JSON.parse(out['catalogs/ar.json']!).impl.copied).toBe('تم النسخ');
+    expect(out['keys.ts']).toContain("'impl.copied'");
+  });
+
+  it('must exist in both languages, start with impl., and not shadow a deck key', () => {
+    expect(() => files(deck, { en: { impl: { a: 'A' } }, ar: {} })).toThrow(/impl\.a: no ar text/);
+    expect(() => files(deck, { en: { ui: { two: 'Two' } }, ar: { ui: { two: 'اثنان' } } })).toThrow(
+      /ui\.two: an extra string must start with impl\./,
+    );
+    expect(() => files(deck, { en: { impl: {} }, ar: {} })).not.toThrow();
+  });
+
+  it('must be valid ICU, like every other message', () => {
+    expect(() =>
+      files(deck, { en: { impl: { x: 'Hi {name' } }, ar: { impl: { x: 'مرحبا' } } }),
+    ).toThrow(/impl\.x: the en text is not valid ICU/);
   });
 });

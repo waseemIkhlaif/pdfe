@@ -1,4 +1,67 @@
 {
+  "impl": {
+    "approvals": {
+      "decisions": "Decisions",
+      "refused": "The decision was refused."
+    },
+    "code": "Code",
+    "compare": "Compare",
+    "config": {
+      "effectiveHint": "Optional. Leave empty to apply at once, after approval.",
+      "invalid": "That value is not valid for this setting.",
+      "locked": "This setting is safety-locked. It cannot be changed here or anywhere in the demo.",
+      "readOnly": "You can read this setting but not ask for a change.",
+      "refused": "The request was refused.",
+      "valueHint": "A JSON value, for example 45, true or [1, 2]."
+    },
+    "copied": "Copied",
+    "count": "Count",
+    "created": "Created",
+    "diff": "Difference",
+    "digest": "Digest",
+    "effectiveFrom": "Effective from",
+    "elevation": {
+      "active": "You are looking at another tenant, read only. Every read is recorded.",
+      "badge": "Read-only elevation",
+      "end": "End elevation",
+      "ended": "Ended",
+      "explain": "Look at another tenant's data, read only, for a limited time. Every read is recorded in the audit trail.",
+      "reasonHint": "At least 10 characters. It is kept with the audit record.",
+      "refused": "The elevation was refused.",
+      "start": "Start elevation",
+      "title": "Read-only elevation"
+    },
+    "errorCode": "Error code",
+    "expires": "Expires",
+    "finished": "Finished",
+    "kind": "Kind",
+    "noDifference": "No difference",
+    "report": "What the run created",
+    "scenarios": {
+      "refused": "The run was refused."
+    },
+    "sections": "Sections",
+    "started": "Started",
+    "status": {
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "scheduled": "Scheduled",
+      "stale": "Out of date",
+      "superseded": "Replaced"
+    },
+    "timeLeft": "Time left",
+    "users": {
+      "cannotRequest": "You can see users but not ask for a role change.",
+      "refused": "The request was refused.",
+      "requestRole": "Ask for a role",
+      "sod": "This user already holds a role that cannot be combined with {role}.",
+      "submit": "Ask for approval"
+    },
+    "verify": {
+      "broken": "The chain is broken at",
+      "refused": "The check could not be run."
+    }
+  },
   "money": {
     "all-payments": "All payments",
     "balances-and-journals": "Balances and journals",

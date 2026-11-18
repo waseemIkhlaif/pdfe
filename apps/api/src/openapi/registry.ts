@@ -85,6 +85,11 @@ export const REGISTRY: Record<string, RouteDoc> = {
     tag: 'identity',
     response: 'IamRoleList',
   },
+  'GET /v1/tenants': {
+    summary: 'The tenants of the platform, read only.',
+    tag: 'identity',
+    response: 'TenantList',
+  },
   'POST /v1/iam/users/:id/role-grants': {
     summary:
       'Ask for a role grant. Creates an approval request; refused up front on a separation-of-duties conflict.',

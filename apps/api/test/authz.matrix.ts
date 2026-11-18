@@ -34,6 +34,7 @@ export const MATRIX: Record<string, Entry> = {
   'POST /v1/config/:key/versions': { kind: 'permission', permission: 'config.request' },
   'POST /v1/config/:key/rollback': { kind: 'permission', permission: 'config.request' },
 
+  'GET /v1/tenants': { kind: 'permission', permission: 'iam.read' },
   'GET /v1/iam/users': { kind: 'permission', permission: 'iam.read' },
   'GET /v1/iam/roles': { kind: 'permission', permission: 'iam.read' },
   'POST /v1/iam/users/:id/role-grants': {
