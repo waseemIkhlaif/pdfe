@@ -29,6 +29,9 @@ export default defineConfig({
       use: { baseURL: 'http://localhost:8080' },
     },
     { name: 'negative', testMatch: 'label-negative.spec.ts' },
+    { name: 'a11y', testMatch: 'a11y.spec.ts', use: { baseURL: 'http://localhost:3001' } },
+    { name: 'shell', testMatch: 'shell.spec.ts', use: { baseURL: 'http://localhost:3001' } },
+    { name: 'visual', testMatch: 'visual.spec.ts', use: { baseURL: 'http://localhost:3001' } },
     // One action followed through every component, with Grafana (SC-012). Needs the whole stack, lgtm included.
     {
       name: 'correlation',

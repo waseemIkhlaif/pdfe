@@ -732,12 +732,12 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - every key exists in both `ar` and `en`;
   - the ICU syntax parses;
   - a key used in the code but missing from the catalog fails the build
-- [ ] T175 [P] [US9] Write `tests/e2e-web/specs/a11y.spec.ts`: `@axe-core/playwright` on every manifest route × {ar, en} × each declared state; it fails on serious or critical issues
-- [ ] T176 [P] [US9] Write `tests/e2e-web/specs/visual.spec.ts`:
+- [x] T175 [P] [US9] Write `tests/e2e-web/specs/a11y.spec.ts`: `@axe-core/playwright` on every manifest route × {ar, en} × each declared state; it fails on serious or critical issues
+- [x] T176 [P] [US9] Write `tests/e2e-web/specs/visual.spec.ts`:
   - for every manifest entry with a `baseline` ID, screenshot it at the baseline sizes from `docs/design/packages/phase-02/manifest.md` and compare it with `docs/design/packages/phase-02/baseline/{ar,en}/**`, with `maxDiffPixelRatio: 0.01`;
   - allow differences listed in `docs/design/qa/phase-02-approved-diffs.md` (create it empty);
   - print the routes that have no baseline
-- [ ] T177 [P] [US9] Write `tests/e2e-web/specs/shell.spec.ts`:
+- [x] T177 [P] [US9] Write `tests/e2e-web/specs/shell.spec.ts`:
   - navigation equals the permission-filtered config for each demo role (from `/v1/me`);
   - the tenant, role and DEMO badges are visible;
   - the language switch sets `<html lang dir>`, the layout mirrors, and amounts and IDs sit in `<bdi>` with Western digits;
@@ -759,7 +759,7 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
   - it runs in `pnpm bootstrap` and `turbo build`.
 
   Make T174 pass
-- [ ] T180 [US9] Build the `packages/ui-web` components from `docs/design/prototype/` and `docs/design/system/components.md`, styled with `@pdfe/design-tokens` CSS variables and Tailwind 4 logical utilities, with Radix for overlays:
+- [x] T180 [US9] Build the `packages/ui-web` components from `docs/design/prototype/` and `docs/design/system/components.md`, styled with `@pdfe/design-tokens` CSS variables and Tailwind 4 logical utilities, with Radix for overlays:
   - layout: `AppShell`, `SideNav`, `TopBar`;
   - badges: `TenantBadge`, `RoleBadge`, `EnvBadge`;
   - status and states: `StatusChip`, `StateBox` (empty, loading, error, denied);
@@ -768,18 +768,18 @@ Monorepo, following plan.md §Project Structure: `apps/<app>/`, `packages/<pkg>/
 
   Each component gets a test in `packages/ui-web/test/`
 - [ ] T181 [P] [US9] Build the `packages/ui-native` components: `TabShell`, `StateBox`, `Badges`, `LanguageSwitch` (`I18nManager.forceRTL` plus a restart prompt), `OfflineBanner` and `AppLock` (`expo-local-authentication`, labelled simulated, never identity verification)
-- [ ] T182 [US9] Complete the Keycloak theme in `infra/keycloak/themes/pdfe/login/`: token CSS, the sign-in page following CON-002, the OTP page following CON-003, and `ar`/`en` messages generated from `packages/i18n`
-- [ ] T183 [US9] Add the demo role picker (CON-004): `packages/ui-web/src/auth/RolePicker.tsx` on each app's `/[locale]/sign-in`, which passes `login_hint` through `auth-web`. Add `/[locale]/settings/language` (CON-005) and `/[locale]/403` (CON-007) to all six apps
-- [ ] T184 [P] [US9] Build the web-consumer shell (CON-008): `src/nav.ts`, `/[locale]/page.tsx` with `StateBox` states, and the manifest updated with baseline IDs
-- [ ] T185 [P] [US9] Build the shells for web-merchant (MER-001), web-business (BIZ-001), web-investor (INV-001, read-only demo viewer) and web-devportal (DEV-001): the `src/nav.ts` and `/[locale]/page.tsx` files, and the manifests updated
-- [ ] T186 [US9] Build the web-console shell: role-routed navigation (OPS-001, CMP-001, FIN-001, ADM) in `apps/web-console/src/nav.ts`, filtered by `/v1/me`
-- [ ] T187 [US9] Build the console `/[locale]/admin/users` (ADM-001) and `/[locale]/admin/roles` (ADM-002). The role grant request form shows the SoD conflict message from 409 `SOD_CONFLICT`
-- [ ] T188 [US9] Build the console `/[locale]/admin/config` (ADM-003, ADM-007 feature flags) and `/[locale]/admin/config/[key]`: history (ADM-004), diff and request (ADM-005), and rollback (ADM-006). Safety-locked keys are read-only, with their reason
-- [ ] T189 [US9] Build the console `/[locale]/approvals` and `/[locale]/approvals/[id]` with `MakerCheckerPanel`. For the requester, Approve is disabled, with the copy-deck string for "You cannot approve your own request"
-- [ ] T190 [US9] Build the console `/[locale]/admin/scenarios` and `/[locale]/admin/scenarios/runs/[id]` (OPS-002): run with code, version and seed, then status, digest and report
-- [ ] T191 [US9] Build the console `/[locale]/audit` (CMP-011), `/[locale]/audit/verify` (CMP-012) and `/[locale]/audit/export` (CMP-013)
-- [ ] T192 [US9] Build the console `/[locale]/elevation`: choose a tenant, give a reason, see the countdown, end. While elevated, a persistent "read-only elevation" badge shows
-- [ ] T193 [US9] Build the console `/[locale]/admin/tenants` (ADM-008), a read-only list backed by a new `GET /v1/tenants` (`iam.read`, platform scope). Add the matrix entry, and update `contracts/http-api.md` and `contracts/ui-shell.md`
+- [x] T182 [US9] Complete the Keycloak theme in `infra/keycloak/themes/pdfe/login/`: token CSS, the sign-in page following CON-002, the OTP page following CON-003, and `ar`/`en` messages generated from `packages/i18n`
+- [x] T183 [US9] Add the demo role picker (CON-004): `packages/ui-web/src/auth/RolePicker.tsx` on each app's `/[locale]/sign-in`, which passes `login_hint` through `auth-web`. Add `/[locale]/settings/language` (CON-005) and `/[locale]/403` (CON-007) to all six apps
+- [x] T184 [P] [US9] Build the web-consumer shell (CON-008): `src/nav.ts`, `/[locale]/page.tsx` with `StateBox` states, and the manifest updated with baseline IDs
+- [x] T185 [P] [US9] Build the shells for web-merchant (MER-001), web-business (BIZ-001), web-investor (INV-001, read-only demo viewer) and web-devportal (DEV-001): the `src/nav.ts` and `/[locale]/page.tsx` files, and the manifests updated
+- [x] T186 [US9] Build the web-console shell: role-routed navigation (OPS-001, CMP-001, FIN-001, ADM) in `apps/web-console/src/nav.ts`, filtered by `/v1/me`
+- [x] T187 [US9] Build the console `/[locale]/admin/users` (ADM-001) and `/[locale]/admin/roles` (ADM-002). The role grant request form shows the SoD conflict message from 409 `SOD_CONFLICT`
+- [x] T188 [US9] Build the console `/[locale]/admin/config` (ADM-003, ADM-007 feature flags) and `/[locale]/admin/config/[key]`: history (ADM-004), diff and request (ADM-005), and rollback (ADM-006). Safety-locked keys are read-only, with their reason
+- [x] T189 [US9] Build the console `/[locale]/approvals` and `/[locale]/approvals/[id]` with `MakerCheckerPanel`. For the requester, Approve is disabled, with the copy-deck string for "You cannot approve your own request"
+- [x] T190 [US9] Build the console `/[locale]/admin/scenarios` and `/[locale]/admin/scenarios/runs/[id]` (OPS-002): run with code, version and seed, then status, digest and report
+- [x] T191 [US9] Build the console `/[locale]/audit` (CMP-011), `/[locale]/audit/verify` (CMP-012) and `/[locale]/audit/export` (CMP-013)
+- [x] T192 [US9] Build the console `/[locale]/elevation`: choose a tenant, give a reason, see the countdown, end. While elevated, a persistent "read-only elevation" badge shows
+- [x] T193 [US9] Build the console `/[locale]/admin/tenants` (ADM-008), a read-only list backed by a new `GET /v1/tenants` (`iam.read`, platform scope). Add the matrix entry, and update `contracts/http-api.md` and `contracts/ui-shell.md`
 - [ ] T194 [US9] Build the mobile shell in `apps/mobile`:
   - tabs Home, Pay, Send, Markets and Profile with `TabShell` (CON-008), where each tab shows `StateBox`;
   - `sign-in` through `expo-auth-session` PKCE on client `mobile`, with tokens in `expo-secure-store` (CON-002, CON-003);
