@@ -69,8 +69,8 @@ describe('Keycloak login theme: styling and the sign-in words (T182)', () => {
 
   it('uses only token variables for colour and logical properties for direction', () => {
     const rules = read('login-theme.css');
-    expect(rules).not.toMatch(/#[0-9a-fA-F]{3,8}/);
-    expect(rules).not.toMatch(/(margin|padding|border)-(left|right)/);
+    expect(rules).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+    expect(rules).not.toMatch(/(margin|padding|border)-(left|right)/);
     expect(rules).not.toMatch(/(^|[;{\s])(left|right)\s*:/);
     expect(rules).toContain('var(--pdfe-color-brand-primary)');
   });
