@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { getTranslator, type Locale, type MessageKey } from '@pdfe/i18n/next';
+import { getTranslator, type Locale } from '@pdfe/i18n/next';
 import {
   AppShell,
   EnvBadge,
