@@ -20,7 +20,7 @@ export function Table({
   caption: string;
 }) {
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" role="region" aria-label={caption} tabIndex={0}>
       <table>
         <caption className="sr-only" style={srOnly}>
           {caption}
